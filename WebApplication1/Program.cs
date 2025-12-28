@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using System;
 using Microsoft.AspNetCore.DataProtection;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 QuestPDF.Settings.License = LicenseType.Community;
@@ -23,21 +22,10 @@ DotNetEnv.Env.Load();
 
 builder.Services.AddControllersWithViews();
 
-//      lokalne bez env
-
-// Rejestracja DbContext z konfiguracj� po��czenia
-//builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString")));
-
-//      dla AWS
-
 var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
-
-//builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//    options.UseSqlServer(ConnectionString));
 
 //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -55,8 +43,6 @@ builder.Services.AddScoped<EmailService>();
 
 builder.Services.AddAuthorization();
 
-
-//identity  
 builder.Services.Configure<IdentityOptions>(options =>
 {
     // Password settings.
@@ -74,8 +60,6 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.User.AllowedUserNameCharacters =
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
     options.User.RequireUniqueEmail = false;
-
-
 });
 
 builder.Services.ConfigureApplicationCookie(options =>
@@ -96,7 +80,6 @@ builder.Services.AddDataProtection()
     .SetApplicationName("projekt-app");
 
 //// oauth 
-
 string googleClientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");
 
 string googleClientSecret = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET");
@@ -126,6 +109,7 @@ builder.Services.AddAuthentication(options =>
 {
     options.ClientId = googleClientId;
     options.ClientSecret = googleClientSecret;
+
     options.CallbackPath = "/signin-google";
 });
 
@@ -136,7 +120,6 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    //db.Database.Migrate();
 }
 
 app.Use(async (context, next) =>
@@ -145,10 +128,8 @@ app.Use(async (context, next) =>
     context.Response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate";  // Disable caching
     context.Response.Headers["Pragma"] = "no-cache";  // For older browsers
     context.Response.Headers["Expires"] = "-1";  // To prevent caching in older browsers
-
     // Add the X-Content-Type-Options header to prevent MIME type sniffing
     context.Response.Headers["X-Content-Type-Options"] = "nosniff";
-
     // Ensure these security headers are present, they help protect against various attacks
     if (!context.Response.Headers.ContainsKey("Content-Security-Policy"))
     {
