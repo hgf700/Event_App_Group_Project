@@ -1,2 +1,0 @@
-PowerShell
-$env:CONNECTION_STRING = "Server=LAPTOP-RNG4KAQI\SQLEXPRESS01;Database=ProjektGrupowy;Trusted_Connection=True;TrustServerCertificate=True;"

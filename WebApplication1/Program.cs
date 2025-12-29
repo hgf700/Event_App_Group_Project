@@ -1,42 +1,36 @@
+using DotNetEnv;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using QuestPDF.Infrastructure;
+using Stripe;
+using System.Text.Json;
 using WebApplication1.Areas.Identity.Data;
+using WebApplication1.Models;
 using WebApplication1.Models.Identity;
 using WebApplication1.ProjectSERVICES;
-using WebApplication1.Models;
-using DotNetEnv;
-using Stripe;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using QuestPDF.Infrastructure;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using System;
-using Microsoft.AspNetCore.DataProtection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 QuestPDF.Settings.License = LicenseType.Community;
-
-DotNetEnv.Env.Load(); 
+DotNetEnv.Env.Load();
 
 builder.Services.AddControllersWithViews();
 
 var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
-
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
-
-//builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddTransient<IEmailSender, WebApplication1.ExtraTools.NullEmailSender>();
-
 builder.Services.AddHttpClient();
-
 builder.Services.AddScoped<QrService>();
 builder.Services.AddScoped<SmsService>();
 builder.Services.AddScoped<EmailService>();
@@ -45,59 +39,94 @@ builder.Services.AddAuthorization();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
-    // Password settings.
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
-    //options.Password.RequireUppercase = true;
     options.Password.RequiredLength = 1;
 
-    // Lockout settings.
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
     options.Lockout.MaxFailedAccessAttempts = 10;
     options.Lockout.AllowedForNewUsers = true;
 
-    // User settings.
-    options.User.AllowedUserNameCharacters =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
     options.User.RequireUniqueEmail = false;
 });
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    // Cookie settings
     options.Cookie.HttpOnly = true;
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+    options.ExpireTimeSpan = TimeSpan.FromHours(1); // D³u¿szy czas ¿ycia sesji
+    options.SlidingExpiration = true;
     options.LoginPath = "/Identity/Account/Login";
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
     options.LogoutPath = "/Identity/Account/Logout";
-    options.SlidingExpiration = true;
+
+    // <<< KLUCZOWA CZÊŒÆ: AUTOMATYCZNE ODŒWIE¯ANIE TOKENA <<<
+    options.Events.OnValidatePrincipal = async context =>
+    {
+        var expiresAtValue = context.Properties.GetTokenValue("expires_at");
+        if (DateTime.TryParse(expiresAtValue, out var expiresAt) && expiresAt < DateTime.UtcNow.AddMinutes(5))
+        {
+            var refreshToken = context.Properties.GetTokenValue("refresh_token");
+            if (!string.IsNullOrEmpty(refreshToken))
+            {
+                var clientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");
+                var clientSecret = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET");
+
+                var tokenRequestParameters = new Dictionary<string, string>
+                {
+                    { "client_id", clientId },
+                    { "client_secret", clientSecret },
+                    { "refresh_token", refreshToken },
+                    { "grant_type", "refresh_token" }
+                };
+
+                using var client = new HttpClient();
+                var requestContent = new FormUrlEncodedContent(tokenRequestParameters);
+                var response = await client.PostAsync("https://oauth2.googleapis.com/token", requestContent);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var tokenResponse = JsonDocument.Parse(responseContent).RootElement;
+
+                    var newAccessToken = tokenResponse.GetProperty("access_token").GetString();
+                    var newExpiresIn = tokenResponse.GetProperty("expires_in").GetInt32();
+                    var newExpiresAt = DateTime.UtcNow.AddSeconds(newExpiresIn);
+
+                    // Aktualizuj tokeny w kontekœcie
+                    context.Properties.UpdateTokenValue("access_token", newAccessToken);
+                    context.Properties.UpdateTokenValue("expires_at", newExpiresAt.ToString("o"));
+
+                    // Jeœli Google zwróci nowy refresh token (rzadko, ale mo¿e), zapisz go
+                    if (tokenResponse.TryGetProperty("refresh_token", out var newRefreshTokenElem))
+                    {
+                        var newRefreshToken = newRefreshTokenElem.GetString();
+                        context.Properties.UpdateTokenValue("refresh_token", newRefreshToken);
+                    }
+
+                    // Ponowne podpisanie u¿ytkownika z nowymi tokenami
+                    context.ShouldRenew = true;
+                }
+                else
+                {
+                    // Jeœli refresh nie uda³ siê – wyloguj u¿ytkownika
+                    context.RejectPrincipal();
+                    await context.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                }
+            }
+        }
+    };
+
 });
 
-//Generuje i zapisuje klucze XML cos z cookies
 builder.Services.AddDataProtection()
-    .PersistKeysToFileSystem(new DirectoryInfo("/var/dpkeys")) 
+    .PersistKeysToFileSystem(new DirectoryInfo("/var/dpkeys"))
     .SetApplicationName("projekt-app");
 
-//// oauth 
+// Google OAuth z refresh tokenem
 string googleClientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");
-
 string googleClientSecret = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET");
-
-string googleRedirectUri = Environment.GetEnvironmentVariable("GOOGLE_REDIRECT_URI");
-
-builder.Services.AddHttpClient<TokenService>();
-
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.Cookie.HttpOnly = true;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-    options.Cookie.SameSite = SameSiteMode.Strict;
-    options.Cookie.SameSite = SameSiteMode.Lax; 
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-    options.SlidingExpiration = true;
-    options.Cookie.MaxAge = options.ExpireTimeSpan;
-});
 
 builder.Services.AddAuthentication(options =>
 {
@@ -109,66 +138,62 @@ builder.Services.AddAuthentication(options =>
 {
     options.ClientId = googleClientId;
     options.ClientSecret = googleClientSecret;
-
     options.CallbackPath = "/signin-google";
+
+    // <<< WA¯NE: ¯eby otrzymaæ refresh token przy pierwszym logowaniu >>>
+    options.AccessType = "offline";        // Wymaga refresh tokena
+
+    options.SaveTokens = true;             // Zapisz tokeny w cookie
+    options.Scope.Add("profile");
+    options.Scope.Add("email");
+
+    // Opcjonalnie: zdarzenie po odebraniu ticketu
+    options.Events.OnCreatingTicket = context =>
+    {
+        // Zapewnia, ¿e refresh token jest zapisany
+        var expiresIn = context.Properties.GetTokenValue("expires_in");
+        //if (int.TryParse(expiresIn, out int seconds))
+        //{
+        //    context.Properties.UpdateTokenValue("expires_in", "30"); // 30 sekund zamiast godziny
+        //    var newExpiresAt = DateTime.UtcNow.AddSeconds(30);
+        //    context.Properties.UpdateTokenValue("expires_at", newExpiresAt.ToString("o"));
+        //}
+
+
+        return Task.CompletedTask;
+    };
 });
 
-builder.Services.AddRazorPages(); // <--- dodaj to
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-}
-
+// Middleware bezpieczeñstwa
 app.Use(async (context, next) =>
 {
-    // Set Cache-Control headers to disable caching for sensitive responses
-    context.Response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate";  // Disable caching
-    context.Response.Headers["Pragma"] = "no-cache";  // For older browsers
-    context.Response.Headers["Expires"] = "-1";  // To prevent caching in older browsers
-    // Add the X-Content-Type-Options header to prevent MIME type sniffing
+    context.Response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate";
+    context.Response.Headers["Pragma"] = "no-cache";
+    context.Response.Headers["Expires"] = "-1";
     context.Response.Headers["X-Content-Type-Options"] = "nosniff";
-    // Ensure these security headers are present, they help protect against various attacks
-    if (!context.Response.Headers.ContainsKey("Content-Security-Policy"))
-    {
-        context.Response.Headers["Content-Security-Policy"] = "default-src 'self';"; // Basic CSP rule to restrict content loading to same-origin
-    }
+    context.Response.Headers["X-Frame-Options"] = "DENY";
+    context.Response.Headers["X-XSS-Protection"] = "1; mode=block";
 
-    if (!context.Response.Headers.ContainsKey("X-XSS-Protection"))
-    {
-        context.Response.Headers["X-XSS-Protection"] = "1; mode=block"; // Enable XSS filter
-    }
-
-    if (!context.Response.Headers.ContainsKey("X-Frame-Options"))
-    {
-        context.Response.Headers["X-Frame-Options"] = "DENY"; // Prevent clickjacking
-    }
-
-    // Check and remove the P3P header if it exists (deprecated)
-    if (context.Response.Headers.ContainsKey("P3P"))
-    {
-        context.Response.Headers.Remove("P3P");
-    }
-
-    // Continue processing the next middleware
     await next.Invoke();
 });
 
-// Konfiguracja potoku HTTP
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
 
-app.UseRouting();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseRouting();
+
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseRouting();
 
 app.MapControllerRoute(
     name: "default",
