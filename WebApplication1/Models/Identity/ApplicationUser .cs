@@ -7,7 +7,6 @@ namespace WebApplication1.Models.Identity
        
         public bool IsOAuth { get; set; }
         public string? GoogleId { get; set; }
-        //public string? RefreshTokenGoogle { get; set; }
 
         // Jeśli potrzebujesz relacji:
         public ICollection<UserEvent> UserEvents { get; set; } = new List<UserEvent>();

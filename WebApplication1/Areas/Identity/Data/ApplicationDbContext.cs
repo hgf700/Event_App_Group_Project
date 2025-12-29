@@ -16,6 +16,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<ApplicationUser> Users { get; set; }
     public DbSet<Event> Events { get; set; }
     public DbSet<UserEvent> UserEvents { get; set; }
+    public DbSet<ExternalGoogleOAuthToken> ExternalGoogleOAuthToken { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -33,6 +35,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasOne(ue => ue.Event)
             .WithMany(e => e.UserEvents)
             .HasForeignKey(ue => ue.EventId);
+
+        modelBuilder.Entity<ExternalGoogleOAuthToken>()
+            .HasIndex(x => new { x.UserId, x.Provider })
+            .IsUnique();
 
     }
 }
