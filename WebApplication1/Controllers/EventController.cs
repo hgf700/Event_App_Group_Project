@@ -1,16 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
-using Stripe.Checkout;
+using QuestPDF.Fluent;
 using Stripe;
+using Stripe.Checkout;
+using System.Security.Claims;
 using System.Text.Json;
 using WebApplication1.Areas.Identity.Data;
 using WebApplication1.Models;
-using WebApplication1.ProjectSERVICES;
-using QuestPDF.Fluent;
-using Microsoft.AspNetCore.Identity;
 using WebApplication1.Models.Identity;
-using Microsoft.AspNetCore.Authorization;
+using WebApplication1.ProjectSERVICES;
 
 namespace WebApplication1.Controllers
 {
@@ -24,8 +25,18 @@ namespace WebApplication1.Controllers
         private readonly QrService _qrService;
         private readonly SmsService _smsservice;
         private readonly EmailService _emailService;
+        private readonly OauthRefreshService _OauthRefreshService;
 
-        public EventController(HttpClient httpClient, ApplicationDbContext context, QrService qrService, SmsService smsservice, EmailService emailService, UserManager<ApplicationUser> userManager)
+        
+
+        public EventController(
+            HttpClient httpClient, 
+            ApplicationDbContext context, 
+            QrService qrService, 
+            SmsService smsservice, 
+            EmailService emailService, 
+            UserManager<ApplicationUser> userManager,
+            OauthRefreshService OauthRefreshService)
         {
             _httpClient = httpClient;
             _context = context;
@@ -33,6 +44,7 @@ namespace WebApplication1.Controllers
             _smsservice = smsservice;
             _emailService = emailService;
             _userManager = userManager;
+            _OauthRefreshService = OauthRefreshService;
         }
 
         [HttpGet("")]
@@ -83,6 +95,7 @@ namespace WebApplication1.Controllers
         [HttpPost("BuyTicket/{id}")]
         public async Task<IActionResult> BuyTicket(int id)
         {
+
             var ev = await _context.Events.FindAsync(id);
             if (ev == null)
                 return NotFound();
@@ -128,41 +141,50 @@ namespace WebApplication1.Controllers
 
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
-
                 return Unauthorized();
 
+            string accessToken;
+            try
+            {
+                accessToken = await _OauthRefreshService.EnsureValidAccessTokenAsync(user.Id);
+            }
+            catch
+            {
+                // <<< POPRAWKA: Użyj Redirect zamiast RedirectToPage w kontrolerze MVC >>>
+                return Redirect("/Identity/Account/Login"); // lub RedirectToAction("Login", "Account", new { area = "Identity" });
+            }
+
+            // Reszta logiki bez zmian
             var userEvent = new UserEvent
             {
                 EventId = ev.Id,
                 UserId = user.Id
             };
-
             _context.UserEvents.Add(userEvent);
             await _context.SaveChangesAsync();
 
             _qrService.GenerateQrCode(ev.UrlOfEvent);
 
             bool.TryParse(Environment.GetEnvironmentVariable("TWILIO_SMS_SEND_STATE"), out bool twilio_sms_state);
-
-            if (twilio_sms_state == true)
+            if (twilio_sms_state)
             {
                 _smsservice.SendSMS(ev.UrlOfEvent);
             }
 
             var doc = new InvoiceDocument(
-                eventName: $"{ev.NameOfEvent}",
-                eventDate: $"{ev.StartOfEvent}",
-                eventAddress: $"{ev.Address}",
-                eventType: $"{ev.TypeOfEvent}"
+                eventName: ev.NameOfEvent,
+                eventDate: ev.StartOfEvent.ToString(),
+                eventAddress: ev.Address,
+                eventType: ev.TypeOfEvent
             );
 
             string resourcesPath = Path.Combine(Directory.GetCurrentDirectory(), "Resources");
+            Directory.CreateDirectory(resourcesPath); // na wszelki wypadek
             string pdfPath = Path.Combine(resourcesPath, "bilet.pdf");
             doc.GeneratePdf(pdfPath);
 
             string docelowyemail = Environment.GetEnvironmentVariable("TARGET_EMAIL");
-
-            _emailService.SendEmail(docelowyemail,ev.UrlOfEvent);
+            _emailService.SendEmail(docelowyemail, ev.UrlOfEvent);
 
             ViewBag.Message = "Płatność zakończona sukcesem!";
             return View("Success");

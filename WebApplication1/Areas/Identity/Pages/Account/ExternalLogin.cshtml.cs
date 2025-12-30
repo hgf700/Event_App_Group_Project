@@ -69,7 +69,12 @@ namespace WebApplication1.Areas.Identity.Pages.Account
         public IActionResult OnPost(string provider, string returnUrl = null)
         {
             var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl = Url.Content("~/Index") });
+
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+
+            // <<< To wymusza pytanie o zgodê i zwrot refresh tokena przy ka¿dym logowaniu >>>
+            properties.Items["prompt"] = "consent";
+
             return new ChallengeResult(provider, properties);
         }
 
@@ -117,7 +122,6 @@ namespace WebApplication1.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
-
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
@@ -135,54 +139,39 @@ namespace WebApplication1.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
-
+                    result = await _userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {
-                        var loginResult = await _userManager.AddLoginAsync(user, info);
-                        if (loginResult.Succeeded)
+                        _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+
+                        // <<< ZAPIS REFRESH TOKENA TYLKO GDY ISTNIEJE (PIERWSZE LOGOWANIE) >>>
+                        var refreshToken = info.AuthenticationTokens?
+                            .FirstOrDefault(t => t.Name == "refresh_token")?.Value;
+
+                        if (!string.IsNullOrEmpty(refreshToken))
                         {
-                            _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+                            var oauthService = HttpContext.RequestServices
+                                .GetRequiredService<OauthRefreshService>();
 
-                            var userId = await _userManager.GetUserIdAsync(user);
-                            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                            var callbackUrl = Url.Page(
-                                "/Account/ConfirmEmail",
-                                pageHandler: null,
-                                values: new { area = "Identity", userId = userId, code = code },
-                                protocol: Request.Scheme);
+                            await oauthService.SaveRefreshTokenAsync(user.Id, refreshToken);
 
-                            await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                            if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                            {
-                                return RedirectToPage("./RegisterConfirmation", new { Email = Input.Email });
-                            }
-
-                            var authResult = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-                            var accessToken = authResult.Properties.GetTokenValue("access_token");
-                            var refreshToken = authResult.Properties.GetTokenValue("refresh_token");
-                            var expiresAt = authResult.Properties.GetTokenValue("expires_at");
-
-                            var client = new HttpClient();
-
-                            await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
-
-                            return RedirectToPage("/Index");
+                            _logger.LogInformation("Refresh token zapisany dla u¿ytkownika {Email}", user.Email);
                         }
                         else
                         {
-                            // rollback u¿ytkownika
-                            await _userManager.DeleteAsync(user);
-                            foreach (var error in loginResult.Errors)
-                            {
-                                ModelState.AddModelError(string.Empty, error.Description);
-                            }
+                            _logger.LogInformation("Brak nowego refresh tokena (ju¿ istnieje) dla {Email}", user.Email);
+                        }
+                        // <<< KONIEC >>>
+
+                        // Email confirmation jeœli w³¹czony
+                        if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                        {
+                            // ... Twój kod z potwierdzeniem emaila
+                            return RedirectToPage("./RegisterConfirmation", new { Email = Input.Email });
                         }
 
-
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return LocalRedirect(returnUrl);
                     }
                 }
 
@@ -196,7 +185,6 @@ namespace WebApplication1.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
             return Page();
         }
-
         private ApplicationUser CreateUser()
         {
             try

@@ -32,7 +32,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection")
     ));
 
-
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
@@ -42,6 +41,8 @@ builder.Services.AddHttpClient();
 builder.Services.AddScoped<QrService>();
 builder.Services.AddScoped<SmsService>();
 builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<OauthRefreshService>();
+builder.Services.AddSingleton<TokenEncryptionService>();
 
 builder.Services.AddAuthorization();
 
@@ -68,64 +69,6 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/Identity/Account/Login";
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
     options.LogoutPath = "/Identity/Account/Logout";
-
-    // <<< KLUCZOWA CZÊŒÆ: AUTOMATYCZNE ODŒWIE¯ANIE TOKENA <<<
-    //options.Events.OnValidatePrincipal = async context =>
-    //{
-    //    var expiresAtValue = context.Properties.GetTokenValue("expires_at");
-    //    if (DateTime.TryParse(expiresAtValue, out var expiresAt) && expiresAt < DateTime.UtcNow.AddMinutes(5))
-    //    {
-    //        var refreshToken = context.Properties.GetTokenValue("refresh_token");
-    //        if (!string.IsNullOrEmpty(refreshToken))
-    //        {
-    //            var clientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");
-    //            var clientSecret = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET");
-
-    //            var tokenRequestParameters = new Dictionary<string, string>
-    //            {
-    //                { "client_id", clientId },
-    //                { "client_secret", clientSecret },
-    //                { "refresh_token", refreshToken },
-    //                { "grant_type", "refresh_token" }
-    //            };
-
-    //            using var client = new HttpClient();
-    //            var requestContent = new FormUrlEncodedContent(tokenRequestParameters);
-    //            var response = await client.PostAsync("https://oauth2.googleapis.com/token", requestContent);
-
-    //            if (response.IsSuccessStatusCode)
-    //            {
-    //                var responseContent = await response.Content.ReadAsStringAsync();
-    //                var tokenResponse = JsonDocument.Parse(responseContent).RootElement;
-
-    //                var newAccessToken = tokenResponse.GetProperty("access_token").GetString();
-    //                var newExpiresIn = tokenResponse.GetProperty("expires_in").GetInt32();
-    //                var newExpiresAt = DateTime.UtcNow.AddSeconds(newExpiresIn);
-
-    //                // Aktualizuj tokeny w kontekœcie
-    //                context.Properties.UpdateTokenValue("access_token", newAccessToken);
-    //                context.Properties.UpdateTokenValue("expires_at", newExpiresAt.ToString("o"));
-
-    //                // Jeœli Google zwróci nowy refresh token (rzadko, ale mo¿e), zapisz go
-    //                if (tokenResponse.TryGetProperty("refresh_token", out var newRefreshTokenElem))
-    //                {
-    //                    var newRefreshToken = newRefreshTokenElem.GetString();
-    //                    context.Properties.UpdateTokenValue("refresh_token", newRefreshToken);
-    //                }
-
-    //                // Ponowne podpisanie u¿ytkownika z nowymi tokenami
-    //                context.ShouldRenew = true;
-    //            }
-    //            else
-    //            {
-    //                // Jeœli refresh nie uda³ siê – wyloguj u¿ytkownika
-    //                context.RejectPrincipal();
-    //                await context.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-    //            }
-    //        }
-    //    }
-    //};
-
 });
 
 builder.Services.AddDataProtection()
@@ -143,46 +86,13 @@ builder.Services.AddAuthentication(options =>
 })
 .AddCookie()
 .AddGoogle(options =>
-{
-    options.ClientId = googleClientId;
-    options.ClientSecret = googleClientSecret;
-    options.CallbackPath = "/signin-google";
-
-    // <<< WA¯NE: ¯eby otrzymaæ refresh token przy pierwszym logowaniu >>>
-    options.AccessType = "offline";        // Wymaga refresh tokena
-
-    options.SaveTokens = true;             // Zapisz tokeny w cookie
-
-    options.Events.OnTicketReceived = async context =>
-    {
-        var refreshToken = context.Properties.GetTokenValue("refresh_token");
-
-        if (!string.IsNullOrEmpty(refreshToken))
-        {
-            var userId = context.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            //await tokenStore.SaveGoogleRefreshTokenAsync(userId, refreshToken);
-        }
-    };
-    //options.Scope.Add("profile");
-    //options.Scope.Add("email");
-
-    //// Opcjonalnie: zdarzenie po odebraniu ticketu
-    //options.Events.OnCreatingTicket = context =>
-    //{
-    //    // Zapewnia, ¿e refresh token jest zapisany
-    //    var expiresIn = context.Properties.GetTokenValue("expires_in");
-    //    //if (int.TryParse(expiresIn, out int seconds))
-    //    //{
-    //    //    context.Properties.UpdateTokenValue("expires_in", "30"); // 30 sekund zamiast godziny
-    //    //    var newExpiresAt = DateTime.UtcNow.AddSeconds(30);
-    //    //    context.Properties.UpdateTokenValue("expires_at", newExpiresAt.ToString("o"));
-    //    //}
-
-
-    //    return Task.CompletedTask;
-    //};
-});
+ {
+     options.ClientId = googleClientId;
+     options.ClientSecret = googleClientSecret;
+     options.CallbackPath = "/signin-google";
+     options.AccessType = "offline";
+     options.SaveTokens = true;
+ });
 
 builder.Services.AddRazorPages();
 

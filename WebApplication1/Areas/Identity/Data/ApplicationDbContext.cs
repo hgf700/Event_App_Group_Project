@@ -16,7 +16,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<ApplicationUser> Users { get; set; }
     public DbSet<Event> Events { get; set; }
     public DbSet<UserEvent> UserEvents { get; set; }
-    public DbSet<ExternalGoogleOAuthToken> ExternalGoogleOAuthToken { get; set; }
+    public DbSet<ExternalGoogleOAuthToken> ExternalGoogleOAuthTokens { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
