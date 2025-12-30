@@ -121,7 +121,7 @@ namespace WebApplication1.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
         {
-            returnUrl ??= Url.Content("~/");
+            returnUrl = Url.Action("Index", "Home");
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
