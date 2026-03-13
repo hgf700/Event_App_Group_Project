@@ -23,6 +23,7 @@ DotNetEnv.Env.Load();
 
 builder.Services.AddControllersWithViews();
 
+//AWS
 //var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 //builder.Services.AddDbContext<ApplicationDbContext>(options =>
 //    options.UseSqlServer(connectionString));
