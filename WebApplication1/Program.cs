@@ -28,10 +28,26 @@ builder.Services.AddControllersWithViews();
 //builder.Services.AddDbContext<ApplicationDbContext>(options =>
 //    options.UseSqlServer(connectionString));
 
+//stare ms sql
+//builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//    options.UseSqlServer(
+//        builder.Configuration.GetConnectionString("DefaultConnection")
+//    ));
+
+var host = Environment.GetEnvironmentVariable("POSTGRES_HOST");
+var db = Environment.GetEnvironmentVariable("POSTGRES_DB");
+var user = Environment.GetEnvironmentVariable("POSTGRES_USER");
+var pass = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD");
+var port = Environment.GetEnvironmentVariable("POSTGRES_PORT");
+
+
+//db
+var connectionString =
+    $"Host={host};Port={port};Database={db};Username={user};Password={pass}";
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")
-    ));
+    options.UseNpgsql(connectionString));
+
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
