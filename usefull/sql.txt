@@ -1,0 +1,4 @@
+-- SELECT * FROM "Events"
+-- SELECT * FROM "Sports"
+-- SELECT * FROM "Teams"
+-- SELECT * FROM "Venues"

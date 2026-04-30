@@ -1,0 +1,22 @@
+#tworz docker
+docker compose watch
+docker compose up --build
+
+#aktywne sprawdza
+docker compose ps
+
+#usuwanie processu po pid
+taskkill /PID 29876 /F
+
+# pelny rebuild dla front
+#wylaczenei docker compose down
+#wlaczenie docker compose up
+docker compose down
+docker compose build --no-cache frontend
+docker compose up
+
+#usuwa
+docker compose down -v
+
+#sprawdzenie dany contener
+docker compose exec frontend sh
