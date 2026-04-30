@@ -1,0 +1,45 @@
+services:
+  web:
+    build:
+      context: ./WebApplication1
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "8080:80"
+    environment:
+      - CONNECTION_STRING=${CONNECTION_STRING}
+      - MAILTRAP_SENDER_USER=${MAILTRAP_SENDER_USER}
+      - MAILTRAP_SENDER_PASS=${MAILTRAP_SENDER_PASS}
+      - TARGET_EMAIL=${TARGET_EMAIL}
+      - TICKETMASTER_API_KEY=${TICKETMASTER_API_KEY}
+      - TWILIO_SMS_SEND_STATE=${TWILIO_SMS_SEND_STATE}
+      - TWILIO_SID=${TWILIO_SID}
+      - TWILIO_TOKEN=${TWILIO_TOKEN}
+      - TWILIO_NUMBER=${TWILIO_NUMBER}
+      - SMS_RECEIVER=${SMS_RECEIVER}
+      - STRIP_PUB_KEY=${STRIP_PUB_KEY}
+      - STRIP_SEC_KEY=${STRIP_SEC_KEY}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI}
+    depends_on:
+      - sqlserver
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:80/health || exit 1"]
+      interval: 30s
+      retries: 3
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - SA_PASSWORD=YourStrong!Passw0rd
+      - ACCEPT_EULA=Y
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+      - dpkeys:/var/dpkeys
+
+volumes:
+  mssql_data:
