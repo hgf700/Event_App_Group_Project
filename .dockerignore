@@ -1,3 +1,9 @@
-.vs/
-.github/
-.git/
+**/.vs/
+**/bin/
+**/obj/
+**/.env
+opinia/
+useful/
+**/.gitignore
+**/.angular/
+**/node_modules/

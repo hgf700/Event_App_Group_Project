@@ -20,3 +20,51 @@ docker compose down -v
 
 #sprawdzenie dany contener
 docker compose exec frontend sh
+
+
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: sport_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: sport_radar
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres1
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./Backend/Backend
+      dockerfile: Dockerfile
+    container_name: sport_backend
+    restart: always
+    ports:
+      - "5000:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__Default: Host=postgres;Port=5432;Database=sport_radar;Username=postgres;Password=postgres1
+
+  frontend:
+    build:
+      context: ./Frontend/front
+    container_name: sport_frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
