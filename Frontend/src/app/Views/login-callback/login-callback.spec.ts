@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Home } from './home';
+import { LoginCallback } from './login-callback';
 
-describe('Home', () => {
-  let component: Home;
-  let fixture: ComponentFixture<Home>;
+describe('LoginCallback', () => {
+  let component: LoginCallback;
+  let fixture: ComponentFixture<LoginCallback>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Home],
+      imports: [LoginCallback],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Home);
+    fixture = TestBed.createComponent(LoginCallback);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

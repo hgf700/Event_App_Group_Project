@@ -4,7 +4,7 @@ npm start
 
 ng generate component Views/
 
-cd Frontend/front/src/app
+cd Frontend/src/app
 
 #prettier
 npx prettier --write src/
