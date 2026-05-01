@@ -7,32 +7,22 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
-//using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
-//using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
-
-//DotNetEnv.Env.Load();
 
 builder.Services.AddControllers();
 
 builder.Services.AddOpenApi();
 
-//var env = builder.Environment;
-
 var connectionString =
     builder.Configuration.GetConnectionString("Default");
-
-if (string.IsNullOrWhiteSpace(connectionString))
-    throw new Exception("Missing connection string 'Default'");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString, o =>
         o.EnableRetryOnFailure()));
-
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -97,25 +87,6 @@ builder.Services.AddCors(options =>
             .AllowCredentials());
 });
 
-//builder.Services.AddRateLimiter(options =>
-//{
-//    options.AddFixedWindowLimiter("RateLimitGet", opt =>
-//    {
-//        opt.PermitLimit = 30;
-//        opt.Window = TimeSpan.FromSeconds(2);
-//        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-//        opt.QueueLimit = 10;
-//    });
-
-//    options.AddFixedWindowLimiter("RateLimitPost", opt =>
-//    {
-//        opt.PermitLimit = 3;
-//        opt.Window = TimeSpan.FromSeconds(10);
-//        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-//        opt.QueueLimit = 2;
-//    });
-//});
-
 var app = builder.Build();
 
 // Middleware bezpieczeństwa
@@ -149,22 +120,22 @@ app.UseCors("Prod");
 app.MapControllers();
 
 // MIGRATIONS (tylko DEV/PROD, NIE TESTY)
-if (!app.Environment.IsEnvironment("UnitTest") &&
-    !app.Environment.IsEnvironment("IntegrationTest"))
-{
-    using var scope = app.Services.CreateScope();
-    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+//if (!app.Environment.IsEnvironment("UnitTest") &&
+//    !app.Environment.IsEnvironment("IntegrationTest"))
+//{
+//    using var scope = app.Services.CreateScope();
+//    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-    try
-    {
-        db.Database.Migrate();
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Migration failed: {ex.Message}");
-        throw;
-    }
-}
+//    try
+//    {
+//        db.Database.Migrate();
+//    }
+//    catch (Exception ex)
+//    {
+//        Console.WriteLine($"Migration failed: {ex.Message}");
+//        throw;
+//    }
+//}
 
 app.Run();
 

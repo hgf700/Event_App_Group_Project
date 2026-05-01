@@ -1,0 +1,18 @@
+﻿//builder.Services.AddRateLimiter(options =>
+//{
+//    options.AddFixedWindowLimiter("RateLimitGet", opt =>
+//    {
+//        opt.PermitLimit = 30;
+//        opt.Window = TimeSpan.FromSeconds(2);
+//        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+//        opt.QueueLimit = 10;
+//    });
+
+//    options.AddFixedWindowLimiter("RateLimitPost", opt =>
+//    {
+//        opt.PermitLimit = 3;
+//        opt.Window = TimeSpan.FromSeconds(10);
+//        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+//        opt.QueueLimit = 2;
+//    });
+//});
