@@ -1,0 +1,510 @@
+{
+  "_embedded": {
+    "events": [
+      {
+        "name": "Piaf! The Show",
+        "type": "event",
+        "id": "Z698xZQpZaavt",
+        "test": false,
+        "url": "https://www.ticketmaster.pl/event/piaf-the-show-tickets/36969?language=en-us",
+        "locale": "en-us",
+        "images": [
+          {
+            "ratio": "16_9",
+            "url": "https://s1.ticketm.net/dam/a/804/8e56090f-5650-42f6-8c75-ffb98831c804_EVENT_DETAIL_PAGE_16_9.jpg",
+            "width": 205,
+            "height": 115,
+            "fallback": false,
+            "attribution": "Piaf! The Show"
+          },
+          {
+            "ratio": "3_2",
+            "url": "https://s1.ticketm.net/dam/a/804/8e56090f-5650-42f6-8c75-ffb98831c804_TABLET_LANDSCAPE_3_2.jpg",
+            "width": 1024,
+            "height": 683,
+            "fallback": false,
+            "attribution": "Piaf! The Show"
+          },
+          {
+            "ratio": "16_9",
+            "url": "https://s1.ticketm.net/dam/a/804/8e56090f-5650-42f6-8c75-ffb98831c804_RETINA_PORTRAIT_16_9.jpg",
+            "width": 640,
+            "height": 360,
+            "fallback": false,
+            "attribution": "Piaf! The Show"
+          },
+          {
+            "ratio": "3_2",
+            "url": "https://s1.ticketm.net/dam/a/804/8e56090f-5650-42f6-8c75-ffb98831c804_RETINA_PORTRAIT_3_2.jpg",
+            "width": 640,
+            "height": 427,
+            "fallback": false,
+            "attribution": "Piaf! The Show"
+          },
+          {
+            "ratio": "4_3",
+            "url": "https://s1.ticketm.net/dam/a/fb4/0fc479cb-2bf7-4332-be3e-01cfa038bfb4_SOURCE",
+            "width": 2426,
+            "height": 1791,
+            "fallback": false
+          },
+          {
+            "ratio": "16_9",
+            "url": "https://s1.ticketm.net/dam/a/804/8e56090f-5650-42f6-8c75-ffb98831c804_RECOMENDATION_16_9.jpg",
+            "width": 100,
+            "height": 56,
+            "fallback": false,
+            "attribution": "Piaf! The Show"
+          },
+          {
+            "ratio": "16_9",
+            "url": "https://s1.ticketm.net/dam/a/804/8e56090f-5650-42f6-8c75-ffb98831c804_SOURCE",
+            "width": 2426,
+            "height": 1365,
+            "fallback": false,
+            "attribution": "Piaf! The Show"
+          },
+          {
+            "ratio": "16_9",
+            "url": "https://s1.ticketm.net/dam/a/804/8e56090f-5650-42f6-8c75-ffb98831c804_TABLET_LANDSCAPE_LARGE_16_9.jpg",
+            "width": 2048,
+            "height": 1152,
+            "fallback": false,
+            "attribution": "Piaf! The Show"
+          },
+          {
+            "ratio": "3_2",
+            "url": "https://s1.ticketm.net/dam/a/804/8e56090f-5650-42f6-8c75-ffb98831c804_ARTIST_PAGE_3_2.jpg",
+            "width": 305,
+            "height": 203,
+            "fallback": false,
+            "attribution": "Piaf! The Show"
+          },
+          {
+            "ratio": "4_3",
+            "url": "https://s1.ticketm.net/dam/a/804/8e56090f-5650-42f6-8c75-ffb98831c804_CUSTOM.jpg",
+            "width": 305,
+            "height": 225,
+            "fallback": false,
+            "attribution": "Piaf! The Show"
+          },
+          {
+            "ratio": "16_9",
+            "url": "https://s1.ticketm.net/dam/a/804/8e56090f-5650-42f6-8c75-ffb98831c804_RETINA_LANDSCAPE_16_9.jpg",
+            "width": 1136,
+            "height": 639,
+            "fallback": false,
+            "attribution": "Piaf! The Show"
+          },
+          {
+            "ratio": "16_9",
+            "url": "https://s1.ticketm.net/dam/a/804/8e56090f-5650-42f6-8c75-ffb98831c804_TABLET_LANDSCAPE_16_9.jpg",
+            "width": 1024,
+            "height": 576,
+            "fallback": false,
+            "attribution": "Piaf! The Show"
+          }
+        ],
+        "sales": {
+          "public": {
+            "startDateTime": "2024-11-18T16:00:00Z",
+            "startTBD": false,
+            "startTBA": false,
+            "endDateTime": "2025-04-22T18:30:00Z"
+          }
+        },
+        "dates": {
+          "start": {
+            "localDate": "2025-04-22",
+            "localTime": "20:00:00",
+            "dateTime": "2025-04-22T18:00:00Z",
+            "dateTBD": false,
+            "dateTBA": false,
+            "timeTBA": false,
+            "noSpecificTime": false
+          },
+          "timezone": "Europe/Warsaw",
+          "status": {
+            "code": "onsale"
+          },
+          "spanMultipleDays": false
+        },
+        "classifications": [
+          {
+            "primary": true,
+            "segment": {
+              "id": "KZFzniwnSyZfZ7v7na",
+              "name": "Arts & Theatre"
+            },
+            "genre": {
+              "id": "KnvZfZ7v7l1",
+              "name": "Theatre"
+            },
+            "subGenre": {
+              "id": "KZazBEonSMnZfZ7vAve",
+              "name": "Musical"
+            },
+            "family": false
+          }
+        ],
+        "promoter": {
+          "id": "1621",
+          "name": "Good Walk Sp. z o.o."
+        },
+        "promoters": [
+          {
+            "id": "1621",
+            "name": "Good Walk Sp. z o.o."
+          }
+        ],
+        "ticketing": {
+          "safeTix": {
+            "enabled": false
+          },
+          "id": "ticketing"
+        },
+        "_links": {
+          "self": {
+            "href": "/discovery/v2/events/Z698xZQpZaavt?locale=en-us"
+          },
+          "attractions": [
+            {
+              "href": "/discovery/v2/attractions/K8vZ9179dHf?locale=en-us"
+            },
+            {
+              "href": "/discovery/v2/attractions/K8vZ917b1d0?locale=en-us"
+            }
+          ],
+          "venues": [
+            {
+              "href": "/discovery/v2/venues/Z198xZQpZ6Fe?locale=en-us"
+            }
+          ]
+        },
+        "_embedded": {
+          "venues": [
+            {
+              "name": "ICE Kraków Congress Centre",
+              "type": "venue",
+              "id": "Z198xZQpZ6Fe",
+              "test": false,
+              "url": "https://www.ticketmaster.pl/venue/ice-krakow-congress-centre-krakow--bilety/ic2/101",
+              "locale": "en-us",
+              "postalCode": "30-302",
+              "timezone": "Europe/Warsaw",
+              "city": {
+                "name": "Krakow"
+              },
+              "state": {
+                "name": "Małopolskie"
+              },
+              "country": {
+                "name": "Poland",
+                "countryCode": "PL"
+              },
+              "address": {
+                "line1": "Marii Konopnickiej 17"
+              },
+              "location": {
+                "longitude": "19.93118",
+                "latitude": "50.04782"
+              },
+              "upcomingEvents": {
+                "mfx-pl": 6,
+                "_total": 6,
+                "_filtered": 0
+              },
+              "_links": {
+                "self": {
+                  "href": "/discovery/v2/venues/Z198xZQpZ6Fe?locale=en-us"
+                }
+              }
+            }
+          ],
+          "attractions": [
+            {
+              "name": "Piaf! The Show",
+              "type": "attraction",
+              "id": "K8vZ9179dHf",
+              "test": false,
+              "url": "https://www.ticketmaster.com/piaf-the-show-tickets/artist/2504598",
+              "locale": "en-us",
+              "images": [
+                {
+                  "ratio": "16_9",
+                  "url": "https://s1.ticketm.net/dam/a/804/8e56090f-5650-42f6-8c75-ffb98831c804_EVENT_DETAIL_PAGE_16_9.jpg",
+                  "width": 205,
+                  "height": 115,
+                  "fallback": false,
+                  "attribution": "Piaf! The Show"
+                },
+                {
+                  "ratio": "3_2",
+                  "url": "https://s1.ticketm.net/dam/a/804/8e56090f-5650-42f6-8c75-ffb98831c804_TABLET_LANDSCAPE_3_2.jpg",
+                  "width": 1024,
+                  "height": 683,
+                  "fallback": false,
+                  "attribution": "Piaf! The Show"
+                },
+                {
+                  "ratio": "16_9",
+                  "url": "https://s1.ticketm.net/dam/a/804/8e56090f-5650-42f6-8c75-ffb98831c804_RETINA_PORTRAIT_16_9.jpg",
+                  "width": 640,
+                  "height": 360,
+                  "fallback": false,
+                  "attribution": "Piaf! The Show"
+                },
+                {
+                  "ratio": "3_2",
+                  "url": "https://s1.ticketm.net/dam/a/804/8e56090f-5650-42f6-8c75-ffb98831c804_RETINA_PORTRAIT_3_2.jpg",
+                  "width": 640,
+                  "height": 427,
+                  "fallback": false,
+                  "attribution": "Piaf! The Show"
+                },
+                {
+                  "ratio": "4_3",
+                  "url": "https://s1.ticketm.net/dam/a/fb4/0fc479cb-2bf7-4332-be3e-01cfa038bfb4_SOURCE",
+                  "width": 2426,
+                  "height": 1791,
+                  "fallback": false
+                },
+                {
+                  "ratio": "16_9",
+                  "url": "https://s1.ticketm.net/dam/a/804/8e56090f-5650-42f6-8c75-ffb98831c804_RECOMENDATION_16_9.jpg",
+                  "width": 100,
+                  "height": 56,
+                  "fallback": false,
+                  "attribution": "Piaf! The Show"
+                },
+                {
+                  "ratio": "16_9",
+                  "url": "https://s1.ticketm.net/dam/a/804/8e56090f-5650-42f6-8c75-ffb98831c804_SOURCE",
+                  "width": 2426,
+                  "height": 1365,
+                  "fallback": false,
+                  "attribution": "Piaf! The Show"
+                },
+                {
+                  "ratio": "16_9",
+                  "url": "https://s1.ticketm.net/dam/a/804/8e56090f-5650-42f6-8c75-ffb98831c804_TABLET_LANDSCAPE_LARGE_16_9.jpg",
+                  "width": 2048,
+                  "height": 1152,
+                  "fallback": false,
+                  "attribution": "Piaf! The Show"
+                },
+                {
+                  "ratio": "3_2",
+                  "url": "https://s1.ticketm.net/dam/a/804/8e56090f-5650-42f6-8c75-ffb98831c804_ARTIST_PAGE_3_2.jpg",
+                  "width": 305,
+                  "height": 203,
+                  "fallback": false,
+                  "attribution": "Piaf! The Show"
+                },
+                {
+                  "ratio": "4_3",
+                  "url": "https://s1.ticketm.net/dam/a/804/8e56090f-5650-42f6-8c75-ffb98831c804_CUSTOM.jpg",
+                  "width": 305,
+                  "height": 225,
+                  "fallback": false,
+                  "attribution": "Piaf! The Show"
+                },
+                {
+                  "ratio": "16_9",
+                  "url": "https://s1.ticketm.net/dam/a/804/8e56090f-5650-42f6-8c75-ffb98831c804_RETINA_LANDSCAPE_16_9.jpg",
+                  "width": 1136,
+                  "height": 639,
+                  "fallback": false,
+                  "attribution": "Piaf! The Show"
+                },
+                {
+                  "ratio": "16_9",
+                  "url": "https://s1.ticketm.net/dam/a/804/8e56090f-5650-42f6-8c75-ffb98831c804_TABLET_LANDSCAPE_16_9.jpg",
+                  "width": 1024,
+                  "height": 576,
+                  "fallback": false,
+                  "attribution": "Piaf! The Show"
+                }
+              ],
+              "classifications": [
+                {
+                  "primary": true,
+                  "segment": {
+                    "id": "KZFzniwnSyZfZ7v7na",
+                    "name": "Arts & Theatre"
+                  },
+                  "genre": {
+                    "id": "KnvZfZ7v7l1",
+                    "name": "Theatre"
+                  },
+                  "subGenre": {
+                    "id": "KZazBEonSMnZfZ7vAve",
+                    "name": "Musical"
+                  },
+                  "type": {
+                    "id": "KZAyXgnZfZ7v7lt",
+                    "name": "Event Style"
+                  },
+                  "subType": {
+                    "id": "KZFzBErXgnZfZ7vAAv",
+                    "name": "Undefined"
+                  },
+                  "family": false
+                }
+              ],
+              "upcomingEvents": {
+                "mfx-be": 4,
+                "ticketmaster": 10,
+                "mfx-de": 2,
+                "mfx-pl": 11,
+                "_total": 27,
+                "_filtered": 0
+              },
+              "_links": {
+                "self": {
+                  "href": "/discovery/v2/attractions/K8vZ9179dHf?locale=en-us"
+                }
+              }
+            },
+            {
+              "name": "Good Walk",
+              "type": "attraction",
+              "id": "K8vZ917b1d0",
+              "test": false,
+              "url": "https://www.ticketmaster.com/good-walk-tickets/artist/2651277",
+              "locale": "en-us",
+              "images": [
+                {
+                  "ratio": "16_9",
+                  "url": "https://s1.ticketm.net/dam/c/03e/e15ef00f-2c87-4421-ae61-d740851a703e_105891_RECOMENDATION_16_9.jpg",
+                  "width": 100,
+                  "height": 56,
+                  "fallback": true
+                },
+                {
+                  "ratio": "16_9",
+                  "url": "https://s1.ticketm.net/dam/c/03e/e15ef00f-2c87-4421-ae61-d740851a703e_105891_RETINA_LANDSCAPE_16_9.jpg",
+                  "width": 1136,
+                  "height": 639,
+                  "fallback": true
+                },
+                {
+                  "ratio": "4_3",
+                  "url": "https://s1.ticketm.net/dam/c/03e/e15ef00f-2c87-4421-ae61-d740851a703e_105891_CUSTOM.jpg",
+                  "width": 305,
+                  "height": 225,
+                  "fallback": true
+                },
+                {
+                  "ratio": "3_2",
+                  "url": "https://s1.ticketm.net/dam/c/03e/e15ef00f-2c87-4421-ae61-d740851a703e_105891_TABLET_LANDSCAPE_3_2.jpg",
+                  "width": 1024,
+                  "height": 683,
+                  "fallback": true
+                },
+                {
+                  "ratio": "16_9",
+                  "url": "https://s1.ticketm.net/dam/c/03e/e15ef00f-2c87-4421-ae61-d740851a703e_105891_TABLET_LANDSCAPE_LARGE_16_9.jpg",
+                  "width": 2048,
+                  "height": 1152,
+                  "fallback": true
+                },
+                {
+                  "ratio": "3_2",
+                  "url": "https://s1.ticketm.net/dam/c/03e/e15ef00f-2c87-4421-ae61-d740851a703e_105891_ARTIST_PAGE_3_2.jpg",
+                  "width": 305,
+                  "height": 203,
+                  "fallback": true
+                },
+                {
+                  "ratio": "16_9",
+                  "url": "https://s1.ticketm.net/dam/c/03e/e15ef00f-2c87-4421-ae61-d740851a703e_105891_EVENT_DETAIL_PAGE_16_9.jpg",
+                  "width": 205,
+                  "height": 115,
+                  "fallback": true
+                },
+                {
+                  "ratio": "3_2",
+                  "url": "https://s1.ticketm.net/dam/c/03e/e15ef00f-2c87-4421-ae61-d740851a703e_105891_RETINA_PORTRAIT_3_2.jpg",
+                  "width": 640,
+                  "height": 427,
+                  "fallback": true
+                },
+                {
+                  "ratio": "16_9",
+                  "url": "https://s1.ticketm.net/dam/c/03e/e15ef00f-2c87-4421-ae61-d740851a703e_105891_RETINA_PORTRAIT_16_9.jpg",
+                  "width": 640,
+                  "height": 360,
+                  "fallback": true
+                },
+                {
+                  "ratio": "16_9",
+                  "url": "https://s1.ticketm.net/dam/c/03e/e15ef00f-2c87-4421-ae61-d740851a703e_105891_TABLET_LANDSCAPE_16_9.jpg",
+                  "width": 1024,
+                  "height": 576,
+                  "fallback": true
+                }
+              ],
+              "classifications": [
+                {
+                  "primary": true,
+                  "segment": {
+                    "id": "KZFzniwnSyZfZ7v7n1",
+                    "name": "Miscellaneous"
+                  },
+                  "genre": {
+                    "id": "KnvZfZ7v7ll",
+                    "name": "Undefined"
+                  },
+                  "subGenre": {
+                    "id": "KZazBEonSMnZfZ7vAv1",
+                    "name": "Undefined"
+                  },
+                  "type": {
+                    "id": "KZAyXgnZfZ7v7nI",
+                    "name": "Undefined"
+                  },
+                  "subType": {
+                    "id": "KZFzBErXgnZfZ7v7lJ",
+                    "name": "Undefined"
+                  },
+                  "family": false
+                }
+              ],
+              "upcomingEvents": {
+                "mfx-pl": 78,
+                "_total": 78,
+                "_filtered": 0
+              },
+              "_links": {
+                "self": {
+                  "href": "/discovery/v2/attractions/K8vZ917b1d0?locale=en-us"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "_links": {
+    "first": {
+      "href": "/discovery/v2/events.json?unit=km&city=Krakow&radius=1&page=0&size=1"
+    },
+    "self": {
+      "href": "/discovery/v2/events.json?unit=km&size=1&city=Krakow&radius=1"
+    },
+    "next": {
+      "href": "/discovery/v2/events.json?unit=km&city=Krakow&radius=1&page=1&size=1"
+    },
+    "last": {
+      "href": "/discovery/v2/events.json?unit=km&city=Krakow&radius=1&page=81&size=1"
+    }
+  },
+  "page": {
+    "size": 1,
+    "totalElements": 82,
+    "totalPages": 82,
+    "number": 0
+  }
+}

@@ -1,0 +1,12 @@
+﻿using Backend.Models.Model;
+using Microsoft.AspNetCore.Identity;
+
+namespace Backend.Identity;
+
+public class ApplicationUser : IdentityUser
+{
+    public bool IsOAuth { get; set; }
+    public string? GoogleId { get; set; }
+
+    public ICollection<UserEvent> UserEvents { get; set; } = new List<UserEvent>();
+}

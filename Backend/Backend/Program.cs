@@ -1,7 +1,10 @@
-
-
 using Backend.Db;
+using Backend.Identity;
+using Backend.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +23,18 @@ if (string.IsNullOrWhiteSpace(connectionString))
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString, o =>
         o.EnableRetryOnFailure()));
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+//builder.Services.AddTransient<IEmailSender, WebApplication1.ExtraTools.NullEmailSender>();
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<QrCodeService>();
+builder.Services.AddScoped<SmsService>();
+builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<OauthRefreshService>();
+builder.Services.AddSingleton<TokenEncryptionService>();
 
 builder.Services.AddCors(options =>
 {

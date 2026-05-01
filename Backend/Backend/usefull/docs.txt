@@ -1,0 +1,13 @@
+qr
+https://github.com/codebude/QRCoder/wiki/Advanced-usage---QR-Code-renderers
+
+sms i inne
+https://www.twilio.com/docs
+
+platnosci stripe
+https://docs.stripe.com/api?lang=dotnet
+https://docs.stripe.com/testing
+https://docs.stripe.com/api/checkout/sessions/object?lang=dotnet  //platnosc opcje
+
+pdf
+https://www.questpdf.com/getting-started.html
