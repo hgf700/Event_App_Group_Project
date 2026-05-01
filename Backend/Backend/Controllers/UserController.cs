@@ -1,5 +1,6 @@
 ﻿using Backend.Db;
 using Backend.Identity;
+using Backend.Models.Dto;
 using Backend.Models.Model;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,35 +15,47 @@ public class UserController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
 
-    public UserController(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
+    public UserController(UserManager<ApplicationUser> userManager, 
+        ApplicationDbContext context
+        )
     {
         _userManager = userManager;
         _context = context;
     }
 
-    [HttpGet]
-    public async Task<ActionResult> Account()
+    [HttpPost("register-norm")]
+    public async Task<ActionResult<postCreateUserDto>> RegisterUserNormal([FromBody] postCreateUserDto dto)
     {
-        var user = await _userManager.GetUserAsync(User);
-        return Ok(user);
-    }
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
-    [HttpGet]
-    public async Task<IActionResult> MyEvents()
-    {
-        var user = await _userManager.GetUserAsync(User);
-        var events = await _context.UserEvents
-            .Include(ue => ue.Event)
-            .Where(ue => ue.UserId == user.Id)
-            .ToListAsync();
+        if (dto.Password != dto.ConfirmPassword)
+            return BadRequest("Passwords do not match");
 
-        return Ok(events);
+        var existingUser = await _userManager.FindByEmailAsync(dto.Email);
+        if (existingUser != null)
+            return BadRequest("User already exists");
+
+        var user = new ApplicationUser
+        {
+            UserName = dto.Email,
+            Email = dto.Email,
+            PasswordHash=dto.Password,
+            IsOAuth = false
+        };
+
+        var result = await _userManager.CreateAsync(user, dto.Password);
+
+        if (!result.Succeeded)
+            return BadRequest(result.Errors);
+
+        return Ok(result);
+
     }
 
     //[HttpPost]
-    //public async Task<IActionResult> Edit()
+    //public async Task<ActionResult> RegisterUserOauth([FromBody] )
     //{
     //    var user = await _userManager.GetUserAsync(User);
 
@@ -57,5 +70,4 @@ public class UserController : ControllerBase
 
     //    return Ok(model);
     //}
-
 }

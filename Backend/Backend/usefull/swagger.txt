@@ -1,1 +1,6 @@
-﻿https://localhost:7051/openapi/v1.json
+﻿//swager
+https://localhost:7051/swagger
+
+
+//tylko do spr czy dziala
+https://localhost:7051/swagger/v1/swagger.json
