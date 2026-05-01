@@ -1,0 +1,12 @@
+<p>register-user works!</p>
+
+<main class="main">
+  <form [formGroup]="registerUserForm" (ngSubmit)="onSubmit()">
+    <label>Email login</label>
+    <input type="email" formControlName="email" />
+    <input type="password" formControlName="password"/>
+    <input type="confirmPassword" formControlName="confirmPassword"/>
+
+    <button type="submit">Register</button>
+  </form>
+</main>
