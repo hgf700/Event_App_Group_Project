@@ -3,7 +3,12 @@
 namespace Backend.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class TestController : ControllerBase
 {
+    public TestController(
+        )
+    {
+
+    }
 }

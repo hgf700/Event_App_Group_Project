@@ -1,1 +1,3 @@
-﻿﻿-- SELECT * FROM "Events"
+﻿-- SELECT * FROM "AspNetUsers"
+-- SELECT * FROM "Events"
+-- SELECT * FROM "UserEvents"
