@@ -1,5 +1,6 @@
 ﻿using Backend.Db;
 using Backend.Models.Model;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
 namespace Backend.Services;
