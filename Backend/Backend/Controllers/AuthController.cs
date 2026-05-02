@@ -37,9 +37,6 @@ public class AuthController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        if (dto.password != dto.confirmPassword)
-            return BadRequest("Passwords do not match");
-
         var existingUser = await _userManager.FindByEmailAsync(dto.email);
         if (existingUser != null)
             return BadRequest("User already exists");
@@ -61,9 +58,11 @@ public class AuthController : ControllerBase
 
             var jwt = _jwtService.GenerateToken(user);
 
-            return Redirect(
-                $"http://localhost:4200/login-callback?token={jwt}"
-            );
+            return Ok(new
+            {
+                token = jwt
+            });
+
         }
         catch (Exception ex) 
         {
@@ -90,12 +89,17 @@ public class AuthController : ControllerBase
 
         var jwt = _jwtService.GenerateToken(existingUser);
 
-        return Redirect(
-            $"http://localhost:4200/login-callback?token={jwt}"
-        );
+        //return Redirect(
+        //    $"http://localhost:4200/login-callback?token={jwt}"
+        //);
+
+        return Ok(new
+        {
+            token = jwt
+        });
     }
 
-    [HttpGet("signin-google")]
+    [HttpGet("sign-in-google")]
     public IActionResult SignInWithGoogle(string returnUrl = "/")
     {
 

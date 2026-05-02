@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { getAuthHeaders } from '../helpers/GetAuthHeaders';
+// import { loginUserNormDto } from '../Dto/loginUserNormDto';
+// import { registerUserNormDto } from '../Dto/registerUserNormDto';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -8,5 +10,24 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
+  registerUserNorm(email: string, password: string, repeatPassword: string) {
+    if (password !== repeatPassword) {
+      throw new Error('Hasła nie są identyczne');
+    }
+    
+    return this.http.post<{ token: string }>(
+      `${this.apiUrl}/register-norm`, {
+      email,
+      password
+    });
+  }
+
+  loginUserNorm(email: string, password: string) {
+    return this.http.post<{ token: string }>(
+      `${this.apiUrl}/login-norm`, {
+      email,
+      password
+    });
+  }
 
 }

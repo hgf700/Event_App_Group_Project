@@ -8,6 +8,8 @@ import {
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { AuthService } from '../../Services/AuthService'
+
 
 @Component({
   selector: 'app-register-user',
@@ -24,31 +26,35 @@ export class RegisterUser {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
+    private authService: AuthService,
   ) {
     this.registerUserForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
       confirmPassword: ['', [Validators.required]],
-
     });
   }
 
-
-
-    onSubmit() {
+  onSubmit() {
     this.submitted = true;
 
-    console.log(this.registerUserForm.errors);
+    if (this.registerUserForm.invalid) {
+      console.log(this.registerUserForm.errors);
+      return;
+    }
+
     console.log(this.registerUserForm.valid);
 
     const email = this.registerUserForm.value.email;
+    const password = this.registerUserForm.value.password;
+    const confirmPassword = this.registerUserForm.value.confirmPassword;
 
-    // this.devLogin.developingLogin(email).subscribe({
-    //   next: (res) => {
-    //     localStorage.setItem('jwt', res.token);
-    //     this.router.navigate(['/login-callback']);
-    //   },
-    //   error: (err) => alert(err.error),
-    // });
+    this.authService.registerUserNorm(email,password,confirmPassword).subscribe({
+      next: (res) => {
+        localStorage.setItem('jwt', res.token);
+        this.router.navigate(['/login-callback']);
+      },
+      error: (err) => alert(err.error),
+    });
   }
 }

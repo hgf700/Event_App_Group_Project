@@ -3,9 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import {
-  FormBuilder,
   FormGroup,
-  Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
 
@@ -19,21 +17,23 @@ import {
 export class Home {
   developingLoginForm!: FormGroup;
   submitted = false;
+  private apiUrl = 'https://localhost:7051/api/auth';
+
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
   ) {}
 
-  loginWithGoogle() {
-    window.location.href = 'https://localhost:7051/api/auth/signin-google';
+  loginWithGoogleOauth() {
+    window.location.href = `${this.apiUrl}/sign-in-google`;
   }
 
-  registerUser() {
+  registerUserView() {
     this.router.navigate(['/register-user']);
   }
 
-  loginUser() {
+  loginUserView() {
     this.router.navigate(['/login-user']);
   }
 }
