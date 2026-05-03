@@ -23,12 +23,12 @@ DotNetEnv.Env.Load();
 
 builder.Services.AddControllersWithViews();
 
-//AWS
+////AWS
 //var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 //builder.Services.AddDbContext<ApplicationDbContext>(options =>
 //    options.UseSqlServer(connectionString));
 
-//stare ms sql
+////stare ms sql
 //builder.Services.AddDbContext<ApplicationDbContext>(options =>
 //    options.UseSqlServer(
 //        builder.Configuration.GetConnectionString("DefaultConnection")
@@ -40,14 +40,12 @@ var user = Environment.GetEnvironmentVariable("POSTGRES_USER");
 var pass = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD");
 var port = Environment.GetEnvironmentVariable("POSTGRES_PORT");
 
-
 //db
 var connectionString =
     $"Host={host};Port={port};Database={db};Username={user};Password={pass}";
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
-
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()

@@ -64,7 +64,7 @@ namespace WebApplication1.Controllers
 
             var uniqueEvents = allEvents
                 .GroupBy(e => e.NameOfEvent)
-                .Select(g => g.First())
+                .Select(g => g.First()) 
                 .ToList();
 
             var totalEvents = uniqueEvents.Count;
@@ -286,7 +286,7 @@ namespace WebApplication1.Controllers
             }
         }
 
-                [HttpPost("SaveEvent")]
+        [HttpPost("SaveEvent")]
         public async Task<IActionResult> SaveEvent(int id)
         {
             var ev = await _context.Events.FindAsync(id);

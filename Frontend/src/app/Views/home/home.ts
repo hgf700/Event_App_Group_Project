@@ -12,7 +12,6 @@ import { AuthService } from '../../Services/AuthService'
   styleUrl: './home.css',
 })
 export class Home {
-  // private apiUrl = 'https://localhost:7051/api/v1/auth';
    
   constructor(
     private router: Router,

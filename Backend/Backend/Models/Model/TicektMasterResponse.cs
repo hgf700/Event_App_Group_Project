@@ -26,7 +26,6 @@ public class PageInfo
     public int Number { get; set; }
 }
 
-
 public class Embedded
 {
     [JsonPropertyName("events")]
@@ -54,16 +53,15 @@ public class EventObject
     public Dates Dates { get; set; }
 
     [JsonPropertyName("_embedded")]
-    public EventEmbedded Embedded { get; set; } // np. venue info
+    public EventEmbedded Embedded { get; set; }
 }
 
 public class Image
 {
-
     [JsonPropertyName("url")]
     public string Url { get; set; }
-
 }
+
 public class Dates
 {
     [JsonPropertyName("start")]
@@ -102,6 +100,7 @@ public class Address
     [JsonPropertyName("line1")]
     public string Line1 { get; set; }
 }
+
 public class City
 {
     [JsonPropertyName("name")]

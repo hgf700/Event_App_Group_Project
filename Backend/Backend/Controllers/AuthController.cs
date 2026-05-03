@@ -89,10 +89,6 @@ public class AuthController : ControllerBase
 
         var jwt = _jwtService.GenerateToken(existingUser);
 
-        //return Redirect(
-        //    $"http://localhost:4200/login-callback?token={jwt}"
-        //);
-
         return Ok(new
         {
             token = jwt

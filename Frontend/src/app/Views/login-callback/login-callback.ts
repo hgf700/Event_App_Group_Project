@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { SeedService } from '../../Services/SeedService'
 
 @Component({
   selector: 'app-login-callback',
@@ -15,11 +16,12 @@ export class LoginCallback implements OnInit{
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private seedService: SeedService,
   ) {}
 
-  // manageFriend() {
-  //   this.router.navigate(['/manage-friends']);
-  // }
+  seedData() {
+    this.router.navigate(['/seed-data']);
+  }
 
   ngOnInit(): void {
     const tokenFromUrl = this.route.snapshot.queryParamMap.get('token');
