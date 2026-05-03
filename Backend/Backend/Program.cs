@@ -69,6 +69,7 @@ builder.Services.AddScoped<SmsService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<OauthRefreshService>();
 builder.Services.AddSingleton<TokenEncryptionService>();
+builder.Services.AddScoped<JwtService>();
 
 builder.Services.AddAuthorization();
 

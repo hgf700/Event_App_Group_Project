@@ -76,12 +76,12 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             new ApplicationUser
             {
                 Id = "user-1",
-                UserName = "testuser",
-                NormalizedUserName = "TESTUSER",
-                Email = "test@example.com",
-                NormalizedEmail = "TEST@EXAMPLE.COM",
+                UserName = "a",
+                NormalizedUserName = "A",
+                Email = "a",
+                NormalizedEmail = "A",
                 EmailConfirmed = true,
-                PasswordHash = "AQAAAAEAACcQAAAAEFAKEHASH",
+                PasswordHash = "A",
                 IsOAuth = false,
                 GoogleId = null,
                 SecurityStamp = "STATIC-SECURITY-STAMP-1",

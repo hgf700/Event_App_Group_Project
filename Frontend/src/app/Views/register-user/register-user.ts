@@ -29,21 +29,22 @@ export class RegisterUser {
     private authService: AuthService,
   ) {
     this.registerUserForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required]],
       password: ['', [Validators.required]],
       confirmPassword: ['', [Validators.required]],
     });
   }
-
+// , Validators.email
   onSubmit() {
     this.submitted = true;
 
     if (this.registerUserForm.invalid) {
       console.log(this.registerUserForm.errors);
+      console.log(this.registerUserForm.get('email')?.errors);
+      console.log(this.registerUserForm.get('password')?.errors);
+      console.log(this.registerUserForm.get('confirmPassword')?.errors);
       return;
     }
-
-    console.log(this.registerUserForm.valid);
 
     const email = this.registerUserForm.value.email;
     const password = this.registerUserForm.value.password;

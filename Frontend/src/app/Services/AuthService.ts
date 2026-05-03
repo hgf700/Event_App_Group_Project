@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { getAuthHeaders } from '../helpers/GetAuthHeaders';
-// import { loginUserNormDto } from '../Dto/loginUserNormDto';
-// import { registerUserNormDto } from '../Dto/registerUserNormDto';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private apiUrl = 'https://localhost:7051/api/auth';
+  private apiUrl = 'https://localhost:7051/api/v1/auth';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient
+  ) {}
 
   registerUserNorm(email: string, password: string, repeatPassword: string) {
     if (password !== repeatPassword) {
@@ -30,4 +30,7 @@ export class AuthService {
     });
   }
 
+  loginWithGoogleOauth() {
+    window.location.href = `${this.apiUrl}/sign-in-google`;
+  }
 }

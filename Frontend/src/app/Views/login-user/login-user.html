@@ -2,9 +2,10 @@
 
 <main class="main">
   <form [formGroup]="loginUserForm" (ngSubmit)="onSubmit()">
-    <label>Email login</label>
-    <input type="email" formControlName="email" />
-    <input type="password" formControlName="password"/>
+    <label>Email</label>
+    <input type="email" formControlName="email" /> <br>
+    <label>password</label>
+    <input type="password" formControlName="password"/><br>
 
     <button type="submit">Login</button>
   </form>

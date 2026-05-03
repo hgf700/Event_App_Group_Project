@@ -14,7 +14,7 @@ using System.Security.Claims;
 namespace Backend.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/[controller]")]
 public class AuthController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
@@ -145,7 +145,8 @@ public class AuthController : ControllerBase
             {
                 UserName = email,
                 Email = email,
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                IsOAuth=true
             };
 
             var createResult = await _userManager.CreateAsync(user);
