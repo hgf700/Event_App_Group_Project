@@ -5,11 +5,13 @@ using Backend.Models.Model;
 using Backend.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
 using System.Security.Claims;
+using Twilio.TwiML.Messaging;
 
 namespace Backend.Controllers;
 
@@ -32,6 +34,9 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register-norm")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<postCreateUserNormDto>> RegisterUserNormal([FromBody] postCreateUserNormDto dto)
     {
         if (!ModelState.IsValid)
@@ -66,12 +71,15 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex) 
         {
-            //_logger.LogError(ex, "Register error");
-            return BadRequest("register error");
+            Console.WriteLine(ex);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
 
     [HttpPost("login-norm")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> LoginUserNorm([FromBody] postLoginUserNormDto dto)
     {
         if (!ModelState.IsValid)
@@ -82,21 +90,29 @@ public class AuthController : ControllerBase
         if (existingUser == null)
             return Unauthorized("Invalid email or password");
 
-        var validPassword = await _userManager.CheckPasswordAsync(existingUser, dto.password);
-
-        if (!validPassword)
-            return Unauthorized("Invalid email or password");
-
-        var jwt = _jwtService.GenerateToken(existingUser);
-
-        return Ok(new
+        try
         {
-            token = jwt
-        });
+            var validPassword = await _userManager.CheckPasswordAsync(existingUser, dto.password);
+
+            if (!validPassword)
+                return Unauthorized("Invalid email or password");
+
+            var jwt = _jwtService.GenerateToken(existingUser);
+
+            return Ok(new
+            {
+                token = jwt
+            });
+        }
+        catch (Exception ex) {
+            Console.WriteLine(ex);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+        }
+        
     }
 
     [HttpGet("sign-in-google")]
-    public IActionResult SignInWithGoogle(string returnUrl = "/")
+    public ActionResult SignInWithGoogle(string returnUrl = "/")
     {
 
         var redirectUrl = Url.Action(
@@ -111,57 +127,82 @@ public class AuthController : ControllerBase
     }
 
     [HttpGet("google-response")]
-    public async Task<IActionResult> GoogleResponse()
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult> GoogleResponse()
     {
-        //var authenticateResult = await HttpContext.AuthenticateAsync(
-        //    GoogleDefaults.AuthenticationScheme);
-
-        var authenticateResult = await HttpContext.AuthenticateAsync(
-            IdentityConstants.ExternalScheme);
-
-        if (!authenticateResult.Principal.Identities.Any(i => i.AuthenticationType == "Google"))
-            return Unauthorized();
-
-        if (!authenticateResult.Succeeded)
-            return Unauthorized();
-
-        var principal = authenticateResult.Principal;
-
-        var email = principal.FindFirstValue(ClaimTypes.Email);
-        var googleId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        if (email == null)
-            return BadRequest("Brak emaila z Google");
-
-        var user = await _userManager.FindByEmailAsync(email);
-
-        if (user == null)
+        try
         {
-            user = new ApplicationUser
+            var authenticateResult = await HttpContext.AuthenticateAsync(
+                IdentityConstants.ExternalScheme);
+
+            if (authenticateResult?.Principal == null)
+                return Unauthorized();
+
+            if (!authenticateResult.Succeeded)
+                return Unauthorized();
+
+            if (!authenticateResult.Principal.Identities
+                .Any(i => i.AuthenticationType == "Google"))
             {
-                UserName = email,
-                Email = email,
-                EmailConfirmed = true,
-                IsOAuth=true
-            };
+                return Unauthorized();
+            }
 
-            var createResult = await _userManager.CreateAsync(user);
+            var principal = authenticateResult.Principal;
 
-            if (!createResult.Succeeded)
-                return BadRequest(createResult.Errors);
+            var email = principal.FindFirstValue(ClaimTypes.Email);
+            var googleId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var loginInfo = new UserLoginInfo(
-                "Google",
-                googleId,
-                "Google");
+            if (string.IsNullOrWhiteSpace(email))
+                return BadRequest("Brak emaila z Google");
 
-            await _userManager.AddLoginAsync(user, loginInfo);
+            if (string.IsNullOrWhiteSpace(googleId))
+                return BadRequest("Brak Google ID");
+
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                user = new ApplicationUser
+                {
+                    UserName = email,
+                    Email = email,
+                    EmailConfirmed = true,
+                    IsOAuth = true
+                };
+
+                var createResult = await _userManager.CreateAsync(user);
+
+                if (!createResult.Succeeded)
+                {
+                    return BadRequest(createResult.Errors);
+                }
+
+                var loginInfo = new UserLoginInfo(
+                    "Google",
+                    googleId,
+                    "Google");
+
+                var addLoginResult = await _userManager.AddLoginAsync(user, loginInfo);
+
+                if (!addLoginResult.Succeeded)
+                {
+                    return BadRequest(addLoginResult.Errors);
+                }
+            }
+
+            var jwt = _jwtService.GenerateToken(user);
+
+            return Redirect(
+                $"http://localhost:4200/login-callback?token={jwt}"
+            );
         }
-
-        var jwt = _jwtService.GenerateToken(user);
-
-        return Redirect(
-            $"http://localhost:4200/login-callback?token={jwt}"
-        );
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+        }
     }
 }

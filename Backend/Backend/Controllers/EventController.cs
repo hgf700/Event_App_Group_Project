@@ -1,5 +1,6 @@
 ﻿using Backend.Db;
 using Backend.Identity;
+using Backend.Models.Dto;
 using Backend.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -44,9 +45,20 @@ public class EventController : ControllerBase
         _seedDbService= seedDbService; 
     }
 
+    [HttpGet("get-events")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<getEventsDto>> GetEvents(int id)
+    {
 
-    [HttpGet("search-event/{id}")]
-    public async Task<ActionResult> SearchEvent(int id)
+        return Ok();
+    }
+
+    [HttpGet("search-event/{city}")]
+    public async Task<ActionResult> SearchEvent(string city)
     {
 
         return Ok();

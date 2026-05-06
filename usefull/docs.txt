@@ -1,0 +1,9 @@
+http status code
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status
+
+return Ok();
+return Unauthorized();
+return Forbid();
+return NotFound();
+return Conflict();
+return NoContent();

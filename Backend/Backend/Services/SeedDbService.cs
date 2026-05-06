@@ -11,7 +11,6 @@ public class SeedDbService
     private readonly HttpClient _httpClient;
     private readonly ApplicationDbContext _context;
 
-
     public SeedDbService(HttpClient httpClient,
         ApplicationDbContext context
         )

@@ -8,9 +8,9 @@ namespace Backend.Services;
 public class OauthRefreshService
 {
     private readonly ApplicationDbContext _context;
-    private readonly TokenEncryptionService _encryption;
+    private readonly RefreshTokenEncryptionService _encryption;
 
-    public OauthRefreshService(ApplicationDbContext context, TokenEncryptionService encryption)
+    public OauthRefreshService(ApplicationDbContext context, RefreshTokenEncryptionService encryption)
     {
         _context = context;
         _encryption = encryption;

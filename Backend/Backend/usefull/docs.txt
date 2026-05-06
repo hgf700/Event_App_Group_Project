@@ -11,3 +11,13 @@ https://docs.stripe.com/api/checkout/sessions/object?lang=dotnet  //platnosc opc
 
 pdf
 https://www.questpdf.com/getting-started.html
+
+http status code
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status
+
+return Ok();
+return Unauthorized();
+return Forbid();
+return NotFound();
+return Conflict();
+return NoContent();

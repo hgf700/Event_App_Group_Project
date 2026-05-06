@@ -2,11 +2,11 @@
 
 namespace Backend.Services;
 
-public class TokenEncryptionService
+public class RefreshTokenEncryptionService
 {
     private readonly IDataProtector _protector;
 
-    public TokenEncryptionService(IDataProtectionProvider provider)
+    public RefreshTokenEncryptionService(IDataProtectionProvider provider)
     {
         _protector = provider.CreateProtector("OAuthTokenProtection");
     }
