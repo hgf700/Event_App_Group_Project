@@ -1,0 +1,20 @@
+http status code
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status
+
+return Ok();
+return Unauthorized();
+return Forbid();
+return NotFound();
+return Conflict();
+return NoContent();
+
+forbiden 403
+✔️ user jest uwierzytelniony (ma token / login)
+❌ ale nie ma dostępu do zasobu (role)
+
+Conflict 409
+Używasz jej wtedy, gdy żądanie jest poprawne składniowo, ale nie może zostać wykonane, bo „koliduje” ze stanem 
+danych na serwerze np:
+Duplikat danych
+Naruszenie unikalności biznesowej
+Konflikt wersji / edycji (ktoś edytował rekord, który już zmienił ktoś inny:)

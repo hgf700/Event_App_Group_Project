@@ -1,6 +1,6 @@
 ﻿using Backend.Db;
 using Backend.Identity;
-using Backend.Models.Dto;
+using Backend.Models.Dto.RelAuth;
 using Backend.Models.Model;
 using Backend.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -154,6 +154,7 @@ public class AuthController : ControllerBase
 
             var email = principal.FindFirstValue(ClaimTypes.Email);
             var googleId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
+
 
             if (string.IsNullOrWhiteSpace(email))
                 return BadRequest("Brak emaila z Google");

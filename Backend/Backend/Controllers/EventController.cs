@@ -1,6 +1,6 @@
 ﻿using Backend.Db;
 using Backend.Identity;
-using Backend.Models.Dto;
+using Backend.Models.Dto.RelEvent;
 using Backend.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using Stripe;
+using System.Security.Claims;
 using Twilio.Http;
 
 namespace Backend.Controllers;
@@ -47,19 +49,102 @@ public class EventController : ControllerBase
 
     [HttpGet("get-events")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<getEventsDto>> GetEvents(int id)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
-        return Ok();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) 
+            return Unauthorized();
+
+        try
+        {
+            var ev = await _context.Events.ToListAsync();
+
+            var dto = ev.Select(ev => new getEventsDto
+            {
+                typeOfEvent = ev.TypeOfEvent,
+                nameOfEvent=ev.NameOfEvent,
+                urlOfEvent=ev.UrlOfEvent,
+                photoUrl= ev.PhotoUrl,
+                startOfEvent = ev.StartOfEvent,
+                address = ev.Address,
+                city = ev.City,
+                country = ev.Country,
+                nameOfClub = ev.NameOfClub
+            }).ToList();
+
+            return Ok(dto);
+        }
+        catch (Exception ex) {
+            Console.WriteLine(ex);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+        }
+    }
+
+    [HttpGet("event-details/{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<getEventDetailsDto>> EventDetails(int id)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+            return Unauthorized();
+
+        try
+        {
+            var ev = await _context.Events.FindAsync(id);
+            if (ev == null)
+                return NotFound();
+
+            var dto = new getEventDetailsDto
+            {
+                typeOfEvent = ev.TypeOfEvent,
+                nameOfEvent = ev.NameOfEvent,
+                urlOfEvent = ev.UrlOfEvent,
+                photoUrl = ev.PhotoUrl,
+                startOfEvent = ev.StartOfEvent,
+                address = ev.Address,
+                city = ev.City,
+                country = ev.Country,
+                nameOfClub = ev.NameOfClub
+            };
+
+            return Ok(dto);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+        }
     }
 
     [HttpGet("search-event/{city}")]
-    public async Task<ActionResult> SearchEvent(string city)
+    public async Task<ActionResult<getSingleEventDto>> SearchEvent(string city)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+            return Unauthorized();
+
+        try
+        {
+
+        }
+        catch (Exception ex) {
+            Console.WriteLine(ex);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+        }
 
         return Ok();
     }
@@ -67,6 +152,10 @@ public class EventController : ControllerBase
     [HttpPost("seed-database")]
     public async Task<ActionResult> SeedDatabase()
     {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+            return Unauthorized();
+
         try
         {
             await _seedDbService.FetchAndSaveEventsAsync();
@@ -78,11 +167,8 @@ public class EventController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(new
-            {
-                message = "Error while seeding database",
-                error = ex.Message
-            });
+            Console.WriteLine(ex);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
 

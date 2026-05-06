@@ -1,4 +1,4 @@
-﻿namespace Backend.Models.Dto;
+﻿namespace Backend.Models.Dto.RelAuth;
 
 public class postRegisterUserDto
 {
