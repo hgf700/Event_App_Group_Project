@@ -1,7 +1,9 @@
 ﻿using Backend.Db;
+using Backend.Models.Dto.RelEvent;
 using Backend.Models.Model;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using Superpower.Model;
 using System.Text.Json;
 
 namespace Backend.Services;
@@ -19,92 +21,91 @@ public class SeedDbService
         _context = context;
     }
 
-    public async Task FetchAndSaveEventsAsync()
+    public async Task<List<getEventsDto>> FetchAndSaveEventsAsync(string? city = null)
     {
-        try
+        var finalCity = string.IsNullOrWhiteSpace(city) ? "Warsaw" : city;
+
+        string apiKey = Environment.GetEnvironmentVariable("TICKETMASTER_API_KEY");
+
+        if (string.IsNullOrWhiteSpace(apiKey))
+            return new List<getEventsDto>();
+
+        string baseUrl = "https://app.ticketmaster.com/discovery/v2/events.json";
+
+        var query = new Dictionary<string, string?>
         {
-            string? apiKey = Environment.GetEnvironmentVariable("TICKETMASTER_API_KEY");
+            { "apikey", apiKey },
+            { "size", "20" },
+            { "countryCode", "PL" },
+            { "city", finalCity }
+        };
 
-            if (string.IsNullOrWhiteSpace(apiKey))
+        string url = QueryHelpers.AddQueryString(baseUrl, query);
+
+        HttpResponseMessage response = await _httpClient.GetAsync(url);
+
+        if (!response.IsSuccessStatusCode)
+            return new List<getEventsDto>();
+
+        string json = await response.Content.ReadAsStringAsync();
+
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
+        var ticketmasterData = JsonSerializer.Deserialize<TicketmasterResponse>(json, options);
+
+        if (ticketmasterData?.Embedded?.Events == null)
+            return new List<getEventsDto>();
+
+        var result = new List<getEventsDto>();
+
+        foreach (var ev in ticketmasterData.Embedded.Events)
+        {
+            bool exists = await _context.Events
+                .AnyAsync(e => e.ExternalEventId == ev.Id);
+
+            if (exists)
+                continue;
+
+            var venue = ev.Embedded?.Venues?.FirstOrDefault();
+
+            var newEvent = new Event
             {
-                Console.WriteLine("Brak TICKETMASTER_API_KEY");
-                return;
-            }
+                ExternalEventId = ev.Id,
+                TypeOfEvent = ev.Type,
+                NameOfEvent = ev.Name,
+                UrlOfEvent = ev.Url,
+                PhotoUrl = ev.Images?.FirstOrDefault()?.Url,
+                StartOfEvent = DateTime.TryParse(ev.Dates?.Start?.DateTime, out var eventStart)
+                    ? eventStart.ToUniversalTime()
+                    : DateTime.UtcNow,
 
-            string baseUrl = "https://app.ticketmaster.com/discovery/v2/events.json";
-
-            var query = new Dictionary<string, string?>
-            {
-                { "apikey", apiKey },
-                { "size", "20" },
-                { "countryCode", "PL" }
+                Address = venue?.Address?.Line1,
+                City = venue?.City?.Name,
+                Country = venue?.Country?.Name,
+                NameOfClub = venue?.Name,
             };
 
-            string url = QueryHelpers.AddQueryString(baseUrl, query);
+            await _context.Events.AddAsync(newEvent);
 
-            HttpResponseMessage response = await _httpClient.GetAsync(url);
-
-            if (!response.IsSuccessStatusCode)
+            result.Add(new getEventsDto
             {
-                Console.WriteLine($"Błąd API: {response.StatusCode}");
-                return;
-            }
-
-            string json = await response.Content.ReadAsStringAsync();
-
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-
-            var ticketmasterData = JsonSerializer.Deserialize<TicketmasterResponse>(json, options);
-
-            if (ticketmasterData?.Embedded?.Events == null ||
-                !ticketmasterData.Embedded.Events.Any())
-            {
-                Console.WriteLine("Brak wydarzeń do zapisania.");
-                return;
-            }
-
-            foreach (var ev in ticketmasterData.Embedded.Events)
-            {
-                bool exists = await _context.Events
-                    .AnyAsync(e => e.ExternalEventId == ev.Id);
-
-                if (exists)
-                    continue;
-
-                var venue = ev.Embedded?.Venues?.FirstOrDefault();
-
-                var newEvent = new Event
-                {
-                    ExternalEventId = ev.Id,
-                    TypeOfEvent = ev.Type,
-                    NameOfEvent = ev.Name,
-                    UrlOfEvent = ev.Url,
-                    PhotoUrl = ev.Images?.FirstOrDefault()?.Url,
-                    StartOfEvent = DateTime.TryParse(
-                        ev.Dates?.Start?.DateTime,
-                        out var eventStart)
-                        ? eventStart.ToUniversalTime()
-                        : DateTime.UtcNow,
-
-                    Address = venue?.Address?.Line1,
-                    City = venue?.City?.Name,
-                    Country = venue?.Country?.Name,
-                    NameOfClub = venue?.Name,
-                };
-
-                await _context.Events.AddAsync(newEvent);
-            }
-
-            await _context.SaveChangesAsync();
-
-            Console.WriteLine("Wydarzenia zostały zapisane.");
+                typeOfEvent = newEvent.TypeOfEvent,
+                nameOfEvent = newEvent.NameOfEvent,
+                urlOfEvent = newEvent.UrlOfEvent,
+                photoUrl = newEvent.PhotoUrl,
+                startOfEvent = newEvent.StartOfEvent,
+                address = newEvent.Address,
+                city = newEvent.City,
+                country = newEvent.Country,
+                nameOfClub = newEvent.NameOfClub
+            });
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Błąd podczas seedowania danych: {ex.Message}");
-        }
+
+        await _context.SaveChangesAsync();
+
+        return result;
     }
 }

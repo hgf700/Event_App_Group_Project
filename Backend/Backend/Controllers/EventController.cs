@@ -127,8 +127,13 @@ public class EventController : ControllerBase
         }
     }
 
-    [HttpGet("search-event/{city}")]
-    public async Task<ActionResult<getSingleEventDto>> SearchEvent(string city)
+    //tu nei wiem czy dobrze trzeba spr
+    [HttpGet("search-event")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<getEventsQueryDto>> SearchEvent([FromQuery] string city, int pageNumber = 1)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -139,14 +144,28 @@ public class EventController : ControllerBase
 
         try
         {
+            var ev = await _seedDbService.FetchAndSaveEventsAsync(city);
+
+            var dto = ev.Select(ev => new getEventsQueryDto
+            {
+                typeOfEvent = ev.typeOfEvent,
+                nameOfEvent = ev.nameOfEvent,
+                urlOfEvent = ev.urlOfEvent,
+                photoUrl = ev.photoUrl,
+                startOfEvent = ev.startOfEvent,
+                address = ev.address,
+                city = ev.city,
+                country = ev.country,
+                nameOfClub = ev.nameOfClub
+            }).ToList();
+
+            return Ok(dto);
 
         }
         catch (Exception ex) {
             Console.WriteLine(ex);
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
-
-        return Ok();
     }
 
     [HttpPost("seed-database")]
