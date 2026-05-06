@@ -2,16 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { SeedService } from '../../Services/SeedService'
+import { SeedService } from '../../Services/EventService'
 
 @Component({
-  selector: 'app-seed-data',
+  selector: 'app-seed-database',
   imports: [CommonModule, RouterModule],
-  templateUrl: './seed-data.html',
-  styleUrl: './seed-data.css',
+  templateUrl: './seed-database.html',
+  styleUrl: './seed-database.css',
 })
-export class SeedData implements OnInit {
-
+export class SeedDatabase implements OnInit{
   constructor(
     private seedService: SeedService,
   ) {}
@@ -24,6 +23,7 @@ export class SeedData implements OnInit {
     this.seedService.seedDataBase().subscribe({
       next: (data) => {
         console.log('seedDataBase')
+        console.log(data)
       },
       error: (err) => {
         console.error(err);
@@ -31,5 +31,4 @@ export class SeedData implements OnInit {
       },
     });
   }
-
 }

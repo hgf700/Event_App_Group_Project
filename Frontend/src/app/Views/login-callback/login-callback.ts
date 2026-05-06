@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { SeedService } from '../../Services/SeedService'
+import { SeedService } from '../../Services/EventService'
 
 @Component({
   selector: 'app-login-callback',
@@ -20,7 +20,7 @@ export class LoginCallback implements OnInit{
   ) {}
 
   seedData() {
-    this.router.navigate(['/seed-data']);
+    this.router.navigate(['/seed-database']);
   }
 
   ngOnInit(): void {

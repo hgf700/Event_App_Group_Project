@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SeedData } from './seed-data';
+import { SeedDatabase } from './seed-database';
 
-describe('SeedData', () => {
-  let component: SeedData;
-  let fixture: ComponentFixture<SeedData>;
+describe('SeedDatabase', () => {
+  let component: SeedDatabase;
+  let fixture: ComponentFixture<SeedDatabase>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SeedData],
+      imports: [SeedDatabase],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SeedData);
+    fixture = TestBed.createComponent(SeedDatabase);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

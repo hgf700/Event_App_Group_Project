@@ -4,7 +4,7 @@ import { LoginCallback } from '../Views/login-callback/login-callback';
 import { Home } from '../Views/home/home';
 import { LoginUser } from '../Views/login-user/login-user';
 import { RegisterUser } from '../Views/register-user/register-user';
-import { SeedData } from '../Views/seed-data/seed-data';
+import { SeedDatabase } from '../Views/seed-database/seed-database';
 
 
 export const routes: Routes = [
@@ -12,7 +12,7 @@ export const routes: Routes = [
   { path: 'login-user', component: LoginUser },
   { path: 'register-user', component: RegisterUser },
   { path: 'login-callback', component: LoginCallback },
-  { path: 'seed-data', component: SeedData },
+  { path: 'seed-database', component: SeedDatabase },
 
 ];
 
