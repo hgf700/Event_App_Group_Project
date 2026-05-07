@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { SeedService } from '../../Services/EventService'
 
 @Component({
   selector: 'app-login-callback',
@@ -16,11 +15,14 @@ export class LoginCallback implements OnInit{
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private seedService: SeedService,
   ) {}
 
   seedData() {
     this.router.navigate(['/seed-database']);
+  }
+
+  eventsView() {
+    this.router.navigate(['/get-events']);
   }
 
   ngOnInit(): void {

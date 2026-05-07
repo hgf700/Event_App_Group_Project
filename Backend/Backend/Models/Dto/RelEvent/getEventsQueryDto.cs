@@ -18,7 +18,7 @@ public class getEventsQueryDto
     [Required]
     [MinLength(1)]
     [MaxLength(100)]
-    public string? city { get; set; }
+    public string city { get; set; }
     public string? country { get; set; }
     public string? nameOfClub { get; set; }
 }

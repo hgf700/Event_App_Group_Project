@@ -1,5 +1,6 @@
 
 export interface eventDto {
+  eventId?: number;
   typeOfEvent?: string;
   nameOfEvent?: string;
   urlOfEvent?: string;

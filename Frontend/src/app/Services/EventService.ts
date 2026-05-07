@@ -5,7 +5,7 @@ import { getAuthHeaders } from '../helpers/GetAuthHeaders';
 import {eventDto} from '../Dto/eventDto'
 
 @Injectable({ providedIn: 'root' })
-export class SeedService {
+export class EventService {
   private apiUrl = 'https://localhost:7051/api/v1/Event';
   event: eventDto[] = [];
 
