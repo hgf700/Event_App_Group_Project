@@ -20,9 +20,9 @@ export class EventService {
     );
   }
 
-  eventDetails(id: number){
+  eventDetails(eventId: number){
     return this.http.get<eventDto>(
-      `${this.apiUrl}/event-details/${id}`,
+      `${this.apiUrl}/event-details/${eventId}`,
       { headers: getAuthHeaders() }
     );
   }

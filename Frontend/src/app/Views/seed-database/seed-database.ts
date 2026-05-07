@@ -11,8 +11,9 @@ import { EventService } from '../../Services/EventService'
   styleUrl: './seed-database.css',
 })
 export class SeedDatabase implements OnInit{
-  constructor(
-    private eventService: EventService,
+  loading = false;
+
+  constructor(private eventService: EventService,
   ) {}
 
   ngOnInit(): void {
@@ -20,12 +21,15 @@ export class SeedDatabase implements OnInit{
   }
 
   seedDataBase() {
+    this.loading=true;
     this.eventService.seedDataBase().subscribe({
       next: (data) => {
         console.log('seedDataBase')
         console.log(data)
+        this.loading = false;
       },
       error: (err) => {
+        this.loading = false;
         console.error(err);
         alert('Nie udało się seedDataBase');
       },

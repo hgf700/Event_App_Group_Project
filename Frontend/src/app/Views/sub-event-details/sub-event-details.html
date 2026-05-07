@@ -1,1 +1,16 @@
-<p>sub-event-details works!</p>
+
+<main>
+@if(event){
+    <p>{{event.address}}</p>
+    <p>{{event.city}}</p>
+    <p>{{event.country}}</p>
+    <p>{{event.nameOfClub}}</p>
+    <p>{{event.nameOfEvent}}</p>
+    <p>{{event.photoUrl}}</p>
+    <p>{{event.startOfEvent}}</p>
+    <p>{{event.typeOfEvent}}</p>
+    <p>{{event.urlOfEvent}}</p>
+} @else {
+    <p>Brak events</p>
+}
+</main>

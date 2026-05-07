@@ -1,0 +1,8 @@
+! dziala jak promise i mowi ze ten obiekt bedzie istnial
+<button (click)="eventDetails(e.eventId!)">eventDetails</button>
+
+czasem nie wykrywa zmian wtedy trzeba
+import { ChangeDetectorRef } from '@angular/core';
+private cdr: ChangeDetectorRef,
+this.cdr.detectChanges();
+

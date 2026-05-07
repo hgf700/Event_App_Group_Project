@@ -6,8 +6,8 @@ import {
   MatDialogModule,
 } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
-
-type ViewMode = 'list' | 'create';
+import { EventService } from '../../Services/EventService'
+import { eventDto } from '../../Dto/eventDto'
 
 @Component({
   selector: 'app-sub-event-details',
@@ -17,7 +17,7 @@ type ViewMode = 'list' | 'create';
   styleUrl: './sub-event-details.css',
 })
 export class SubEventDetails implements OnInit{
-  viewMode: ViewMode = 'list';
+  event?: eventDto;
   loading = false;
 
   eventId!: number;
@@ -25,9 +25,25 @@ export class SubEventDetails implements OnInit{
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { eventId: number },
     private dialogRef: MatDialogRef<SubEventDetails>,
-) {}
+    private eventService: EventService,
+  ) {}
 
   ngOnInit(): void {
-    this.eventId = this.data.eventId;
+    this.getEventDetails();
+  }
+
+  getEventDetails(){
+    this.loading=true;
+    this.eventService.eventDetails(this.eventId).subscribe({
+      next: (data) => {
+        this.event = data;
+        this.loading=false;
+      },
+      error: (err) => {
+        this.loading=false;
+        console.error(err);
+        alert('Nie udało się getEvents');
+      },
+    });
   }
 }
