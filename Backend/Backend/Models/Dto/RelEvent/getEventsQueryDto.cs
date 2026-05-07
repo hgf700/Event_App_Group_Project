@@ -15,6 +15,8 @@ public class getEventsQueryDto
     public DateTime? startOfEvent { get; set; }
     public string? address { get; set; }
 
+    [Required]
+    [MinLength(1)]
     [MaxLength(100)]
     public string? city { get; set; }
     public string? country { get; set; }
