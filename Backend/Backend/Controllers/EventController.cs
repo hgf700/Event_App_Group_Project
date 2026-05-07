@@ -26,7 +26,7 @@ public class EventController : ControllerBase
     private readonly SmsService _smsservice;
     private readonly EmailService _emailService;
     private readonly OauthRefreshService _OauthRefreshService;
-    private readonly SeedDbService _seedDbService;
+    private readonly DownloadFromApi _seedDbService;
 
     public EventController(
             ApplicationDbContext context,
@@ -35,7 +35,7 @@ public class EventController : ControllerBase
             EmailService emailService,
             UserManager<ApplicationUser> userManager,
             OauthRefreshService OauthRefreshService,
-            SeedDbService seedDbService
+            DownloadFromApi seedDbService
         )
     {
         _context = context;

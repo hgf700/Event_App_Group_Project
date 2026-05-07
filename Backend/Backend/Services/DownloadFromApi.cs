@@ -8,12 +8,12 @@ using System.Text.Json;
 
 namespace Backend.Services;
 
-public class SeedDbService
+public class DownloadFromApi
 {
     private readonly HttpClient _httpClient;
     private readonly ApplicationDbContext _context;
 
-    public SeedDbService(HttpClient httpClient,
+    public DownloadFromApi(HttpClient httpClient,
         ApplicationDbContext context
         )
     {
@@ -23,7 +23,7 @@ public class SeedDbService
 
     public async Task<List<getEventsDto>> FetchAndSaveEventsAsync(string? city = null)
     {
-        var finalCity = string.IsNullOrWhiteSpace(city) ? "Warsaw" : city;
+        var finalCity = string.IsNullOrWhiteSpace(city) ? "warsaw" : city;
 
         string apiKey = Environment.GetEnvironmentVariable("TICKETMASTER_API_KEY");
 
@@ -36,7 +36,6 @@ public class SeedDbService
         {
             { "apikey", apiKey },
             { "size", "20" },
-            { "countryCode", "PL" },
             { "city", finalCity }
         };
 

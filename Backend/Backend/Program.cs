@@ -68,9 +68,9 @@ builder.Services.AddScoped<QrCodeService>();
 builder.Services.AddScoped<SmsService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<OauthRefreshService>();
-builder.Services.AddSingleton<TokenEncryptionService>();
+builder.Services.AddSingleton<RefreshTokenEncryptionService>();
 builder.Services.AddScoped<JwtService>();
-builder.Services.AddScoped<SeedDbService>();
+builder.Services.AddScoped<DownloadFromApi>();
 
 builder.Services.AddAuthorization();
 
