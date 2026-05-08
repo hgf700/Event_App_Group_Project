@@ -13,11 +13,11 @@ namespace Backend.Controllers;
 //[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
-public class PaymentsController
+public class PaymentsController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ApplicationDbContext _context;
-    private string YOUR_DOMAIN = "";
+    private readonly string YOUR_DOMAIN = "http://localhost:4200";
 
     public PaymentsController(UserManager<ApplicationUser> userManager,
         ApplicationDbContext context
@@ -27,48 +27,65 @@ public class PaymentsController
         _userManager = userManager;
     }
 
-    //[HttpPost("buy-ticket/{id}")]
-    //public async Task<ActionResult> BuyTicket(int id)
-    //{
-    //    if (!ModelState.IsValid)
-    //        return BadRequest(ModelState);
+    [HttpPost("buy-ticket/{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult> BuyTicket(int id)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
-    //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-    //    if (userId == null)
-    //        return Unauthorized();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+            return Unauthorized();
 
-    //    var ev = await _context.Events.FindAsync(id);
-    //    if (ev == null)
-    //        return NotFound();
+        var ev = await _context.Events.FindAsync(id);
+        if (ev == null)
+            return NotFound();
+        try
+        {
+            StripeConfiguration.ApiKey = Environment.GetEnvironmentVariable("STRIP_SEC_KEY");
 
-    //    StripeConfiguration.ApiKey = Environment.GetEnvironmentVariable("STRIP_SEC_KEY");
+            if (string.IsNullOrWhiteSpace(StripeConfiguration.ApiKey))
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "STRIPE_SECRET_KEY is missing");
+            }
 
-    //    var options = new SessionCreateOptions
-    //    {
-    //        LineItems = new List<SessionLineItemOptions>
-    //            {
-    //                new SessionLineItemOptions
-    //                {
-    //                    PriceData = new SessionLineItemPriceDataOptions
-    //                    {
-    //                        Currency = "pln",
-    //                        UnitAmount = 1000,
-    //                        ProductData = new SessionLineItemPriceDataProductDataOptions
-    //                        {
-    //                            Name = "Bilet na wydarzenie",
-    //                        },
-    //                    },
-    //                    Quantity = 1,
-    //                },
-    //            },
+            var options = new SessionCreateOptions
+            {
+                LineItems = new List<SessionLineItemOptions>
+                {
+                    new SessionLineItemOptions
+                    {
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            Currency = "pln",
+                            UnitAmount = 1000,
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = "Bilet na wydarzenie",
+                            },
+                        },
+                        Quantity = 1,
+                    },
+                },
 
-    //        Mode = "payment",
-    //        SuccessUrl = $"{YOUR_DOMAIN}/Event/PaymentSuccess?id={id}",
-    //        CancelUrl = $"{YOUR_DOMAIN}/Event/PaymentFailed",
-    //    };
-    //    var service = new SessionService();
-    //    Session session = service.Create(options);
+                Mode = "payment",
+                SuccessUrl = $"{YOUR_DOMAIN}/PaymentSuccess?id={id}",
+                CancelUrl = $"{YOUR_DOMAIN}/PaymentFailed",
+            };
+            var service = new SessionService();
+            Session session = service.Create(options);
 
-    //    return Redirect(session.Url); // przekierowuje do strony Stripe Checkout
-    //}
+            return Ok(new { url = session.Url });
+        }
+        catch (Exception ex) {
+            Console.WriteLine(ex);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+        }
+    }
+    
 }

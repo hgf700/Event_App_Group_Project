@@ -6,13 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers;
 
-//[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
-public class PaymentCallbackController
+public class PaymentCallbackController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ApplicationDbContext _context;
+    private string YOUR_DOMAIN = "";
     private readonly QrCodeService _qrCodeService;
     private readonly SmsService _smsservice;
     private readonly EmailService _emailService;
@@ -27,11 +27,11 @@ public class PaymentCallbackController
         )
     {
         _context = context;
-        _qrCodeService = qrCodeService;
-        _smsservice = smsservice;
-        _emailService = emailService;
         _userManager = userManager;
-        _OauthRefreshService = OauthRefreshService;
+        _qrCodeService = qrCodeService;
+        _smsservice= smsservice;
+        _emailService= emailService;
+        _OauthRefreshService = OauthRefreshService; 
     }
 
     //[HttpGet("PaymentSuccess")]
