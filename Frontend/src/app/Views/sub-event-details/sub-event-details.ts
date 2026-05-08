@@ -6,6 +6,7 @@ import {
   MatDialogModule,
 } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
+import { ChangeDetectorRef } from '@angular/core';
 import { EventService } from '../../Services/EventService'
 import { eventDto } from '../../Dto/eventDto'
 
@@ -19,16 +20,17 @@ import { eventDto } from '../../Dto/eventDto'
 export class SubEventDetails implements OnInit{
   event?: eventDto;
   loading = false;
-
   eventId!: number;
 
   constructor(
+    private cdr: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: { eventId: number },
     private dialogRef: MatDialogRef<SubEventDetails>,
     private eventService: EventService,
   ) {}
 
   ngOnInit(): void {
+    this.eventId = this.data.eventId;
     this.getEventDetails();
   }
 
@@ -38,6 +40,7 @@ export class SubEventDetails implements OnInit{
       next: (data) => {
         this.event = data;
         this.loading=false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.loading=false;

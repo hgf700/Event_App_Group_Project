@@ -66,6 +66,7 @@ public class EventController : ControllerBase
 
             var dto = ev.Select(ev => new getEventsDto
             {
+                eventId = ev.Id,
                 typeOfEvent = ev.TypeOfEvent,
                 nameOfEvent=ev.NameOfEvent,
                 urlOfEvent=ev.UrlOfEvent,
