@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
 import { EventService } from '../../Services/EventService';
 import { PaymentService } from '../../Services/PaymentService';
-import { eventDto } from '../../Dto/getEventDto';
+import { getEventDto } from '../../Dto/getEventDto';
 
 @Component({
   selector: 'app-sub-event-details',
@@ -15,7 +15,7 @@ import { eventDto } from '../../Dto/getEventDto';
   styleUrl: './sub-event-details.css',
 })
 export class SubEventDetails implements OnInit {
-  event?: eventDto;
+  event?: getEventDto;
   loading = false;
   eventId!: number;
 

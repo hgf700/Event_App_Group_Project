@@ -1,11 +1,12 @@
 ﻿using Backend.Db;
 using Backend.Identity;
 using Backend.Models.Dto.RelEvent;
+using Backend.Patterns;
 using Backend.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace Backend.Controllers;
 
@@ -28,6 +29,16 @@ public class SearchAndImportEventsController : ControllerBase
         _seedDbService = seedDbService;
     }
 
+    //nie moge to lower poniewaz najpierw pytam z bazy a w bazie mam z duzej 1 a potem z api a api i tak pewnie robi to lower
+    private string NormalizeEvent(string? value)
+    {
+        return new Pipe()
+            .Add(new TrimFilter())
+            .Add(new WhitespacesFilter())
+            .Execute(new StringContext { Value = value })
+            .Value!;
+    }
+
     [HttpGet("search-event")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -44,7 +55,7 @@ public class SearchAndImportEventsController : ControllerBase
 
         try
         {
-            city = city.Trim();
+            city = NormalizeEvent(city);
 
             var events = await _context.Events
                 .Where(e => e.City == city && e.StartOfEvent >= DateTime.UtcNow)

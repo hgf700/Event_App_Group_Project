@@ -60,22 +60,8 @@ export class SearchAndImportEvents implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.getEvents();
+    
   }
 
-  getEvents() {
-    this.loading = true;
-    this.eventService.getEvents().subscribe({
-      next: (data) => {
-        this.events = data ?? [];
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        this.loading = false;
-        console.error(err);
-        alert('Nie udało się getEvents');
-      },
-    });
-  }
+
 }
