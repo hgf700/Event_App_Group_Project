@@ -9,10 +9,8 @@ public class Event
     public string? ExternalEventId { get; set; }
     public string? TypeOfEvent { get; set; }
     public string? NameOfEvent { get; set; }
-
     [Url]
     public string? UrlOfEvent { get; set; }
-
     [Url]
     public string? PhotoUrl { get; set; }
     public DateTime? StartOfEvent { get; set; }

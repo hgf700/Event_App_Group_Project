@@ -17,6 +17,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<ApplicationUser> Users { get; set; }
     public DbSet<Event> Events { get; set; }
     public DbSet<UserEvent> UserEvents { get; set; }
+    public DbSet<NotificationLog> NotificationLogs { get; set; }
     public DbSet<ExternalGoogleOAuthToken> ExternalGoogleOAuthTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -40,5 +41,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasIndex(x => new { x.UserId, x.Provider })
             .IsUnique();
 
+        modelBuilder.Entity<NotificationLog>()
+            .HasOne(u => u.User)
+            .WithMany()
+            .HasForeignKey(u => u.UserId);
+
+        modelBuilder.Entity<NotificationLog>()
+            .HasOne(e => e.Event)
+            .WithMany()
+            .HasForeignKey(e => e.EventId);
     }
 }
