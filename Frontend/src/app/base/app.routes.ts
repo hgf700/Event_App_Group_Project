@@ -9,10 +9,7 @@ import { GetEvents } from '../Views/get-events/get-events';
 import { SubEventDetails } from '../Views/sub-event-details/sub-event-details';
 import { PaymentSuccess } from '../Views/payment-success/payment-success';
 import { PaymentFailed } from '../Views/payment-failed/payment-failed';
-
-
-
-
+import { SearchAndImportEvents } from '../Views/search-and-import-events/search-and-import-events';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -24,12 +21,8 @@ export const routes: Routes = [
   { path: 'sub-event-details/:id', component: SubEventDetails },
   { path: 'payment-success', component: PaymentSuccess },
   { path: 'payment-failed', component: PaymentFailed },
-
-
-
-
+  { path: 'search-and-import-events', component: SearchAndImportEvents },
 ];
-
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

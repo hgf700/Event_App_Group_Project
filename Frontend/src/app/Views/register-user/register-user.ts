@@ -2,14 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import { AuthService } from '../../Services/AuthService'
-
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { AuthService } from '../../Services/AuthService';
 
 @Component({
   selector: 'app-register-user',
@@ -34,7 +28,7 @@ export class RegisterUser {
       confirmPassword: ['', [Validators.required]],
     });
   }
-// , Validators.email
+  // , Validators.email
   onSubmit() {
     this.submitted = true;
 
@@ -50,7 +44,7 @@ export class RegisterUser {
     const password = this.registerUserForm.value.password;
     const confirmPassword = this.registerUserForm.value.confirmPassword;
 
-    this.authService.registerUserNorm(email,password,confirmPassword).subscribe({
+    this.authService.registerUserNorm(email, password, confirmPassword).subscribe({
       next: (res) => {
         localStorage.setItem('jwt', res.token);
         this.router.navigate(['/login-callback']);

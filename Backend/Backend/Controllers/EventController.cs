@@ -1,6 +1,7 @@
 ﻿using Backend.Db;
 using Backend.Identity;
 using Backend.Models.Dto.RelEvent;
+using Backend.Models.Model;
 using Backend.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
 using System.Security.Claims;
+using System.Text.Json;
 using Twilio.Http;
 
 namespace Backend.Controllers;
@@ -22,28 +24,16 @@ public class EventController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly QrCodeService _qrCodeService;
-    private readonly SmsService _smsservice;
-    private readonly EmailService _emailService;
-    private readonly OauthRefreshService _OauthRefreshService;
     private readonly DownloadFromApi _seedDbService;
 
     public EventController(
             ApplicationDbContext context,
-            QrCodeService qrCodeService,
-            SmsService smsservice,
-            EmailService emailService,
             UserManager<ApplicationUser> userManager,
-            OauthRefreshService OauthRefreshService,
             DownloadFromApi seedDbService
         )
     {
         _context = context;
-        _qrCodeService = qrCodeService;
-        _smsservice = smsservice;
-        _emailService = emailService;
         _userManager = userManager;
-        _OauthRefreshService = OauthRefreshService;
         _seedDbService= seedDbService; 
     }
 
@@ -129,47 +119,6 @@ public class EventController : ControllerBase
         }
     }
 
-    //tu nei wiem czy dobrze trzeba spr
-    [HttpGet("search-event")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<getEventsQueryDto>> SearchEvent([FromQuery] string city, int pageNumber = 1)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId == null)
-            return Unauthorized();
-
-        try
-        {
-            var ev = await _seedDbService.FetchAndSaveEventsAsync(city);
-
-            var dto = ev.Select(ev => new getEventsQueryDto
-            {
-                typeOfEvent = ev.typeOfEvent,
-                nameOfEvent = ev.nameOfEvent,
-                urlOfEvent = ev.urlOfEvent,
-                photoUrl = ev.photoUrl,
-                startOfEvent = ev.startOfEvent,
-                address = ev.address,
-                city = ev.city,
-                country = ev.country,
-                nameOfClub = ev.nameOfClub
-            }).ToList();
-
-            return Ok(dto);
-
-        }
-        catch (Exception ex) {
-            Console.WriteLine(ex);
-            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
-        }
-    }
-
     //[HttpPost("save-event")]
     //public async Task<IActionResult> SaveEvent(int id)
     //{
@@ -212,4 +161,6 @@ public class EventController : ControllerBase
         }
     }
 
+    //tu nei wiem czy dobrze trzeba 
+ 
 }

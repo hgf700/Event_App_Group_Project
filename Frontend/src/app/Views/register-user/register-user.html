@@ -3,11 +3,11 @@
 <main class="main">
   <form [formGroup]="registerUserForm" (ngSubmit)="onSubmit()">
     <label>Email</label>
-    <input type="email" formControlName="email" /> <br>
+    <input type="email" formControlName="email" placeholder="email" /> <br />
     <label>password</label>
-    <input type="password" formControlName="password"/><br>
+    <input type="password" formControlName="password" placeholder="password" /><br />
     <label>confirmPassword</label>
-    <input type="password" formControlName="confirmPassword"/><br>
+    <input type="password" formControlName="confirmPassword" placeholder="confirmPassword" /><br />
 
     <button type="submit">Register</button>
   </form>

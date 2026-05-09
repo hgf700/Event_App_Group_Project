@@ -1,24 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { ChangeDetectorRef } from '@angular/core';
-import { eventDto } from '../../Dto/eventDto'
-import { EventService } from '../../Services/EventService'
-import { SubEventDetails } from '../sub-event-details/sub-event-details'
+import { getEventDto } from '../../Dto/getEventDto';
+import { EventService } from '../../Services/EventService';
+import { SubEventDetails } from '../sub-event-details/sub-event-details';
 
 @Component({
   selector: 'app-get-events',
   standalone: true,
-  imports: [CommonModule, RouterModule,MatDialogModule],
+  imports: [CommonModule, RouterModule, MatDialogModule],
   templateUrl: './get-events.html',
   styleUrl: './get-events.css',
 })
-export class GetEvents implements OnInit{
-  events: eventDto[]=[];
+export class GetEvents implements OnInit {
+  events: getEventDto[] = [];
   loading = false;
-  
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -46,7 +45,7 @@ export class GetEvents implements OnInit{
   }
 
   getEvents() {
-    this.loading=true;
+    this.loading = true;
     this.eventService.getEvents().subscribe({
       next: (data) => {
         this.events = data ?? [];
@@ -60,9 +59,8 @@ export class GetEvents implements OnInit{
       },
     });
   }
-  
-  returnToLoginCallback(){
+
+  returnToLoginCallback() {
     this.router.navigate(['/login-callback']);
   }
-  
 }

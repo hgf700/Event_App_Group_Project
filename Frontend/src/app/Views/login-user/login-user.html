@@ -3,9 +3,9 @@
 <main class="main">
   <form [formGroup]="loginUserForm" (ngSubmit)="onSubmit()">
     <label>Email</label>
-    <input type="email" formControlName="email" /> <br>
+    <input type="email" formControlName="email" placeholder="email" /> <br />
     <label>password</label>
-    <input type="password" formControlName="password"/><br>
+    <input type="password" formControlName="password" placeholder="password" /><br />
 
     <button type="submit">Login</button>
   </form>

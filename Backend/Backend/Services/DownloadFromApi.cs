@@ -91,6 +91,7 @@ public class DownloadFromApi
 
             result.Add(new getEventsDto
             {
+                eventId = newEvent.Id,
                 typeOfEvent = newEvent.TypeOfEvent,
                 nameOfEvent = newEvent.NameOfEvent,
                 urlOfEvent = newEvent.UrlOfEvent,

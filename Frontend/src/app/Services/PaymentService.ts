@@ -7,31 +7,29 @@ export class PaymentService {
   private apiUrl = 'https://localhost:7051/api/v1/Payments';
   private apiUrlCallback = 'https://localhost:7051/api/v1/PaymentCallback';
 
-  constructor(
-    private http: HttpClient
-  ) {}
+  constructor(private http: HttpClient) {}
 
   buyTicketPaymentProcess(eventId: number) {
     return this.http.post<{ url: string }>(
-      `${this.apiUrl}/buy-ticket/${eventId}`, 
+      `${this.apiUrl}/buy-ticket/${eventId}`,
       {},
-      {headers: getAuthHeaders()}
+      { headers: getAuthHeaders() },
     );
   }
 
-  paymentProcessSuccess(eventId: number){
+  paymentProcessSuccess(eventId: number) {
     return this.http.post<{ eventId: number }>(
-      `${this.apiUrlCallback}/payment-success/${eventId}`, 
+      `${this.apiUrlCallback}/payment-success/${eventId}`,
       {},
-      {headers: getAuthHeaders()}
+      { headers: getAuthHeaders() },
     );
   }
 
-  paymentProcessFailed(){
+  paymentProcessFailed() {
     return this.http.post(
-      `${this.apiUrlCallback}/payment-failed`, 
+      `${this.apiUrlCallback}/payment-failed`,
       {},
-      {headers: getAuthHeaders()}
+      { headers: getAuthHeaders() },
     );
   }
 }

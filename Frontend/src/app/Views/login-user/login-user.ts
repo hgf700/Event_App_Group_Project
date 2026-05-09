@@ -2,13 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import { AuthService } from '../../Services/AuthService'
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { AuthService } from '../../Services/AuthService';
 
 @Component({
   selector: 'app-login-user',
@@ -41,16 +36,14 @@ export class LoginUser {
       return;
     }
 
-    console.log(this.loginUserForm.valid);
-
     const email = this.loginUserForm.value.email;
     const password = this.loginUserForm.value.password;
 
-      this.authService.loginUserNorm(email,password).subscribe({
-        next: (res) => {
-          localStorage.setItem('jwt', res.token);
-          this.router.navigate(['/login-callback']);
-        },
+    this.authService.loginUserNorm(email, password).subscribe({
+      next: (res) => {
+        localStorage.setItem('jwt', res.token);
+        this.router.navigate(['/login-callback']);
+      },
       error: (err) => alert(err.error),
     });
   }

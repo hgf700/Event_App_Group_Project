@@ -1,0 +1,39 @@
+<p>search-and-import-events works!</p>
+
+<main class="main">
+  <form [formGroup]="searchAndImportEventsForm" (ngSubmit)="onSubmit()">
+    <label>city name</label>
+    <input type="city" formControlName="city" placeholder="city" /> <br />
+
+    <button type="submit">Search</button>
+  </form>
+</main>
+
+<!-- 
+<main>
+@if(events.length > 0){
+    <ul>
+        @for(e of events; track e.eventId){
+            <li>
+                {{e.eventId}}
+                {{e.address}}
+                {{e.city}}
+                {{e.country}}
+                {{e.nameOfClub}}
+                {{e.nameOfEvent}}
+                {{e.photoUrl}}
+                {{e.startOfEvent}}
+                {{e.typeOfEvent}}
+                {{e.urlOfEvent}}
+
+                <button (click)="eventDetails(e.eventId!)">
+                    eventDetails
+                </button>
+            </li>
+        }
+    </ul>
+
+} @else {
+    <p>Brak Search event</p>
+}
+</main> -->

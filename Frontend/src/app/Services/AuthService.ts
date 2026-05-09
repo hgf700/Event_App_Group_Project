@@ -6,27 +6,23 @@ import { getAuthHeaders } from '../helpers/GetAuthHeaders';
 export class AuthService {
   private apiUrl = 'https://localhost:7051/api/v1/auth';
 
-  constructor(
-    private http: HttpClient
-  ) {}
+  constructor(private http: HttpClient) {}
 
   registerUserNorm(email: string, password: string, repeatPassword: string) {
     if (password !== repeatPassword) {
       throw new Error('Hasła nie są identyczne');
     }
-    
-    return this.http.post<{ token: string }>(
-      `${this.apiUrl}/register-norm`, {
+
+    return this.http.post<{ token: string }>(`${this.apiUrl}/register-norm`, {
       email,
-      password
+      password,
     });
   }
 
   loginUserNorm(email: string, password: string) {
-    return this.http.post<{ token: string }>(
-      `${this.apiUrl}/login-norm`, {
+    return this.http.post<{ token: string }>(`${this.apiUrl}/login-norm`, {
       email,
-      password
+      password,
     });
   }
 

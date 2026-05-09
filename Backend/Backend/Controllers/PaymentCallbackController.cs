@@ -107,12 +107,11 @@ public class PaymentCallbackController : ControllerBase
         }
     }
 
-
     [HttpPost("payment-failed")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public ActionResult PaymentFailed()
+    public async Task<ActionResult> PaymentFailed()
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);

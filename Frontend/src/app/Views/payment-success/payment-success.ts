@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { PaymentService } from '../../Services/PaymentService'
+import { PaymentService } from '../../Services/PaymentService';
 
 @Component({
   selector: 'app-payment-success',
@@ -18,7 +18,7 @@ export class PaymentSuccess implements OnInit {
     private paymentService: PaymentService,
     private route: ActivatedRoute,
     private router: Router,
-  ){}
+  ) {}
 
   ngOnInit(): void {
     this.id = Number(this.route.snapshot.queryParamMap.get('id'));
@@ -26,15 +26,14 @@ export class PaymentSuccess implements OnInit {
     this.paymentSuccess();
   }
 
-  paymentSuccess(){
-    this.paymentService.paymentProcessSuccess(this.id)
-    .subscribe({
+  paymentSuccess() {
+    this.paymentService.paymentProcessSuccess(this.id).subscribe({
       next: () => {
-        console.log("Payment success");
+        console.log('Payment success');
       },
       error: (err) => {
         console.error(err);
-      }
+      },
     });
   }
 

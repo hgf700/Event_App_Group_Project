@@ -10,8 +10,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: './login-callback.html',
   styleUrl: './login-callback.css',
 })
-export class LoginCallback implements OnInit{
-
+export class LoginCallback implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,

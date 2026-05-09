@@ -4,6 +4,7 @@ namespace Backend.Models.Dto.RelEvent;
 
 public class getEventsQueryDto
 {
+    public int? eventId { get; set; }
     public string? typeOfEvent { get; set; }
     public string? nameOfEvent { get; set; }
 

@@ -1,5 +1,4 @@
-
-export interface eventDto {
+export interface getEventDto {
   eventId?: number;
   typeOfEvent?: string;
   nameOfEvent?: string;
