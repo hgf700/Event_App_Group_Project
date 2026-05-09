@@ -7,7 +7,7 @@ import { RegisterUser } from '../Views/register-user/register-user';
 import { SeedDatabase } from '../Views/seed-database/seed-database';
 import { GetEvents } from '../Views/get-events/get-events';
 import { SubEventDetails } from '../Views/sub-event-details/sub-event-details';
-import { PaymentSucess } from '../Views/payment-sucess/payment-sucess';
+import { PaymentSuccess } from '../Views/payment-success/payment-success';
 import { PaymentFailed } from '../Views/payment-failed/payment-failed';
 
 
@@ -22,7 +22,7 @@ export const routes: Routes = [
   { path: 'seed-database', component: SeedDatabase },
   { path: 'get-events', component: GetEvents },
   { path: 'sub-event-details/:id', component: SubEventDetails },
-  { path: 'payment-sucess/:id', component: PaymentSucess },
+  { path: 'payment-success/:id', component: PaymentSuccess },
   { path: 'payment-failed', component: PaymentFailed },
 
 

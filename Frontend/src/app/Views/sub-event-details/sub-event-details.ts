@@ -8,6 +8,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
 import { EventService } from '../../Services/EventService'
+import { PaymentService } from '../../Services/PaymentService'
 import { eventDto } from '../../Dto/eventDto'
 
 @Component({
@@ -27,6 +28,7 @@ export class SubEventDetails implements OnInit{
     @Inject(MAT_DIALOG_DATA) public data: { eventId: number },
     private dialogRef: MatDialogRef<SubEventDetails>,
     private eventService: EventService,
+    private paymentService: PaymentService,
   ) {}
 
   ngOnInit(): void {
@@ -48,5 +50,21 @@ export class SubEventDetails implements OnInit{
         alert('Nie udało się getEvents');
       },
     });
+  }
+
+  buyTicket(eventId: number) {
+    this.loading=true;
+    this.paymentService.buyTicketPaymentProcess(eventId)
+      .subscribe({
+        next: (res) => {
+          this.loading=true;
+          window.location.href = res.url;
+        },
+        error: (err) => {
+          this.loading=false;
+          console.error(err);
+          alert('Nie udało się buyTicket');
+        }
+      });
   }
 }

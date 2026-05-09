@@ -10,6 +10,11 @@
     <p>{{event.startOfEvent}}</p>
     <p>{{event.typeOfEvent}}</p>
     <p>{{event.urlOfEvent}}</p>
+    
+    <button (click)="buyTicket(event.eventId!)">
+        buyTicket
+    </button>
+
 } @else {
     <p>Brak events</p>
 }

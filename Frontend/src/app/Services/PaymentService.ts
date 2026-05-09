@@ -13,9 +13,13 @@ export class PaymentService {
 
   buyTicketPaymentProcess(eventId: number) {
     return this.http.post<{ url: string }>(
-      `${this.apiUrl}/buy-ticket/${eventId}`, {
-    });
+      `${this.apiUrl}/buy-ticket/${eventId}`, 
+      {},
+      {headers: getAuthHeaders()}
+    );
   }
+
+  
 
 //   paymentProcessSuccess(eventId: number){
 //     return this.http.post<{ eventId: number }>(

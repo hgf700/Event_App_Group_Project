@@ -45,6 +45,7 @@ public class PaymentsController : ControllerBase
         var ev = await _context.Events.FindAsync(id);
         if (ev == null)
             return NotFound();
+
         try
         {
             StripeConfiguration.ApiKey = Environment.GetEnvironmentVariable("STRIP_SEC_KEY");
@@ -74,8 +75,8 @@ public class PaymentsController : ControllerBase
                 },
 
                 Mode = "payment",
-                SuccessUrl = $"{YOUR_DOMAIN}/PaymentSuccess?id={id}",
-                CancelUrl = $"{YOUR_DOMAIN}/PaymentFailed",
+                SuccessUrl = $"{YOUR_DOMAIN}/payment-success?id={id}",
+                CancelUrl = $"{YOUR_DOMAIN}/payment-failed",
             };
             var service = new SessionService();
             Session session = service.Create(options);
