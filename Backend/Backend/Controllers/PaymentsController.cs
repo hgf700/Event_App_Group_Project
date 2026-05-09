@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Stripe;
 using Stripe.Checkout;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Controllers;
 
@@ -45,6 +46,12 @@ public class PaymentsController : ControllerBase
         var ev = await _context.Events.FindAsync(id);
         if (ev == null)
             return NotFound();
+
+        var alreadyBought = await _context.UserEvents
+            .AnyAsync(x => x.UserId == userId && x.EventId == id);
+
+        if (alreadyBought)
+            return BadRequest("User already owns this ticket");
 
         try
         {

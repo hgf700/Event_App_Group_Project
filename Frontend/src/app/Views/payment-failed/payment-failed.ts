@@ -16,6 +16,7 @@ export class PaymentFailed implements OnInit {
   constructor(
     private paymentService: PaymentService,
     private route: ActivatedRoute,
+    private router: Router,
   ){}
 
   ngOnInit(): void {
@@ -32,5 +33,9 @@ export class PaymentFailed implements OnInit {
         console.error(err);
       }
     });
+  }
+
+  returnToEvents() {
+    this.router.navigate(['/get-events']);
   }
 }

@@ -60,4 +60,9 @@ export class GetEvents implements OnInit{
       },
     });
   }
+  
+  returnToLoginCallback(){
+    this.router.navigate(['/login-callback']);
+  }
+  
 }

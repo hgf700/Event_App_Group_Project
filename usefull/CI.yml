@@ -43,7 +43,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: Frontend/front
+        working-directory: Frontend
 
     steps:
       - uses: actions/checkout@v4
@@ -51,7 +51,7 @@ jobs:
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: Frontend/front/package-lock.json
+          cache-dependency-path: Frontend/package-lock.json
 
       - run: npm ci
       - run: npm run build
@@ -62,7 +62,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: Frontend/front
+        working-directory: Frontend
 
     steps:
       - uses: actions/checkout@v4
@@ -70,7 +70,7 @@ jobs:
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: Frontend/front/package-lock.json
+          cache-dependency-path: Frontend/package-lock.json
 
       - run: npm ci
       - run: npm test -- --watch=false --browsers=ChromeHeadless

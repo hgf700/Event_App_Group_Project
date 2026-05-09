@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using QuestPDF.Fluent;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Controllers;
 
@@ -38,6 +39,11 @@ public class PaymentCallbackController : ControllerBase
     }
 
     [HttpPost("payment-success/{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> PaymentSuccess(int id)
     {
         if (!ModelState.IsValid)
@@ -53,8 +59,11 @@ public class PaymentCallbackController : ControllerBase
 
         try
         {
-            string accessToken;
-            accessToken = await _oauthRefreshService.EnsureValidAccessTokenAsync(userId);
+            var alreadyExists = await _context.UserEvents
+                .AnyAsync(x => x.UserId == userId && x.EventId == id);
+
+            if (alreadyExists)
+                return BadRequest("Ticket already assigned");
 
             var userEvent = new UserEvent
             {
@@ -100,8 +109,18 @@ public class PaymentCallbackController : ControllerBase
 
 
     [HttpPost("payment-failed")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public ActionResult PaymentFailed()
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+            return Unauthorized();
+
         return Ok();
     }
 }

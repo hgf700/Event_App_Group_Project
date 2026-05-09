@@ -1,0 +1,2 @@
+widok z wyszukiwaniem eventu
+widok do edycji usera o ile nie oauth?

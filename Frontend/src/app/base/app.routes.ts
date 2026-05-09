@@ -22,7 +22,7 @@ export const routes: Routes = [
   { path: 'seed-database', component: SeedDatabase },
   { path: 'get-events', component: GetEvents },
   { path: 'sub-event-details/:id', component: SubEventDetails },
-  { path: 'payment-success/:id', component: PaymentSuccess },
+  { path: 'payment-success', component: PaymentSuccess },
   { path: 'payment-failed', component: PaymentFailed },
 
 

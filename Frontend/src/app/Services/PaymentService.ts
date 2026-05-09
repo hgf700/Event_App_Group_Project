@@ -29,7 +29,7 @@ export class PaymentService {
 
   paymentProcessFailed(){
     return this.http.post(
-      `${this.apiUrlCallback}/payment-failed}`, 
+      `${this.apiUrlCallback}/payment-failed`, 
       {},
       {headers: getAuthHeaders()}
     );
