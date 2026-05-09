@@ -19,18 +19,19 @@ export class PaymentService {
     );
   }
 
-  
+  paymentProcessSuccess(eventId: number){
+    return this.http.post<{ eventId: number }>(
+      `${this.apiUrlCallback}/payment-success/${eventId}`, 
+      {},
+      {headers: getAuthHeaders()}
+    );
+  }
 
-//   paymentProcessSuccess(eventId: number){
-//     return this.http.post<{ eventId: number }>(
-//       `${this.apiUrlCallback}/PaymentSuccess/${eventId}`, {
-//     });
-//   }
-
-//   paymentProcessFailed(eventId: number){
-//     return this.http.post<{ eventId: number }>(
-//       `${this.apiUrlCallback}/PaymentFailed/${eventId}`, {
-//     });
-//   }
-
+  paymentProcessFailed(){
+    return this.http.post(
+      `${this.apiUrlCallback}/payment-failed}`, 
+      {},
+      {headers: getAuthHeaders()}
+    );
+  }
 }

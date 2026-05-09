@@ -1,103 +1,107 @@
 ﻿using Backend.Db;
 using Backend.Identity;
+using Backend.Models.Model;
 using Backend.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using QuestPDF.Fluent;
+using System.Security.Claims;
 
 namespace Backend.Controllers;
 
+//[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
 public class PaymentCallbackController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ApplicationDbContext _context;
-    private string YOUR_DOMAIN = "";
     private readonly QrCodeService _qrCodeService;
     private readonly SmsService _smsservice;
     private readonly EmailService _emailService;
-    private readonly OauthRefreshService _OauthRefreshService;
+    private readonly OauthRefreshService _oauthRefreshService;
 
     public PaymentCallbackController(UserManager<ApplicationUser> userManager,
         ApplicationDbContext context,
         QrCodeService qrCodeService,
         SmsService smsservice,
         EmailService emailService,
-        OauthRefreshService OauthRefreshService
+        OauthRefreshService oauthRefreshService
         )
     {
         _context = context;
         _userManager = userManager;
         _qrCodeService = qrCodeService;
-        _smsservice= smsservice;
-        _emailService= emailService;
-        _OauthRefreshService = OauthRefreshService; 
+        _smsservice = smsservice;
+        _emailService = emailService;
+        _oauthRefreshService = oauthRefreshService;
     }
 
-    //[HttpGet("PaymentSuccess")]
-    //public async Task<IActionResult> PaymentSuccess([FromQuery] int id)
-    //{
-    //    var ev = await _context.Events.FindAsync(id);
-    //    if (ev == null)
-    //        return NotFound();
+    [HttpPost("payment-success/{id}")]
+    public async Task<ActionResult> PaymentSuccess(int id)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
-    //    var user = await _userManager.GetUserAsync(User);
-    //    if (user == null)
-    //        return Unauthorized();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+            return Unauthorized();
 
-    //    string accessToken;
-    //    try
-    //    {
-    //        accessToken = await _OauthRefreshService.EnsureValidAccessTokenAsync(user.Id);
-    //    }
-    //    catch
-    //    {
-    //        // <<< POPRAWKA: Użyj Redirect zamiast RedirectToPage w kontrolerze MVC >>>
-    //        return Redirect("/Identity/Account/Login"); // lub RedirectToAction("Login", "Account", new { area = "Identity" });
-    //    }
+        var ev = await _context.Events.FindAsync(id);
+        if (ev == null)
+            return NotFound();
 
-    //    // Reszta logiki bez zmian
-    //    var userEvent = new UserEvent
-    //    {
-    //        EventId = ev.Id,
-    //        UserId = user.Id
-    //    };
-    //    _context.UserEvents.Add(userEvent);
-    //    await _context.SaveChangesAsync();
+        try
+        {
+            string accessToken;
+            accessToken = await _oauthRefreshService.EnsureValidAccessTokenAsync(userId);
 
-    //    _qrService.GenerateQrCode(ev.UrlOfEvent);
+            var userEvent = new UserEvent
+            {
+                EventId = ev.Id,
+                UserId = userId
+            };
 
-    //    bool.TryParse(Environment.GetEnvironmentVariable("TWILIO_SMS_SEND_STATE"), out bool twilio_sms_state);
-    //    if (twilio_sms_state)
-    //    {
-    //        _smsservice.SendSMS(ev.UrlOfEvent);
-    //    }
+            _context.UserEvents.Add(userEvent);
+            await _context.SaveChangesAsync();
 
-    //    var doc = new InvoiceDocument(
-    //        eventName: ev.NameOfEvent,
-    //        eventDate: ev.StartOfEvent.ToString(),
-    //        eventAddress: ev.Address,
-    //        eventType: ev.TypeOfEvent
-    //    );
+            _qrCodeService.GenerateQrCode(ev.UrlOfEvent);
 
-    //    string resourcesPath = Path.Combine(Directory.GetCurrentDirectory(), "Resources");
-    //    Directory.CreateDirectory(resourcesPath); // na wszelki wypadek
-    //    string pdfPath = Path.Combine(resourcesPath, "bilet.pdf");
-    //    doc.GeneratePdf(pdfPath);
+            bool.TryParse(Environment.GetEnvironmentVariable("TWILIO_SMS_SEND_STATE"), out bool twilio_sms_state);
+            if (twilio_sms_state)
+            {
+                _smsservice.SendSMS(ev.UrlOfEvent);
+            }
 
-    //    string docelowyemail = Environment.GetEnvironmentVariable("TARGET_EMAIL");
-    //    _emailService.SendEmail(docelowyemail, ev.UrlOfEvent);
+            var doc = new InvoiceDocument(
+                eventName: ev.NameOfEvent,
+                eventDate: ev.StartOfEvent.ToString(),
+                eventAddress: ev.Address,
+                eventType: ev.TypeOfEvent
+            );
 
-    //    ViewBag.Message = "Płatność zakończona sukcesem!";
-    //    return View("Success");
-    //}
+            string resourcesPath = Path.Combine(Directory.GetCurrentDirectory(), "Resources");
+            Directory.CreateDirectory(resourcesPath); // na wszelki wypadek
+
+            string pdfPath = Path.Combine(resourcesPath, "bilet.pdf");
+            doc.GeneratePdf(pdfPath);
+
+            string docelowyemail = Environment.GetEnvironmentVariable("TARGET_EMAIL");
+            _emailService.SendEmail(docelowyemail, ev.UrlOfEvent);
+
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+        }
+    }
 
 
-    //[HttpGet("PaymentFailed")]
-    //public IActionResult PaymentFailed()
-    //{
-    //    // Logika po nieudanej płatności
-    //    ViewBag.Message = "Płatność nie powiodła się. Spróbuj ponownie.";
-    //    return View("Failed"); // Zwróć widok "Failed.cshtml"
-    //}
+    [HttpPost("payment-failed")]
+    public ActionResult PaymentFailed()
+    {
+        return Ok();
+    }
 }

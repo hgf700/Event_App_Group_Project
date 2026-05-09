@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { PaymentService } from '../../Services/PaymentService'
 
 @Component({
   selector: 'app-payment-failed',
@@ -12,8 +13,24 @@ import { RouterModule } from '@angular/router';
 })
 export class PaymentFailed implements OnInit {
 
+  constructor(
+    private paymentService: PaymentService,
+    private route: ActivatedRoute,
+  ){}
+
   ngOnInit(): void {
-    // const id = this.route.snapshot.queryParamMap.get('id');
-    // console.log(id);
+    this.paymentSuccess();
+  }
+
+   paymentSuccess(){
+    this.paymentService.paymentProcessFailed()
+    .subscribe({
+      next: () => {
+        console.log("paymentProcessFailed");
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
   }
 }
