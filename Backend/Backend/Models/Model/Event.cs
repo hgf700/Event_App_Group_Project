@@ -1,11 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace Backend.Models.Model;
 
+//[Index(nameof(EventId))]
 public class Event
 {
     [Key]
-    public int Id { get; set; }
+    public int? Id { get; set; }
     public string? ExternalEventId { get; set; }
     public string? TypeOfEvent { get; set; }
     public string? NameOfEvent { get; set; }

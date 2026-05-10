@@ -39,6 +39,7 @@ public class SearchAndImportEventsController : ControllerBase
             .Value!;
     }
 
+    // do poprawy napisane w todo
     [HttpGet("search-event")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -46,12 +47,15 @@ public class SearchAndImportEventsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<List<getEventsQueryDto>>> SearchEvent([FromQuery] string city)
     {
-        if (string.IsNullOrWhiteSpace(city))
-            return BadRequest("City is required.");
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null)
             return Unauthorized();
+        
+        if (string.IsNullOrWhiteSpace(city))
+            return BadRequest("City is required.");
 
         try
         {
@@ -63,6 +67,7 @@ public class SearchAndImportEventsController : ControllerBase
 
             if (!events.Any())
             {
+                // do poprawy napisane w todo
                 var dto = await _seedDbService.FetchAndSaveEventsAsync(city);
 
                 dto

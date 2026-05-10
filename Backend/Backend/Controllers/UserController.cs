@@ -1,14 +1,26 @@
 ﻿using Backend.Db;
 using Backend.Identity;
+using Backend.Models.Dto.RelEvent;
+using Backend.Models.Model;
+using Backend.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
+using Stripe;
+using System.Security.Claims;
+using System.Text.Json;
+using Twilio.Http;
 
 namespace Backend.Controllers;
 
 //[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
-public class UserController
+public class UserController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ApplicationDbContext _context;
@@ -21,69 +33,104 @@ public class UserController
         _context = context;
     }
 
-    //public async Task<IActionResult> Account()
-    //{
-    //    var user = await _userManager.GetUserAsync(User);
-    //    return View(user);
-    //}
+    [HttpGet("me")]
+    public async Task<ActionResult> MyAccount()
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
-    //public async Task<IActionResult> MyEvents()
-    //{
-    //    var user = await _userManager.GetUserAsync(User);
-    //    var events = await _context.UserEvents
-    //        .Include(ue => ue.Event)
-    //        .Where(ue => ue.UserId == user.Id)
-    //        .ToListAsync();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+            return Unauthorized();
 
-    //    return View(events);
-    //}
+        try
+        {
+            //var user = await _userManager.GetUserAsync(userId);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+        }
+    }
 
-    //public async Task<IActionResult> Edit()
-    //{
-    //    var user = await _userManager.GetUserAsync(User);
+    [HttpGet("my-tickets")]
+    public async Task<ActionResult> MyEvents()
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
-    //    if (user == null)
-    //        return NotFound();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+            return Unauthorized();
 
-    //    var model = new EditUserViewModel
-    //    {
-    //        Email = user.Email,
-    //        PhoneNumber = user.PhoneNumber
-    //    };
+        try
+        {
+            //var user = await _userManager.GetUserAsync(userId);
 
-    //    return View(model);
-    //}
+            //var events = await _context.UserEvents
+            //    .Include(ue => ue.Event)
+            //    .Where(ue => ue.UserId == user.Id)
+            //    .ToListAsync();
+
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+        }
+    }
+
+    [HttpGet("edit-user")]
+    public async Task<ActionResult> EditUserView()
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+            return Unauthorized();
+
+        try
+        {
+            return Ok();
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+        }
+    }
 
 
-    //[HttpPost]
-    //[ValidateAntiForgeryToken]
-    //public async Task<IActionResult> Edit(EditUserViewModel model)
-    //{
-    //    if (!ModelState.IsValid)
-    //        return View(model);
+    [HttpPost("edit-user")]
+    public async Task<ActionResult> EditUser()
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
-    //    var user = await _userManager.GetUserAsync(User);
-    //    if (user == null)
-    //        return NotFound();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+            return Unauthorized();
 
-    //    // Zmieniamy dane tylko jeśli coś się faktycznie zmienia
-    //    if (user.Email != model.Email)
-    //        user.Email = model.Email;
+        try
+        {
+            //if (user.Email != model.Email)
+            //    user.Email = model.Email;
 
-    //    if (user.PhoneNumber != model.PhoneNumber)
-    //        user.PhoneNumber = model.PhoneNumber;
+            //var result = await _userManager.UpdateAsync(user);
 
-    //    var result = await _userManager.UpdateAsync(user);
 
-    //    if (result.Succeeded)
-    //    {
-    //        TempData["StatusMessage"] = "Dane zostały zaktualizowane.";
-    //        return RedirectToAction("Details");
-    //    }
+            return Ok();
 
-    //    foreach (var error in result.Errors)
-    //        ModelState.AddModelError(string.Empty, error.Description);
-
-    //    return View(model);
-    //}
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+        }
+    }
 }
