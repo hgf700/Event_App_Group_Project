@@ -35,13 +35,23 @@ public class UserController : ControllerBase
         _context = context;
     }
 
-    [HttpGet("me")]
+    private string NormalizeUser(string? value)
+    {
+        return new Pipe()
+            .Add(new TrimFilter())
+            .Add(new EmptyIfNullOrWhitespaceFilter())
+            .Add(new NormalizeWhitespaceFilter())
+            .Execute(new StringContext { Value = value })
+            .Value!;
+    }
+
+    [HttpGet("current-user")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> MyAccount()
+    public async Task<ActionResult<getCurrentUserDto>> MyAccount()
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -56,7 +66,13 @@ public class UserController : ControllerBase
             if (user == null)
                 return NotFound();
 
-            return Ok(user);
+            var dto = new getCurrentUserDto
+            {
+                email = user.Email,
+            };
+
+            return Ok(dto);
+
         }
         catch (Exception ex)
         {
@@ -117,17 +133,7 @@ public class UserController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
-
-    private string NormalizeUser(string? value)
-    {
-        return new Pipe()
-            .Add(new TrimFilter())
-            .Add(new EmptyIfNullOrWhitespaceFilter())
-            .Add(new NormalizeWhitespaceFilter())
-            .Execute(new StringContext { Value = value })
-            .Value!;
-    }
-
+  
     [HttpPost("edit-user")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

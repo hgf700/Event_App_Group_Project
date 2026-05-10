@@ -7,3 +7,4 @@ logger do controllerow
 
 prometheus i grafana
 
+data anotation dla post i w modelu bazie

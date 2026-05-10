@@ -1,9 +1,14 @@
+<p>logged as:</p>
+@if (currentUser) {
+  <li>{{currentUser.email}}</li>
+}
+
 <main class="main">
   <p>login-callback works!</p>
 
   <button (click)="seedData()">seedData</button><br />
   <button (click)="eventsView()">eventsView</button><br />
   <button (click)="searchAndImportView()">searchAndImportView</button><br />
-
   
 </main>
+

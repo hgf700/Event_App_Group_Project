@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { UserService } from '../../Services/UserService';
+import { getCurrentUserDto } from '../../Dto/getCurrentUserDto';
 
 @Component({
   selector: 'app-login-callback',
@@ -11,9 +13,14 @@ import { RouterModule } from '@angular/router';
   styleUrl: './login-callback.css',
 })
 export class LoginCallback implements OnInit {
+  loading = false;
+  currentUser!: getCurrentUserDto;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private userService: UserService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   seedData() {
@@ -41,5 +48,21 @@ export class LoginCallback implements OnInit {
       console.error('Brak tokena – użytkownik niezalogowany');
       return;
     }
+  }
+
+  getCurrentUser() {
+    this.loading = true;
+    this.userService.getCurrentUser().subscribe({
+      next: (data) => {
+        this.currentUser = data;
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.loading = false;
+        console.error(err);
+        alert('Nie udało się getEvents');
+      },
+    });
   }
 }

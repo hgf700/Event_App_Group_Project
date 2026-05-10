@@ -10,6 +10,8 @@ import { SubEventDetails } from '../Views/sub-event-details/sub-event-details';
 import { PaymentSuccess } from '../Views/payment-success/payment-success';
 import { PaymentFailed } from '../Views/payment-failed/payment-failed';
 import { SearchAndImportEvents } from '../Views/search-and-import-events/search-and-import-events';
+import { EditUser } from '../Views/edit-user/edit-user';
+import { UserTickets } from '../Views/user-tickets/user-tickets';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -22,6 +24,12 @@ export const routes: Routes = [
   { path: 'payment-success', component: PaymentSuccess },
   { path: 'payment-failed', component: PaymentFailed },
   { path: 'search-and-import-events', component: SearchAndImportEvents },
+  { path: 'edit-user', component: EditUser },
+  { path: 'user-tickets', component: UserTickets },
+  
+  
+  
+  
 ];
 
 @NgModule({
