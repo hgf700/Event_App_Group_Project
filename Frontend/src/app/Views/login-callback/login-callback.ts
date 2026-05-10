@@ -24,6 +24,10 @@ export class LoginCallback implements OnInit {
     this.router.navigate(['/get-events']);
   }
 
+  searchAndImportView() {
+    this.router.navigate(['/search-and-import-events']);
+  }
+
   ngOnInit(): void {
     const tokenFromUrl = this.route.snapshot.queryParamMap.get('token');
     const tokenFromStorage = localStorage.getItem('jwt');

@@ -1,2 +1,9 @@
-widok z wyszukiwaniem eventu
 widok do edycji usera o ile nie oauth?
+
+widok z wyszukiwaniem eventu logika najpierw musi zapisywac do bazy i wtedy moge zwrocic id bo 
+inaczej jest 0
+
+logger do controllerow
+
+prometheus i grafana
+
