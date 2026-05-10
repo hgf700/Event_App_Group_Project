@@ -21,6 +21,7 @@ using Stripe;
 using System.Text;
 using System.Threading.RateLimiting;
 using Serilog.Sinks.Grafana.Loki;
+using Prometheus;
 QuestPDF.Settings.License = LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -63,7 +64,7 @@ Log.Logger = new LoggerConfiguration()
         rollingInterval: RollingInterval.Day,
         outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}"
     )
-    //.WriteTo.GrafanaLoki("http://localhost:3100")
+    .WriteTo.GrafanaLoki("http://localhost:3100")
     .CreateLogger();
 
 builder.Host.UseSerilog();
@@ -228,6 +229,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseCors("Prod");
+
+//prometheus
+app.UseHttpMetrics();
+app.MapMetrics();
 
 app.MapControllers();
 

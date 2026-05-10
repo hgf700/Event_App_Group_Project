@@ -46,6 +46,7 @@ The application includes the following features:
 - ASP.NET Identity
 - JWT Authentication
 - xUnit Unit Tests
+- Serilog Logging
 
 ### DevOps / Infrastructure
 - AWS EC2
@@ -53,7 +54,8 @@ The application includes the following features:
 - AWS RDS
 - Docker
 - GitHub Actions
-- Logging
+- Grafana
+- Prometheus
 
 ### External Services & APIs
 - Ticketmaster API

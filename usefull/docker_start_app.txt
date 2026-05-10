@@ -1,0 +1,21 @@
+docker run -d --name prometheus --network monitoring -p 9090:9090  -v C:\Users\USER098\Documents\GitHub\Event_App_Group_Project\prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
+
+docker run -d `
+  --name prometheus `
+  --network monitoring `
+  -p 9090:9090 `
+  -v C:\Users\USER098\Documents\GitHub\Event_App_Group_Project\prometheus.yml:/etc/prometheus/prometheus.yml `
+  prom/prometheus
+
+// jesli bez prometheus.yml
+docker run -d `
+  --name prometheus `
+  --network monitoring `
+  -p 9090:9090 `
+  prom/prometheus
+
+http://localhost:9090/
+
+docker run -d --name grafana --network monitoring -p 3000:3000 grafana/grafana
+
+http://localhost:3000/
