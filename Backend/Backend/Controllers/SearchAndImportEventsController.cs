@@ -34,7 +34,8 @@ public class SearchAndImportEventsController : ControllerBase
     {
         return new Pipe()
             .Add(new TrimFilter())
-            .Add(new WhitespacesFilter())
+            .Add(new EmptyIfNullOrWhitespaceFilter())
+            .Add(new NormalizeWhitespaceFilter())
             .Execute(new StringContext { Value = value })
             .Value!;
     }

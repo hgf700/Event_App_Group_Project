@@ -18,8 +18,10 @@ public class TrimFilter : IFilter
 {
     public StringContext Execute(StringContext input)
     {
-        input.Value = input.Value?.Trim();
-        return input;
+        return new StringContext
+        {
+            Value = input.Value?.Trim()
+        };
     }
 }
 
@@ -27,32 +29,38 @@ public class ToLowerInvariantFilter : IFilter
 {
     public StringContext Execute(StringContext input)
     {
-        input.Value = input.Value?.ToLowerInvariant();
-        return input;
+        return new StringContext
+        {
+            Value = input.Value?.ToLowerInvariant()
+        };
     }
 }
 
-//szybciej niż regex
-public class WhitespacesFilter : IFilter
+public class EmptyIfNullOrWhitespaceFilter : IFilter
 {
     public StringContext Execute(StringContext input)
     {
-        input.Value = string.Join(" ",
-            (input.Value ?? "").
-            Split(' ', StringSplitOptions.RemoveEmptyEntries));
-        return input;
+        return new StringContext
+        {
+            Value = string.IsNullOrWhiteSpace(input.Value)
+                ? string.Empty
+                : input.Value
+        };
     }
 }
 
-
-// if value nothing then if random whitespace(\s) (+) more than 1 replace to space(" ")
-//Regex = wolniejszy niż string ops przy dużym ruchu → koszt CPU
-public class RegexWhitespacesFilter : IFilter
+public class NormalizeWhitespaceFilter : IFilter
 {
     public StringContext Execute(StringContext input)
     {
-        input.Value = Regex.Replace(input.Value ?? "", @"\s+", " ");
-        return input;
+        var value = input.Value;
+
+        return new StringContext
+        {
+            Value = string.Join(" ",
+                value?.Split((char[])null, StringSplitOptions.RemoveEmptyEntries)
+                ?? Array.Empty<string>())
+        };
     }
 }
 
@@ -68,7 +76,7 @@ public class Pipe
 
     public StringContext Execute(StringContext input)
     {
-        var result = input;
+        var result = input ?? new StringContext { Value = string.Empty };
 
         foreach (var filter in _filters)
             result = filter.Execute(result);

@@ -20,7 +20,6 @@ public class PaymentCallbackController : ControllerBase
     private readonly QrCodeService _qrCodeService;
     private readonly SmsService _smsservice;
     private readonly EmailService _emailService;
-    private readonly OauthRefreshService _oauthRefreshService;
 
     public PaymentCallbackController(UserManager<ApplicationUser> userManager,
         ApplicationDbContext context,
@@ -35,7 +34,6 @@ public class PaymentCallbackController : ControllerBase
         _qrCodeService = qrCodeService;
         _smsservice = smsservice;
         _emailService = emailService;
-        _oauthRefreshService = oauthRefreshService;
     }
 
     [HttpPost("payment-success/{id}")]

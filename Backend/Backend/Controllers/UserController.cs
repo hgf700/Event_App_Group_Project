@@ -1,7 +1,9 @@
 ﻿using Backend.Db;
 using Backend.Identity;
+using Backend.Models.Dto.RelAuth;
 using Backend.Models.Dto.RelEvent;
 using Backend.Models.Model;
+using Backend.Patterns;
 using Backend.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -34,6 +36,11 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("me")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> MyAccount()
     {
         if (!ModelState.IsValid)
@@ -45,8 +52,11 @@ public class UserController : ControllerBase
 
         try
         {
-            //var user = await _userManager.GetUserAsync(userId);
-            return Ok();
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return NotFound();
+
+            return Ok(user);
         }
         catch (Exception ex)
         {
@@ -55,8 +65,13 @@ public class UserController : ControllerBase
         }
     }
 
-    [HttpGet("my-tickets")]
-    public async Task<ActionResult> MyEvents()
+    [HttpGet("user-tickets")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<getEventsDto>> MyEvents()
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -67,14 +82,34 @@ public class UserController : ControllerBase
 
         try
         {
-            //var user = await _userManager.GetUserAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return NotFound("User not found");
 
-            //var events = await _context.UserEvents
-            //    .Include(ue => ue.Event)
-            //    .Where(ue => ue.UserId == user.Id)
-            //    .ToListAsync();
+            var events = await _context.UserEvents
+               .Where(ue => ue.UserId == userId)
+               .Include(ue => ue.Event)
+               .Select(ue => new getEventsDto
+               {
+                   eventId = ue.Event.Id,
+                   typeOfEvent = ue.Event.TypeOfEvent,
+                   nameOfEvent = ue.Event.NameOfEvent,
+                   urlOfEvent = ue.Event.UrlOfEvent,
+                   photoUrl = ue.Event.PhotoUrl,
+                   startOfEvent = ue.Event.StartOfEvent,
+                   address = ue.Event.Address,
+                   city = ue.Event.City,
+                   country = ue.Event.Country,
+                   nameOfClub = ue.Event.NameOfClub
+               })
+               .ToListAsync();
 
-            return Ok();
+            if (!events.Any())
+            {
+                return NotFound("No events found for this user");
+            }
+
+            return Ok(events);
         }
         catch (Exception ex)
         {
@@ -83,31 +118,23 @@ public class UserController : ControllerBase
         }
     }
 
-    [HttpGet("edit-user")]
-    public async Task<ActionResult> EditUserView()
+    private string NormalizeUser(string? value)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId == null)
-            return Unauthorized();
-
-        try
-        {
-            return Ok();
-
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex);
-            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
-        }
+        return new Pipe()
+            .Add(new TrimFilter())
+            .Add(new EmptyIfNullOrWhitespaceFilter())
+            .Add(new NormalizeWhitespaceFilter())
+            .Execute(new StringContext { Value = value })
+            .Value!;
     }
-
 
     [HttpPost("edit-user")]
-    public async Task<ActionResult> EditUser()
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<postEditUserDto>> EditUser([FromBody] postEditUserDto model)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -118,14 +145,40 @@ public class UserController : ControllerBase
 
         try
         {
-            //if (user.Email != model.Email)
-            //    user.Email = model.Email;
+            var user = await _userManager.FindByIdAsync(userId);
 
-            //var result = await _userManager.UpdateAsync(user);
+            if (user == null)
+                return NotFound("User not found");
 
+            model.newEmail = NormalizeUser(model.newEmail);
+            model.newPassword = NormalizeUser(model.newPassword);
+
+            var emailExists = await _userManager.FindByEmailAsync(model.newEmail);
+
+            if (emailExists != null)
+                return BadRequest("Email already exists");
+
+            user.Email = model.newEmail;
+            user.UserName = model.newEmail; // nick = email
+
+            if (string.IsNullOrWhiteSpace(model.currentPassword))
+                return BadRequest("Current password is required");
+
+            var passwordResult = await _userManager.ChangePasswordAsync(
+                user,
+                model.currentPassword,
+                model.newPassword
+            );
+
+            if (!passwordResult.Succeeded)
+                return BadRequest(passwordResult.Errors);
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
 
             return Ok();
-
         }
         catch (Exception ex)
         {
