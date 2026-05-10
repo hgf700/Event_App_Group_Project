@@ -36,18 +36,18 @@ The application includes the following features:
 
 ## Technologies Used
 
-## Frontend
+### Frontend
 - Angular
 - Jasmine Unit Tests
 
-## Backend
+### Backend
 - ASP.NET Web API
 - Entity Framework
 - ASP.NET Identity
 - JWT Authentication
 - xUnit Unit Tests
 
-## DevOps / Infrastructure
+### DevOps / Infrastructure
 - AWS EC2
 - AWS ECR
 - AWS RDS
@@ -55,7 +55,7 @@ The application includes the following features:
 - GitHub Actions
 - Logging
 
-## External Services & APIs
+### External Services & APIs
 - Ticketmaster API
 - Stripe Payments
 - Twilio SMS API

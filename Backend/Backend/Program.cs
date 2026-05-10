@@ -14,9 +14,13 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using QuestPDF.Infrastructure;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
 using Stripe;
 using System.Text;
 using System.Threading.RateLimiting;
+using Serilog.Sinks.Grafana.Loki;
 QuestPDF.Settings.License = LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -49,20 +53,20 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddDefaultTokenProviders();
 
 //logs
-//Log.Logger = new LoggerConfiguration()
-//    .MinimumLevel.Information()
-//    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-//    .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
-//    .Enrich.FromLogContext()
-//    .WriteTo.File(
-//        "Logs/log.txt",
-//        rollingInterval: RollingInterval.Day,
-//        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}"
-//    )
-//    .WriteTo.GrafanaLoki("http://localhost:3100")
-//    .CreateLogger();
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
+    .Enrich.FromLogContext()
+    .WriteTo.File(
+        "Logs/log.txt",
+        rollingInterval: RollingInterval.Day,
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}"
+    )
+    //.WriteTo.GrafanaLoki("http://localhost:3100")
+    .CreateLogger();
 
-//builder.Host.UseSerilog();
+builder.Host.UseSerilog();
 
 //builder.Services.AddTransient<IEmailSender, NullEmailSender>();
 builder.Services.AddHttpClient();
@@ -226,6 +230,8 @@ app.UseAuthorization();
 app.UseCors("Prod");
 
 app.MapControllers();
+
+app.UseSerilogRequestLogging();
 
 // MIGRATIONS (tylko DEV/PROD, NIE TESTY)
 //if (!app.Environment.IsEnvironment("UnitTest") &&

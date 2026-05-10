@@ -18,15 +18,18 @@ public class SearchAndImportEventsController : ControllerBase
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly DownloadFromApi _seedDbService;
-    
+    private readonly ILogger<AuthController> _logger;
+
     public SearchAndImportEventsController(ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
-            DownloadFromApi seedDbService
+            DownloadFromApi seedDbService,
+            ILogger<AuthController> logger
         )
     {
         _context = context;
         _userManager = userManager;
         _seedDbService = seedDbService;
+        _logger = logger;
     }
 
     //nie moge to lower poniewaz najpierw pytam z bazy a w bazie mam z duzej 1 a potem z api a api i tak pewnie robi to lower
@@ -40,7 +43,7 @@ public class SearchAndImportEventsController : ControllerBase
             .Value!;
     }
 
-    // do poprawy napisane w todo
+    // do poprawy napisane w todo i zrobic logger przt ex i pod koniec information success
     [HttpGet("search-event")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -112,6 +115,7 @@ public class SearchAndImportEventsController : ControllerBase
         catch (Exception ex)
         {
             Console.WriteLine(ex);
+            _logger.LogError(ex, "Error while search and import ticket for UserId: {UserId}", userId);
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }

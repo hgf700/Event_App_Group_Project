@@ -19,13 +19,16 @@ public class PaymentsController : ControllerBase
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ApplicationDbContext _context;
     private readonly string YOUR_DOMAIN = "http://localhost:4200";
+    private readonly ILogger<AuthController> _logger;
 
     public PaymentsController(UserManager<ApplicationUser> userManager,
-        ApplicationDbContext context
+        ApplicationDbContext context,
+        ILogger<AuthController> logger
         )
     {
         _context = context;
         _userManager = userManager;
+        _logger = logger;
     }
 
     [HttpPost("buy-ticket/{id}")]
@@ -88,10 +91,13 @@ public class PaymentsController : ControllerBase
             var service = new SessionService();
             Session session = service.Create(options);
 
+            _logger.LogInformation("User successfully bought ticket UserId: {UserId}", userId);
+
             return Ok(new { url = session.Url });
         }
         catch (Exception ex) {
             Console.WriteLine(ex);
+            _logger.LogError(ex, "Error while buying ticket for UserId: {UserId}", userId);
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }

@@ -25,16 +25,20 @@ public class EventController : ControllerBase
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly DownloadFromApi _seedDbService;
+    private readonly ILogger<AuthController> _logger;
+
 
     public EventController(
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
-            DownloadFromApi seedDbService
+            DownloadFromApi seedDbService,
+            ILogger<AuthController> logger
         )
     {
         _context = context;
         _userManager = userManager;
-        _seedDbService= seedDbService; 
+        _seedDbService= seedDbService;
+        _logger = logger;
     }
 
     [HttpGet("get-events")]
@@ -72,6 +76,7 @@ public class EventController : ControllerBase
         }
         catch (Exception ex) {
             Console.WriteLine(ex);
+            _logger.LogError(ex, "Error while getting events.");
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
@@ -115,6 +120,7 @@ public class EventController : ControllerBase
         catch (Exception ex)
         {
             Console.WriteLine(ex);
+            _logger.LogError(ex, "Error while getting event details");
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
@@ -157,6 +163,7 @@ public class EventController : ControllerBase
         catch (Exception ex)
         {
             Console.WriteLine(ex);
+            _logger.LogError(ex, "Error while seeding db");
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }

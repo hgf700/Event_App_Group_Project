@@ -26,13 +26,16 @@ public class UserController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ApplicationDbContext _context;
+    private readonly ILogger<AuthController> _logger;
 
     public UserController(UserManager<ApplicationUser> userManager, 
-        ApplicationDbContext context
+        ApplicationDbContext context,
+        ILogger<AuthController> logger
         )
     {
         _userManager = userManager;
         _context = context;
+        _logger = logger;
     }
 
     private string NormalizeUser(string? value)
@@ -77,6 +80,7 @@ public class UserController : ControllerBase
         catch (Exception ex)
         {
             Console.WriteLine(ex);
+            _logger.LogError(ex, "Error while getting current user. email UserId: {UserId}", userId);
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
@@ -129,6 +133,7 @@ public class UserController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error while getting user. tickets UserId: {UserId}", userId);
             Console.WriteLine(ex);
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
@@ -154,7 +159,10 @@ public class UserController : ControllerBase
             var user = await _userManager.FindByIdAsync(userId);
 
             if (user == null)
+            {
+                _logger.LogWarning("User edit failed - user not found. UserId: {UserId}",userId);
                 return NotFound("User not found");
+            }
 
             model.newEmail = NormalizeUser(model.newEmail);
             model.currentPassword = NormalizeUser(model.currentPassword);
@@ -185,10 +193,13 @@ public class UserController : ControllerBase
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
+            _logger.LogInformation("User successfully edited {email}", model.newEmail);
+
             return Ok();
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error while editing user. UserId: {UserId}", userId);
             Console.WriteLine(ex);
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }

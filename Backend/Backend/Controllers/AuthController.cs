@@ -22,15 +22,18 @@ public class AuthController : ControllerBase
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly JwtService _jwtService;
+    private readonly ILogger<AuthController> _logger;
 
     public AuthController(UserManager<ApplicationUser> userManager, 
         ApplicationDbContext context,
-        JwtService jwtService
+        JwtService jwtService,
+        ILogger<AuthController> logger
         )
     {
         _userManager = userManager;
         _context = context;
         _jwtService = jwtService;
+        _logger= logger;
     }
 
     [HttpPost("register-norm")]
@@ -63,6 +66,8 @@ public class AuthController : ControllerBase
 
             var jwt = _jwtService.GenerateToken(user);
 
+            _logger.LogInformation("User successfully register {email}", dto.email);
+
             return Ok(new
             {
                 token = jwt
@@ -72,6 +77,7 @@ public class AuthController : ControllerBase
         catch (Exception ex) 
         {
             Console.WriteLine(ex);
+            _logger.LogError(ex, "Error while register user");
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
@@ -95,9 +101,14 @@ public class AuthController : ControllerBase
             var validPassword = await _userManager.CheckPasswordAsync(existingUser, dto.password);
 
             if (!validPassword)
+            {
+                _logger.LogWarning("Invalid login attempt for email {email}", dto.email);
                 return Unauthorized("Invalid email or password");
+            }
 
             var jwt = _jwtService.GenerateToken(existingUser);
+
+            _logger.LogInformation("User successfully login {email}", dto.email);
 
             return Ok(new
             {
@@ -106,9 +117,9 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex) {
             Console.WriteLine(ex);
+            _logger.LogError(ex, "Error while login user");
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
-        
     }
 
     [HttpGet("sign-in-google")]
@@ -139,14 +150,21 @@ public class AuthController : ControllerBase
                 IdentityConstants.ExternalScheme);
 
             if (authenticateResult?.Principal == null)
+            {
+                _logger.LogWarning("Google OAuth failed - Principal is null");
                 return Unauthorized();
+            }
 
             if (!authenticateResult.Succeeded)
+            {
+                _logger.LogWarning("Google OAuth authentication failed");
                 return Unauthorized();
+            }
 
             if (!authenticateResult.Principal.Identities
                 .Any(i => i.AuthenticationType == "Google"))
             {
+                _logger.LogWarning("Authentication type is not Google");
                 return Unauthorized();
             }
 
@@ -157,10 +175,16 @@ public class AuthController : ControllerBase
 
 
             if (string.IsNullOrWhiteSpace(email))
+            {
+                _logger.LogWarning("Google OAuth missing email claim");
                 return BadRequest("Brak emaila z Google");
+            }
 
             if (string.IsNullOrWhiteSpace(googleId))
+            {
+                _logger.LogWarning("Google OAuth missing Google ID");
                 return BadRequest("Brak Google ID");
+            }
 
             var user = await _userManager.FindByEmailAsync(email);
 
@@ -178,6 +202,7 @@ public class AuthController : ControllerBase
 
                 if (!createResult.Succeeded)
                 {
+                    _logger.LogWarning("Failed to create OAuth user for email {Email}",email);
                     return BadRequest(createResult.Errors);
                 }
 
@@ -190,11 +215,15 @@ public class AuthController : ControllerBase
 
                 if (!addLoginResult.Succeeded)
                 {
+                    _logger.LogWarning("Failed to add Google login for user {UserId}",user.Id);
                     return BadRequest(addLoginResult.Errors);
                 }
+                _logger.LogInformation("OAuth user created successfully. UserId: {UserId}",user.Id);
             }
 
             var jwt = _jwtService.GenerateToken(user);
+
+            _logger.LogInformation("User {UserId} logged in with Google OAuth",user.Id);
 
             return Redirect(
                 $"http://localhost:4200/login-callback?token={jwt}"
@@ -203,6 +232,7 @@ public class AuthController : ControllerBase
         catch (Exception ex)
         {
             Console.WriteLine(ex);
+            _logger.LogError(ex, "Error while oauth");
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }

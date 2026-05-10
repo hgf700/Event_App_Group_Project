@@ -20,13 +20,16 @@ public class PaymentCallbackController : ControllerBase
     private readonly QrCodeService _qrCodeService;
     private readonly SmsService _smsservice;
     private readonly EmailService _emailService;
+    private readonly ILogger<AuthController> _logger;
+
 
     public PaymentCallbackController(UserManager<ApplicationUser> userManager,
         ApplicationDbContext context,
         QrCodeService qrCodeService,
         SmsService smsservice,
         EmailService emailService,
-        OauthRefreshService oauthRefreshService
+        OauthRefreshService oauthRefreshService,
+        ILogger<AuthController> logger
         )
     {
         _context = context;
@@ -34,6 +37,7 @@ public class PaymentCallbackController : ControllerBase
         _qrCodeService = qrCodeService;
         _smsservice = smsservice;
         _emailService = emailService;
+        _logger = logger;
     }
 
     [HttpPost("payment-success/{id}")]
@@ -96,11 +100,14 @@ public class PaymentCallbackController : ControllerBase
             string docelowyemail = Environment.GetEnvironmentVariable("TARGET_EMAIL");
             _emailService.SendEmail(docelowyemail, ev.UrlOfEvent);
 
+            _logger.LogInformation("User successfully bought ticket {userId}", userId);
+
             return Ok();
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex);
+            _logger.LogError(ex, "Error while buying ticket for user: {UserId}", userId);
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
