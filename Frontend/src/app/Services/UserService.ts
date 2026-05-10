@@ -14,24 +14,30 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  getCurrentUser() {
+  getCurrentUserEmail() {
     return this.http.get<getCurrentUserDto>(
-      `${this.apiUrl}/current-user}`,
+      `${this.apiUrl}/current-user`,
       { headers: getAuthHeaders() },
     );
   }
 
   currentUserTickets() {
     return this.http.get<getEventDto[]>(
-      `${this.apiUrl}/user-tickets}`,
+      `${this.apiUrl}/user-tickets`,
       { headers: getAuthHeaders() },
     );
   }
 
-  editCurrentUser() {
+  editCurrentUser(newEmail: string, currentPassword: string, newPassword: string,) {
+    const body: postEditUserDto = {
+      newEmail,
+      currentPassword,
+      newPassword,
+    };
+
     return this.http.post<postEditUserDto>(
-      `${this.apiUrl}/edit-user}`,
-      {},
+      `${this.apiUrl}/edit-user`,
+      body,
       { headers: getAuthHeaders() },
     );
   }

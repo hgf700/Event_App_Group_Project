@@ -2,6 +2,9 @@
 @if (currentUser) {
   <li>{{currentUser.email}}</li>
 }
+@else {
+  <p>blad zalogowania</p>
+}
 
 <main class="main">
   <p>login-callback works!</p>
@@ -9,6 +12,8 @@
   <button (click)="seedData()">seedData</button><br />
   <button (click)="eventsView()">eventsView</button><br />
   <button (click)="searchAndImportView()">searchAndImportView</button><br />
-  
+  <button (click)="userBoughtTickets()">userBoughtTickets</button><br />
+  <button (click)="editCurrentUser()">editCurrentUser</button><br />
+
 </main>
 

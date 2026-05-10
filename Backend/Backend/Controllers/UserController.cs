@@ -157,6 +157,7 @@ public class UserController : ControllerBase
                 return NotFound("User not found");
 
             model.newEmail = NormalizeUser(model.newEmail);
+            model.currentPassword = NormalizeUser(model.currentPassword);
             model.newPassword = NormalizeUser(model.newPassword);
 
             var emailExists = await _userManager.FindByEmailAsync(model.newEmail);
@@ -192,4 +193,5 @@ public class UserController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
+
 }

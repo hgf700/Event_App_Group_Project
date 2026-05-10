@@ -1,1 +1,27 @@
-<p>user-tickets works!</p>
+<button (click)="returnToLoginCallback()">returnToLoginCallback</button>
+
+<p>{{ events.length }}</p>
+
+<main>
+  @if (events.length > 0) {
+    <ul>
+      @for (e of events; track e.eventId) {
+        <li>
+          {{ e.eventId }}
+          {{ e.address }}
+          {{ e.city }}
+          {{ e.country }}
+          {{ e.nameOfClub }}
+          {{ e.nameOfEvent }}
+          {{ e.photoUrl }}
+          {{ e.startOfEvent }}
+          {{ e.typeOfEvent }}
+          {{ e.urlOfEvent }}
+
+        </li>
+      }
+    </ul>
+  } @else {
+    <p>Brak events</p>
+  }
+</main>

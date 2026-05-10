@@ -23,19 +23,12 @@ export class LoginCallback implements OnInit {
     private cdr: ChangeDetectorRef,
   ) {}
 
-  seedData() {
-    this.router.navigate(['/seed-database']);
-  }
-
-  eventsView() {
-    this.router.navigate(['/get-events']);
-  }
-
-  searchAndImportView() {
-    this.router.navigate(['/search-and-import-events']);
-  }
-
   ngOnInit(): void {
+    this.generateJWT();
+    this.getCurrentUser();
+  }
+
+  generateJWT(){
     const tokenFromUrl = this.route.snapshot.queryParamMap.get('token');
     const tokenFromStorage = localStorage.getItem('jwt');
 
@@ -52,7 +45,7 @@ export class LoginCallback implements OnInit {
 
   getCurrentUser() {
     this.loading = true;
-    this.userService.getCurrentUser().subscribe({
+    this.userService.getCurrentUserEmail().subscribe({
       next: (data) => {
         this.currentUser = data;
         this.loading = false;
@@ -61,8 +54,28 @@ export class LoginCallback implements OnInit {
       error: (err) => {
         this.loading = false;
         console.error(err);
-        alert('Nie udało się getEvents');
+        alert('Nie udało się getCurrentUserEmail');
       },
     });
+  }
+
+  seedData() {
+    this.router.navigate(['/seed-database']);
+  }
+
+  eventsView() {
+    this.router.navigate(['/get-events']);
+  }
+
+  searchAndImportView() {
+    this.router.navigate(['/search-and-import-events']);
+  }
+
+  userBoughtTickets() {
+    this.router.navigate(['/user-tickets']);
+  }
+
+  editCurrentUser() {
+    this.router.navigate(['/edit-user']);
   }
 }
