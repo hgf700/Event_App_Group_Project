@@ -1,8 +1,6 @@
 popraw widok z wyszukiwaniem eventu logika najpierw musi zapisywac do bazy i wtedy moge zwrocic id bo 
 inaczej jest 0
 
-prometheus i grafana
-
-data anotation dla post i w modelu bazie
-
 uzycie notification mdoel
+
+popraw edycja uzytkownika

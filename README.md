@@ -66,8 +66,7 @@ The application includes the following features:
 - QR Code Generation Service
 - Google OAuth
 
-# Future Improvements
-- Add monitoring with Prometheus and Grafana
+# Future Potential Improvements
 - Improve application security
 - Add unit and integration tests
 - Improve UI/UX

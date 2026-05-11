@@ -1,0 +1,46 @@
+<header>
+  <nav class="navbar">
+
+    <div class="left">
+      <a routerLink="/">Home</a>
+      <a routerLink="/events">Events</a>
+    </div>
+
+    <div class="right">
+
+      <ng-container *ngIf="isLoggedIn(); else loggedOut">
+
+        <div class="dropdown">
+          <button>
+            <!-- Witaj {{ userEmail }} -->
+          </button>
+
+          <div class="dropdown-content">
+            <a routerLink="/account">Konto</a>
+            <a routerLink="/my-events">Moje eventy</a>
+          </div>
+        </div>
+
+        <!-- <button (click)="logout()">
+          Wyloguj
+        </button> -->
+
+      </ng-container>
+
+      <ng-template #loggedOut>
+        <a routerLink="/login">Login</a>
+        <a routerLink="/register">Register</a>
+      </ng-template>
+
+    </div>
+
+  </nav>
+</header>
+
+<main class="container">
+    <!-- <router-outlet></router-outlet> -->
+</main>
+
+<footer>
+  © 2025
+</footer>
