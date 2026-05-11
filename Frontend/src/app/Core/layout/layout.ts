@@ -1,25 +1,33 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../../Services/AuthService';
+import { RouterLink, RouterOutlet } from '@angular/router';
+
+import { LayoutService } from '../../Services/LayoutService';
 
 @Component({
   selector: 'app-layout',
-  imports: [],
+  standalone: true,
+  imports: [
+    RouterOutlet,
+    RouterLink,
+  ],
   templateUrl: './layout.html',
   styleUrl: './layout.css',
 })
 export class Layout {
-  constructor(public authService: AuthService) {}
 
-  // isLoggedIn(): boolean {
-  //   return this.authService.isAuthenticated();
-  // }
+  constructor(
+    public layoutService: LayoutService
+  ) {}
 
-  // get userEmail(): string {
-  //   return this.authService.userEmail();
-  // }
+  isLoggedIn(): boolean {
+    return this.layoutService.isAuthenticated();
+  }
 
-  // logout(): void {
-  //   this.authService.logout();
-  // }
+  get userEmail(): string {
+    return this.layoutService.userEmail();
+  }
 
+  logout(): void {
+    this.layoutService.logout();
+  }
 }

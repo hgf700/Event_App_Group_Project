@@ -8,11 +8,11 @@
 
     <div class="right">
 
-      <ng-container *ngIf="isLoggedIn(); else loggedOut">
+      @if (isLoggedIn()) {
 
         <div class="dropdown">
-          <button>
-            <!-- Witaj {{ userEmail }} -->
+          <button type="button">
+            Witaj {{ userEmail }}
           </button>
 
           <div class="dropdown-content">
@@ -21,16 +21,20 @@
           </div>
         </div>
 
-        <!-- <button (click)="logout()">
+        <button
+          type="button"
+          class="btn-primary"
+          (click)="logout()"
+        >
           Wyloguj
-        </button> -->
+        </button>
 
-      </ng-container>
+      } @else {
 
-      <ng-template #loggedOut>
         <a routerLink="/login">Login</a>
         <a routerLink="/register">Register</a>
-      </ng-template>
+
+      }
 
     </div>
 
@@ -38,9 +42,9 @@
 </header>
 
 <main class="container">
-    <!-- <router-outlet></router-outlet> -->
+  <router-outlet></router-outlet>
 </main>
 
-<footer>
+<footer class="footer">
   © 2025
 </footer>
