@@ -70,7 +70,8 @@ public class AuthController : ControllerBase
 
             return Ok(new
             {
-                token = jwt
+                token = jwt,
+                email= dto.email
             });
 
         }
@@ -112,7 +113,8 @@ public class AuthController : ControllerBase
 
             return Ok(new
             {
-                token = jwt
+                token = jwt,
+                email = dto.email
             });
         }
         catch (Exception ex) {
@@ -226,7 +228,7 @@ public class AuthController : ControllerBase
             _logger.LogInformation("User {UserId} logged in with Google OAuth",user.Id);
 
             return Redirect(
-                $"http://localhost:4200/login-callback?token={jwt}"
+                $"http://localhost:4200/login-callback?token={jwt}&email={Uri.EscapeDataString(email)}"
             );
         }
         catch (Exception ex)

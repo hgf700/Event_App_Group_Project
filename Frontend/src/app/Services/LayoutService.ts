@@ -11,18 +11,19 @@ export class LayoutService {
   constructor(private http: HttpClient) {}
 
   isAuthenticated(): boolean {
-    return !!localStorage.getItem('token');
+    return !!localStorage.getItem('jwt');
   }
 
   userEmail(): string {
-    return localStorage.getItem('email') || '';
+    return localStorage.getItem('email') 
+    ? localStorage.getItem('email')!
+    : 'brak email';
   }
 
   logout(): void {
-
-    localStorage.removeItem('token');
+    localStorage.removeItem('jwt');
     localStorage.removeItem('email');
 
-    window.location.href = '/login';
+    window.location.href = '/';
   }
 }

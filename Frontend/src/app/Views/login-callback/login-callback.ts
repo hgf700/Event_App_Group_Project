@@ -24,20 +24,23 @@ export class LoginCallback implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.generateJWT();
+    this.generateJWTandEmail();
     this.getCurrentUser();
   }
 
-  generateJWT(){
+  generateJWTandEmail(){
     const tokenFromUrl = this.route.snapshot.queryParamMap.get('token');
+    const emailFromUrl = this.route.snapshot.queryParamMap.get('email');
     const tokenFromStorage = localStorage.getItem('jwt');
+    const emailFromStorage = localStorage.getItem('email');
 
-    if (tokenFromUrl) {
+    if (tokenFromUrl && emailFromUrl) {
       localStorage.setItem('jwt', tokenFromUrl);
+      localStorage.setItem('email', emailFromUrl);
       console.log('JWT zapisany z URL');
     }
 
-    if (!tokenFromUrl && !tokenFromStorage) {
+    if (!tokenFromUrl && !tokenFromStorage && !emailFromUrl && !emailFromStorage) {
       console.error('Brak tokena – użytkownik niezalogowany');
       return;
     }
