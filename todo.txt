@@ -4,3 +4,7 @@ inaczej jest 0
 uzycie notification mdoel
 
 popraw edycja uzytkownika
+
+Polly ma wbudowane retry dla get 
+lub
+HttpClient resilience zamiast ręcznego używania Polly.

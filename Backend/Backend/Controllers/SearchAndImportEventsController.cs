@@ -18,12 +18,12 @@ public class SearchAndImportEventsController : ControllerBase
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly DownloadFromApi _seedDbService;
-    private readonly ILogger<AuthController> _logger;
+    private readonly ILogger<SearchAndImportEventsController> _logger;
 
     public SearchAndImportEventsController(ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
             DownloadFromApi seedDbService,
-            ILogger<AuthController> logger
+            ILogger<SearchAndImportEventsController> logger
         )
     {
         _context = context;

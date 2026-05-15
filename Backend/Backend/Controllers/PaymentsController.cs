@@ -19,11 +19,11 @@ public class PaymentsController : ControllerBase
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ApplicationDbContext _context;
     private readonly string YOUR_DOMAIN = "http://localhost:4200";
-    private readonly ILogger<AuthController> _logger;
+    private readonly ILogger<PaymentsController> _logger;
 
     public PaymentsController(UserManager<ApplicationUser> userManager,
         ApplicationDbContext context,
-        ILogger<AuthController> logger
+        ILogger<PaymentsController> logger
         )
     {
         _context = context;

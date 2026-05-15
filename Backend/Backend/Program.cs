@@ -40,7 +40,6 @@ builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
 //db
 var connectionString =
     builder.Configuration.GetConnectionString("Default");

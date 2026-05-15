@@ -14,10 +14,12 @@ https://www.questpdf.com/getting-started.html
 
 http status code
 https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status
-
 return Ok();
 return Unauthorized();
 return Forbid();
 return NotFound();
 return Conflict();
 return NoContent();
+
+builded in retry, circuit breaker, ...
+https://learn.microsoft.com/en-us/dotnet/core/resilience/?tabs=dotnet-cli

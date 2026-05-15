@@ -26,11 +26,11 @@ public class UserController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ApplicationDbContext _context;
-    private readonly ILogger<AuthController> _logger;
+    private readonly ILogger<UserController> _logger;
 
     public UserController(UserManager<ApplicationUser> userManager, 
         ApplicationDbContext context,
-        ILogger<AuthController> logger
+        ILogger<UserController> logger
         )
     {
         _userManager = userManager;

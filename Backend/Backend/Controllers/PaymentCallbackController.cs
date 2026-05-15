@@ -20,7 +20,7 @@ public class PaymentCallbackController : ControllerBase
     private readonly QrCodeService _qrCodeService;
     private readonly SmsService _smsservice;
     private readonly EmailService _emailService;
-    private readonly ILogger<AuthController> _logger;
+    private readonly ILogger<PaymentCallbackController> _logger;
 
 
     public PaymentCallbackController(UserManager<ApplicationUser> userManager,
@@ -29,7 +29,7 @@ public class PaymentCallbackController : ControllerBase
         SmsService smsservice,
         EmailService emailService,
         OauthRefreshService oauthRefreshService,
-        ILogger<AuthController> logger
+        ILogger<PaymentCallbackController> logger
         )
     {
         _context = context;

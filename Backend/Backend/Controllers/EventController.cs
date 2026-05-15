@@ -25,14 +25,14 @@ public class EventController : ControllerBase
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly DownloadFromApi _seedDbService;
-    private readonly ILogger<AuthController> _logger;
+    private readonly ILogger<EventController> _logger;
 
 
     public EventController(
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
             DownloadFromApi seedDbService,
-            ILogger<AuthController> logger
+            ILogger<EventController> logger
         )
     {
         _context = context;
