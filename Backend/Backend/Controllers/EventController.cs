@@ -2,6 +2,7 @@
 using Backend.Identity;
 using Backend.Models.Dto.RelEvent;
 using Backend.Models.Model;
+using Backend.Resiliance;
 using Backend.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -26,26 +27,29 @@ public class EventController : ControllerBase
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly DownloadFromApi _seedDbService;
     private readonly ILogger<EventController> _logger;
+    private readonly ApiClient _apiClient;
 
 
     public EventController(
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
             DownloadFromApi seedDbService,
-            ILogger<EventController> logger
+            ILogger<EventController> logger,
+            ApiClient apiClient
         )
     {
         _context = context;
         _userManager = userManager;
         _seedDbService= seedDbService;
         _logger = logger;
+        _apiClient= apiClient;
     }
 
     [HttpGet("get-events")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<getEventsDto>> GetEvents(int id)
+    public async Task<ActionResult<List<getEventsDto>>> GetEvents(int id)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);

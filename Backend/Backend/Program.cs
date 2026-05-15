@@ -2,6 +2,7 @@ using Backend.Db;
 using Backend.ExtraTools;
 using Backend.Identity;
 using Backend.Models.Model;
+using Backend.Resiliance;
 using Backend.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -12,16 +13,18 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using QuestPDF.Infrastructure;
+using Microsoft.Extensions.Http.Resilience;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using Polly;
+using Prometheus;
+using QuestPDF.Infrastructure;
 using Serilog;
 using Serilog.Events;
+using Serilog.Sinks.Grafana.Loki;
 using Stripe;
 using System.Text;
 using System.Threading.RateLimiting;
-using Serilog.Sinks.Grafana.Loki;
-using Prometheus;
 QuestPDF.Settings.License = LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -69,7 +72,6 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 
 //builder.Services.AddTransient<IEmailSender, NullEmailSender>();
-builder.Services.AddHttpClient();
 builder.Services.AddScoped<QrCodeService>();
 builder.Services.AddScoped<SmsService>();
 builder.Services.AddScoped<EmailService>();
