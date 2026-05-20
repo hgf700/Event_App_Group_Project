@@ -8,3 +8,9 @@ popraw edycja uzytkownika
 Polly ma wbudowane retry dla get 
 lub
 HttpClient resilience zamiast ręcznego używania Polly.
+
+zamiast local storage to lepiej http cookies i same site strict
+
+refresh tokeny z jwt?
+
+w jwt ustawiac algorytm

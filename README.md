@@ -2,6 +2,10 @@
 
 This is our group project – a web application built with **ASP.NET** and **Angular**
 
+## Older Version
+
+A older version of this project can be found here: https://github.com/hgf700/Old_Event_App_Group_Project
+
 ## Hosting and Deployment
 
 The application is currently hosted on **AWS**:
