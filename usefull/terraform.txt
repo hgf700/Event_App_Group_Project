@@ -1,0 +1,16 @@
+https://developer.hashicorp.com/terraform
+
+# download from .tf file
+terraform init
+
+# show what will do
+terraform plan
+
+#activate
+terraform apply
+
+#after success check if works
+http://localhost:<chosen-port>
+
+# turn off
+terraform destroy

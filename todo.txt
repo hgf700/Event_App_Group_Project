@@ -14,3 +14,5 @@ zamiast local storage to lepiej http cookies i same site strict
 refresh tokeny z jwt?
 
 w jwt ustawiac algorytm
+
+terraform dla odpalenia dockeryzacji projektu , grafany i prometheus
