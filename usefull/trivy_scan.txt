@@ -1,0 +1,20 @@
+# skan pod wzgledem bezpieczenstwa
+vuln
+
+#skan sekretow
+secret
+
+#skan docker plikow
+config
+
+#skan calkowity
+docker run --rm -v C:\Users\USER098\Documents\GitHub\Old_Event_App_Group_Project:/app aquasec/trivy fs /app --scanners vuln,secret,config,license
+docker run --rm -v C:\Users\USER098\Documents\GitHub\Old_Event_App_Group_Project:/app aquasec/trivy fs /app --scanners vuln,secret,config,license --severity LOW,UNKNOWN,MEDIUM,HIGH,CRITICAL
+docker run --rm -v ${PWD}:/app aquasec/trivy fs /app --scanners vuln,config
+
+#lokalnie pobrane
+trivy <target>
+trivy --scanners <high> <target> 
+
+docker build -t myapp ./WebApplication1
+docker run --rm aquasec/trivy image myapp
