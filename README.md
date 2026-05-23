@@ -1,4 +1,4 @@
-# Projekt Grupowy
+# Group Project
 
 This is our group project – a web application built with **ASP.NET** and **Angular**
 
@@ -70,7 +70,6 @@ The application includes the following features:
 - PDF Generation Service
 - QR Code Generation Service
 - Google OAuth
-- JWT Service
 
 # Future Potential Improvements
 - Improve application security
