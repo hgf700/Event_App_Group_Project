@@ -64,12 +64,13 @@ The application includes the following features:
 
 ### External Services & APIs
 - Ticketmaster API
-- Stripe Payments
+- Stripe Payments API
 - Twilio SMS API
-- SMTP Email Service
+- SMTP Email Service API
 - PDF Generation Service
 - QR Code Generation Service
 - Google OAuth
+- JWT Service
 
 # Future Potential Improvements
 - Improve application security
