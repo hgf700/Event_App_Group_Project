@@ -60,6 +60,7 @@ The application includes the following features:
 - GitHub Actions
 - Grafana
 - Prometheus
+- Terraform
 
 ### External Services & APIs
 - Ticketmaster API
