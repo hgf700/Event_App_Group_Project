@@ -1,4 +1,4 @@
-# Projekt Grupowy
+# Group Project
 
 This is our group project – a web application built with **ASP.NET** and **Angular**
 
@@ -60,12 +60,13 @@ The application includes the following features:
 - GitHub Actions
 - Grafana
 - Prometheus
+- Terraform
 
 ### External Services & APIs
 - Ticketmaster API
-- Stripe Payments
+- Stripe Payments API
 - Twilio SMS API
-- SMTP Email Service
+- SMTP Email Service API
 - PDF Generation Service
 - QR Code Generation Service
 - Google OAuth
