@@ -71,7 +71,7 @@ public class AuthController : ControllerBase
 
             return Ok(new
             {
-                token = jwt,
+                jwt = jwt,
                 email= dto.email
             });
 
@@ -114,7 +114,7 @@ public class AuthController : ControllerBase
 
             return Ok(new
             {
-                token = jwt,
+                jwt = jwt,
                 email = dto.email
             });
         }

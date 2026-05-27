@@ -29,24 +29,24 @@ export class SubEventDetails implements OnInit {
 
   ngOnInit(): void {
     this.eventId = this.data.eventId;
-    this.getEventDetails();
+    // this.getEventDetails();
   }
 
-  getEventDetails() {
-    this.loading = true;
-    this.eventService.eventDetails(this.eventId).subscribe({
-      next: (data) => {
-        this.event = data;
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        this.loading = false;
-        console.error(err);
-        alert('Nie udało się getEvents');
-      },
-    });
-  }
+  // getEventDetails() {
+  //   this.loading = true;
+  //   this.eventService.eventDetails(this.eventId).subscribe({
+  //     next: (data) => {
+  //       this.event = data;
+  //       this.loading = false;
+  //       this.cdr.detectChanges();
+  //     },
+  //     error: (err) => {
+  //       this.loading = false;
+  //       console.error(err);
+  //       alert('Nie udało się getEvents');
+  //     },
+  //   });
+  // }
 
   buyTicket(eventId: number) {
     this.loading = true;

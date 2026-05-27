@@ -2,7 +2,6 @@ using Backend.Db;
 using Backend.ExtraTools;
 using Backend.Identity;
 using Backend.Models.Model;
-using Backend.Resiliance;
 using Backend.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -78,7 +77,7 @@ builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<OauthRefreshService>();
 builder.Services.AddSingleton<RefreshTokenEncryptionService>();
 builder.Services.AddScoped<JwtService>();
-builder.Services.AddScoped<DownloadFromApi>();
+//builder.Services.AddScoped<DownloadFromApi>();
 
 builder.Services.AddAuthorization();
 

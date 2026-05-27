@@ -1,4 +1,5 @@
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { getAuthHeaders } from '../helpers/GetAuthHeaders';
@@ -12,7 +13,7 @@ export class EventService {
 
   constructor(private http: HttpClient) {}
 
-  getEvents() {
+  getEvents(): Observable<getEventDto[]> {
     return this.http.get<getEventDto[]>(`${this.apiUrl}/get-events`, {
        headers: getAuthHeaders() 
       }).pipe(

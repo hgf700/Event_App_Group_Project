@@ -13,14 +13,14 @@ export class AuthService {
       throw new Error('Hasła nie są identyczne');
     }
 
-    return this.http.post<{ token: string , email: string }>(`${this.apiUrl}/register-norm`, {
+    return this.http.post<{ jwt: string , email: string }>(`${this.apiUrl}/register-norm`, {
       email,
       password,
     });
   }
 
   loginUserNorm(email: string, password: string) {
-    return this.http.post<{ token: string, email: string }>(`${this.apiUrl}/login-norm`, {
+    return this.http.post<{ jwt: string, email: string }>(`${this.apiUrl}/login-norm`, {
       email,
       password,
     });

@@ -2,7 +2,6 @@
 using Backend.Identity;
 using Backend.Models.Dto.RelEvent;
 using Backend.Models.Model;
-using Backend.Resiliance;
 using Backend.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -27,22 +26,19 @@ public class EventController : ControllerBase
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly DownloadFromApi _seedDbService;
     private readonly ILogger<EventController> _logger;
-    private readonly ApiClient _apiClient;
 
 
     public EventController(
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
             DownloadFromApi seedDbService,
-            ILogger<EventController> logger,
-            ApiClient apiClient
+            ILogger<EventController> logger
         )
     {
         _context = context;
         _userManager = userManager;
         _seedDbService= seedDbService;
         _logger = logger;
-        _apiClient= apiClient;
     }
 
     [HttpGet("get-events")]

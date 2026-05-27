@@ -29,16 +29,23 @@ export class LoginCallback implements OnInit {
   }
 
   generateJWTandEmail(){
-    const tokenFromUrl = this.route.snapshot.queryParamMap.get('token');
+    const tokenFromUrl = this.route.snapshot.queryParamMap.get('jwt');
     const emailFromUrl = this.route.snapshot.queryParamMap.get('email');
+    
     const tokenFromStorage = localStorage.getItem('jwt');
     const emailFromStorage = localStorage.getItem('email');
 
-    if (tokenFromUrl && emailFromUrl) {
-      localStorage.setItem('jwt', tokenFromUrl);
-      localStorage.setItem('email', emailFromUrl);
-      console.log('JWT zapisany z URL');
-    }
+    console.log({
+      tokenFromUrl,
+      emailFromUrl,
+      tokenFromStorage,
+      emailFromStorage
+    });
+
+    // if (tokenFromUrl && emailFromUrl) {
+    //   localStorage.setItem('jwt', tokenFromUrl);
+    //   localStorage.setItem('email', emailFromUrl);
+    // }
 
     if (!tokenFromUrl && !tokenFromStorage && !emailFromUrl && !emailFromStorage) {
       console.error('Brak tokena – użytkownik niezalogowany');

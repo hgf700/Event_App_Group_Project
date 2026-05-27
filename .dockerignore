@@ -7,3 +7,4 @@ useful/
 **/.gitignore
 **/.angular/
 **/node_modules/
+.github/

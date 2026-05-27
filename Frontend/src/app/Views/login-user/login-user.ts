@@ -41,7 +41,9 @@ export class LoginUser {
 
     this.authService.loginUserNorm(email, password).subscribe({
       next: (res) => {
-        localStorage.setItem('jwt', res.token);
+        localStorage.setItem('jwt', res.jwt);
+        localStorage.setItem('email', res.email);
+
         this.router.navigate(['/login-callback']);
       },
       error: (err) => alert(err.error),
