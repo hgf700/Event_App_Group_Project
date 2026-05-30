@@ -5,14 +5,20 @@ uzycie notification model dla sledzenia stanu wyslania email ...
 
 popraw edycja uzytkownika
 
-ressiliance np retry dla frontu w angular
+ressiliance np retry,circut breaker dla frontu w angular
 
-zamiast local storage to lepiej http cookies i same site strict
+zamiast local storage to lepiej http cookies i same site strict ale to potem
 
 refresh tokeny z jwt
 
 w jwt ustawiac algorytm
 
-terraform dla odpalenia dockeryzacji projektu , grafany i prometheus
+terraform dla odpalenia dockeryzacji projektu , grafany i prometheus naraz
+
+dla github actions testy jednostkowe front i back
 
 wyglad frontu
+
+zrobienie nowych dockerow dla front i back
+
+uzycie rate limit i innych zabezpieczen w controller
