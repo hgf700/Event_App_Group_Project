@@ -1,18 +1,18 @@
 popraw widok z wyszukiwaniem eventu logika najpierw musi zapisywac do bazy i wtedy moge zwrocic id bo 
 inaczej jest 0
 
-uzycie notification mdoel
+uzycie notification model dla sledzenia stanu wyslania email ...
 
 popraw edycja uzytkownika
 
-Polly ma wbudowane retry dla get 
-lub
-HttpClient resilience zamiast ręcznego używania Polly.
+ressiliance np retry dla frontu w angular
 
 zamiast local storage to lepiej http cookies i same site strict
 
-refresh tokeny z jwt?
+refresh tokeny z jwt
 
 w jwt ustawiac algorytm
 
 terraform dla odpalenia dockeryzacji projektu , grafany i prometheus
+
+wyglad frontu
