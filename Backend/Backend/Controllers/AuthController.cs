@@ -69,10 +69,9 @@ public class AuthController : ControllerBase
 
             _logger.LogInformation("User successfully register {email}", dto.email);
 
-            return Ok(new
+            return Ok(new 
             {
-                jwt = jwt,
-                email= dto.email
+                jwt = jwt
             });
 
         }
@@ -115,7 +114,6 @@ public class AuthController : ControllerBase
             return Ok(new
             {
                 jwt = jwt,
-                email = dto.email
             });
         }
         catch (Exception ex) {

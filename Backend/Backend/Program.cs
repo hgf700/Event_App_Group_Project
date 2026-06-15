@@ -63,7 +63,7 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File(
         "Logs/log.txt",
         rollingInterval: RollingInterval.Day,
-        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}"
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}{NewLine}"
     )
     .WriteTo.GrafanaLoki("http://localhost:3100")
     .CreateLogger();
@@ -77,6 +77,7 @@ builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<OauthRefreshService>();
 builder.Services.AddSingleton<RefreshTokenEncryptionService>();
 builder.Services.AddScoped<JwtService>();
+builder.Services.AddScoped<SeedDbService>();
 //builder.Services.AddScoped<DownloadFromApi>();
 
 builder.Services.AddAuthorization();
@@ -198,6 +199,8 @@ builder.Services.AddRateLimiter(options =>
     });
 });
 
+builder.Services.AddHttpClient();
+
 var app = builder.Build();
 
 // Middleware bezpieczeństwa
@@ -218,6 +221,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
 }
 
 app.UseHttpsRedirection();

@@ -16,9 +16,7 @@ export class EventService {
   getEvents(): Observable<getEventDto[]> {
     return this.http.get<getEventDto[]>(`${this.apiUrl}/get-events`, {
        headers: getAuthHeaders() 
-      }).pipe(
-        RetryHelper()
-      );
+      });
   }
 
   eventDetails(eventId: number) {

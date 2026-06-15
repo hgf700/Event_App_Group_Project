@@ -24,22 +24,18 @@ export class LoginCallback implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.generateJWTandEmail();
+    this.generateJWT();
     this.getCurrentUser();
   }
 
-  generateJWTandEmail(){
+  generateJWT(){
     const tokenFromUrl = this.route.snapshot.queryParamMap.get('jwt');
-    const emailFromUrl = this.route.snapshot.queryParamMap.get('email');
     
     const tokenFromStorage = localStorage.getItem('jwt');
-    const emailFromStorage = localStorage.getItem('email');
 
     console.log({
       tokenFromUrl,
-      emailFromUrl,
       tokenFromStorage,
-      emailFromStorage
     });
 
     // if (tokenFromUrl && emailFromUrl) {
@@ -47,7 +43,7 @@ export class LoginCallback implements OnInit {
     //   localStorage.setItem('email', emailFromUrl);
     // }
 
-    if (!tokenFromUrl && !tokenFromStorage && !emailFromUrl && !emailFromStorage) {
+    if (!tokenFromUrl && !tokenFromStorage) {
       console.error('Brak tokena – użytkownik niezalogowany');
       return;
     }
@@ -59,6 +55,7 @@ export class LoginCallback implements OnInit {
       next: (data) => {
         this.currentUser = data;
         this.loading = false;
+        localStorage.setItem('email', data.email);
         this.cdr.detectChanges();
       },
       error: (err) => {

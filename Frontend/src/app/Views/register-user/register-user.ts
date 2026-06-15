@@ -47,7 +47,6 @@ export class RegisterUser {
     this.authService.registerUserNorm(email, password, confirmPassword).subscribe({
       next: (res) => {
         localStorage.setItem('jwt', res.jwt);
-        localStorage.setItem('email', res.email);
 
         this.router.navigate(['/login-callback']);
       },
