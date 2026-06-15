@@ -15,9 +15,7 @@ export class LayoutService {
   }
 
   userEmail(): string {
-    return localStorage.getItem('email') 
-    ? localStorage.getItem('email')!
-    : 'brak email';
+    return localStorage.getItem('email') ?? 'brak email';
   }
 
   logout(): void {

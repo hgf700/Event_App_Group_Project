@@ -15,6 +15,7 @@ import { getCurrentUserDto } from '../../Dto/getCurrentUserDto';
 export class LoginCallback implements OnInit {
   loading = false;
   currentUser!: getCurrentUserDto;
+  userEmail!: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -24,6 +25,8 @@ export class LoginCallback implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.userEmail = localStorage.getItem('email') ?? 'brak email';
+    
     this.generateJWT();
     this.getCurrentUser();
   }
@@ -38,11 +41,6 @@ export class LoginCallback implements OnInit {
       tokenFromStorage,
     });
 
-    // if (tokenFromUrl && emailFromUrl) {
-    //   localStorage.setItem('jwt', tokenFromUrl);
-    //   localStorage.setItem('email', emailFromUrl);
-    // }
-
     if (!tokenFromUrl && !tokenFromStorage) {
       console.error('Brak tokena – użytkownik niezalogowany');
       return;
@@ -55,8 +53,8 @@ export class LoginCallback implements OnInit {
       next: (data) => {
         this.currentUser = data;
         this.loading = false;
+        this.userEmail = data.email;
         localStorage.setItem('email', data.email);
-        this.cdr.detectChanges();
       },
       error: (err) => {
         this.loading = false;

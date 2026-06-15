@@ -22,3 +22,5 @@ wyglad frontu
 zrobienie nowych dockerow dla front i back
 
 uzycie rate limit i innych zabezpieczen w controller
+
+poprawienei wyciaganie z local storage emailu uzytkownika dla wspoldzielonego widoku

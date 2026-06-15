@@ -22,9 +22,7 @@ export class EventService {
   eventDetails(eventId: number) {
     return this.http.get<getEventDto>(`${this.apiUrl}/event-details/${eventId}`, {
       headers: getAuthHeaders(),
-    }).pipe(
-      RetryHelper()
-    );
+    });
   }
 
   seedDataBase() {
