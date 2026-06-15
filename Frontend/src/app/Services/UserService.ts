@@ -28,16 +28,18 @@ export class UserService {
     );
   }
 
-  editCurrentUser(newEmail: string, currentPassword: string, newPassword: string,) {
-    const body: postEditUserDto = {
-      newEmail,
-      currentPassword,
-      newPassword,
-    };
-
-    return this.http.post<postEditUserDto>(
+  editCurrentUserEmail(newEmail: string) {
+    return this.http.post(
       `${this.apiUrl}/edit-user`,
-      body,
+      newEmail,
+      { headers: getAuthHeaders() },
+    );
+  }
+
+  editCurrentUserPassword(newPassword: string) {
+    return this.http.post(
+      `${this.apiUrl}/edit-user`,
+      newPassword,
       { headers: getAuthHeaders() },
     );
   }

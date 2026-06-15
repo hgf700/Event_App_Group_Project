@@ -1,0 +1,198 @@
+﻿ //[HttpPost("edit-user-password")]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+    //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    //[ProducesResponseType(StatusCodes.Status404NotFound)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //public async Task<ActionResult<postEditUserDto>> EditUserPassword(string newPassword)
+    //{
+    //    if (!ModelState.IsValid)
+    //        return BadRequest(ModelState);
+
+    //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    //    if (userId == null)
+    //        return Unauthorized();
+
+    //    try
+    //    {
+    //        var user = await _userManager.FindByIdAsync(userId);
+
+    //        if (user == null)
+    //        {
+    //            _logger.LogWarning("User edit failed - user not found. UserId: {UserId}", userId);
+    //            return NotFound("User not found");
+    //        }
+
+    //        model.newEmail = NormalizeUser(model.newEmail);
+    //        model.currentPassword = NormalizeUser(model.currentPassword);
+    //        model.newPassword = NormalizeUser(model.newPassword);
+
+    //        var emailExists = await _userManager.FindByEmailAsync(model.newEmail);
+
+    //        if (emailExists != null)
+    //            return BadRequest("Email already exists");
+
+    //        user.Email = model.newEmail;
+    //        user.UserName = model.newEmail; // nick = email
+
+    //        if (string.IsNullOrWhiteSpace(model.currentPassword))
+    //            return BadRequest("Current password is required");
+
+    //        var passwordResult = await _userManager.ChangePasswordAsync(
+    //            user,
+    //            model.currentPassword,
+    //            model.newPassword
+    //        );
+
+    //        if (!passwordResult.Succeeded)
+    //            return BadRequest(passwordResult.Errors);
+
+    //        var result = await _userManager.UpdateAsync(user);
+
+    //        if (!result.Succeeded)
+    //            return BadRequest(result.Errors);
+
+    //        _logger.LogInformation("User successfully edited {email}", model.newEmail);
+
+    //        return Ok();
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        _logger.LogError(ex, "Error while editing user. UserId: {UserId}", userId);
+    //        Console.WriteLine(ex);
+    //        return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+    //    }
+    //}
+
+    //[HttpPost("edit-user-email")]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+    //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    //[ProducesResponseType(StatusCodes.Status404NotFound)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //public async Task<ActionResult<postEditUserDto>> EditUserEmail(string newEmail)
+    //{
+    //    if (!ModelState.IsValid)
+    //        return BadRequest(ModelState);
+
+    //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    //    if (userId == null)
+    //        return Unauthorized();
+
+    //    try
+    //    {
+    //        var user = await _userManager.FindByIdAsync(userId);
+
+    //        if (user == null)
+    //        {
+    //            _logger.LogWarning("User edit failed - user not found. UserId: {UserId}", userId);
+    //            return NotFound("User not found");
+    //        }
+
+    //        model.newEmail = NormalizeUser(model.newEmail);
+    //        model.currentPassword = NormalizeUser(model.currentPassword);
+    //        model.newPassword = NormalizeUser(model.newPassword);
+
+    //        var emailExists = await _userManager.FindByEmailAsync(model.newEmail);
+
+    //        if (emailExists != null)
+    //            return BadRequest("Email already exists");
+
+    //        user.Email = model.newEmail;
+    //        user.UserName = model.newEmail; // nick = email
+
+    //        if (string.IsNullOrWhiteSpace(model.currentPassword))
+    //            return BadRequest("Current password is required");
+
+    //        var passwordResult = await _userManager.ChangePasswordAsync(
+    //            user,
+    //            model.currentPassword,
+    //            model.newPassword
+    //        );
+
+    //        if (!passwordResult.Succeeded)
+    //            return BadRequest(passwordResult.Errors);
+
+    //        var result = await _userManager.UpdateAsync(user);
+
+    //        if (!result.Succeeded)
+    //            return BadRequest(result.Errors);
+
+    //        _logger.LogInformation("User successfully edited {email}", model.newEmail);
+
+    //        return Ok();
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        _logger.LogError(ex, "Error while editing user. UserId: {UserId}", userId);
+    //        Console.WriteLine(ex);
+    //        return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+    //    }
+    //}
+
+
+    //[HttpPost("edit-user")]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+    //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    //[ProducesResponseType(StatusCodes.Status404NotFound)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //public async Task<ActionResult<postEditUserDto>> EditUser([FromBody] postEditUserDto model)
+    //{
+    //    if (!ModelState.IsValid)
+    //        return BadRequest(ModelState);
+
+    //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    //    if (userId == null)
+    //        return Unauthorized();
+
+    //    try
+    //    {
+    //        var user = await _userManager.FindByIdAsync(userId);
+
+    //        if (user == null)
+    //        {
+    //            _logger.LogWarning("User edit failed - user not found. UserId: {UserId}",userId);
+    //            return NotFound("User not found");
+    //        }
+
+    //        model.newEmail = NormalizeUser(model.newEmail);
+    //        model.currentPassword = NormalizeUser(model.currentPassword);
+    //        model.newPassword = NormalizeUser(model.newPassword);
+
+    //        var emailExists = await _userManager.FindByEmailAsync(model.newEmail);
+
+    //        if (emailExists != null)
+    //            return BadRequest("Email already exists");
+
+    //        user.Email = model.newEmail;
+    //        user.UserName = model.newEmail; // nick = email
+
+    //        if (string.IsNullOrWhiteSpace(model.currentPassword))
+    //            return BadRequest("Current password is required");
+
+    //        var passwordResult = await _userManager.ChangePasswordAsync(
+    //            user,
+    //            model.currentPassword,
+    //            model.newPassword
+    //        );
+
+    //        if (!passwordResult.Succeeded)
+    //            return BadRequest(passwordResult.Errors);
+
+    //        var result = await _userManager.UpdateAsync(user);
+
+    //        if (!result.Succeeded)
+    //            return BadRequest(result.Errors);
+
+    //        _logger.LogInformation("User successfully edited {email}", model.newEmail);
+
+    //        return Ok();
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        _logger.LogError(ex, "Error while editing user. UserId: {UserId}", userId);
+    //        Console.WriteLine(ex);
+    //        return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+    //    }
+    //}

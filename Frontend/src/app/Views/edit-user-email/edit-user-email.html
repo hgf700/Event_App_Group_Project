@@ -1,1 +1,12 @@
+<button (click)="returnToLoginCallback()">returnToLoginCallback</button>
+
 <p>edit-user-email works!</p>
+<p>potem</p>
+<main class="main">
+  <form [formGroup]="editUserEmailForm" (ngSubmit)="onSubmit()">
+    <label>newEmail</label>
+    <input type="email" formControlName="newEmail" placeholder="newEmail" /> <br />
+
+    <button type="submit">Change User Credentials</button>
+  </form>
+</main>

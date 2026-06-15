@@ -3,14 +3,7 @@
 <p>edit-user works!</p>
 
 <main class="main">
-  <form [formGroup]="editUserForm" (ngSubmit)="onSubmit()">
-    <label>newEmail</label>
-    <input type="email" formControlName="newEmail" placeholder="newEmail" /> <br />
-    <label>currentPassword</label>
-    <input type="password" formControlName="currentPassword" placeholder="currentPassword" /><br />
-    <label>newPassword</label>
-    <input type="password" formControlName="newPassword" placeholder="newPassword" /><br />
-
-    <button type="submit">Change User Credentials</button>
-  </form>
+  <button (click)="changeUserEmail()">changeUserEmail</button><br />
+  <button (click)="changeUserPassword()">changeUserPassword</button><br />
 </main>
+
