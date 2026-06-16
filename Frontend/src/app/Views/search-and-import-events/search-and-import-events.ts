@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { getEventDto } from '../../Dto/getEventDto';
 import { postCitySearchDto } from '../../Dto/postCitySearchDto';
-import { DownloadImportEventService } from '../../Services/DownloadImportEventService';
+import { SearchOrDownloadEventService } from '../../Services/SearchOrDownloadEventService';
 import { EventService } from '../../Services/EventService';
 
 @Component({
@@ -15,7 +15,9 @@ import { EventService } from '../../Services/EventService';
   templateUrl: './search-and-import-events.html',
   styleUrl: './search-and-import-events.css',
 })
-export class SearchAndImportEvents implements OnInit {
+
+// export class SearchAndImportEvents implements OnInit {
+export class SearchAndImportEvents{
   searchAndImportEventsForm!: FormGroup;
   events: getEventDto[] = [];
   cityDto!: postCitySearchDto;
@@ -27,7 +29,7 @@ export class SearchAndImportEvents implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private cdr: ChangeDetectorRef,
-    private dIEventService: DownloadImportEventService,
+    private searchOrDownloadEventService: SearchOrDownloadEventService,
     private eventService: EventService,
   ) {
     this.searchAndImportEventsForm = this.fb.group({
@@ -45,7 +47,7 @@ export class SearchAndImportEvents implements OnInit {
 
     const city = this.searchAndImportEventsForm.value.city;
 
-    this.dIEventService.searchEvent(city).subscribe({
+    this.searchOrDownloadEventService.searchOrDownloadEvent(city).subscribe({
       next: (res) => {
         this.events = res ?? [];
         this.loading = false;
@@ -59,9 +61,7 @@ export class SearchAndImportEvents implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    
-  }
+  // ngOnInit(): void {}
 
 
 }
