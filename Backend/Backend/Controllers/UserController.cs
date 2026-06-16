@@ -38,16 +38,6 @@ public class UserController : ControllerBase
         _logger = logger;
     }
 
-    private string NormalizeUser(string? value)
-    {
-        return new Pipe()
-            .Add(new TrimFilter())
-            .Add(new EmptyIfNullOrWhitespaceFilter())
-            .Add(new NormalizeWhitespaceFilter())
-            .Execute(new StringContext { Value = value })
-            .Value!;
-    }
-
     [HttpGet("current-user")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

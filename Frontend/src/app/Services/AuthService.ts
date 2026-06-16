@@ -8,10 +8,7 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  registerUserNorm(email: string, password: string, repeatPassword: string) {
-    if (password !== repeatPassword) {
-      throw new Error('Hasła nie są identyczne');
-    }
+  registerUserNorm(email: string, password: string) {
 
     return this.http.post<{ jwt: string }>(`${this.apiUrl}/register-norm`, {
       email,

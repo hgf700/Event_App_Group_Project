@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { UserService } from '../../Services/UserService';
 import { getCurrentUserDto } from '../../Dto/getCurrentUserDto';
+import { EventsNavigationService }from '../../RootingServices/EventsNavigationService'
+import { UserNavigationService }from '../../RootingServices/UserNavigationService'
 
 @Component({
   selector: 'app-login-callback',
@@ -21,6 +23,8 @@ export class LoginCallback implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private userService: UserService,
+    private eventsNavigtionService: EventsNavigationService,
+    private userNavigationService: UserNavigationService,
     private cdr: ChangeDetectorRef,
   ) {}
 
@@ -65,22 +69,22 @@ export class LoginCallback implements OnInit {
   }
 
   seedData() {
-    this.router.navigate(['/seed-database']);
+    this.eventsNavigtionService.seedDatabase()
   }
 
   eventsView() {
-    this.router.navigate(['/get-events']);
+    this.eventsNavigtionService.goToEvents()
   }
 
   searchAndImportView() {
-    this.router.navigate(['/search-and-import-events']);
+    this.eventsNavigtionService.searchAndDownloadEvents()
   }
 
   userBoughtTickets() {
-    this.router.navigate(['/user-tickets']);
+    this.userNavigationService.userBoughtTickets();
   }
 
   editCurrentUser() {
-    this.router.navigate(['/edit-user']);
+    this.userNavigationService.editCurrentUser();
   }
 }

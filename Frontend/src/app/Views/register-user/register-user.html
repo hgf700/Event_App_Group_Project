@@ -1,5 +1,9 @@
 <p>register-user works!</p>
 
+@if (registerUserForm.errors?.['passwordMismatch']){
+  <p>Hasła nie są takie same</p>
+}
+
 <main class="main">
   <form [formGroup]="registerUserForm" (ngSubmit)="onSubmit()">
     <label>Email</label>

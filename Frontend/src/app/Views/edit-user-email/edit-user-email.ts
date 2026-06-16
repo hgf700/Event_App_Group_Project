@@ -27,10 +27,6 @@ export class EditUserEmail {
       });
     }
 
-returnToLoginCallback() {
-    this.router.navigate(['/login-callback']);
-  }
-
   onSubmit() {
     this.submitted = true;
 

@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../Services/AuthService';
+import {registerPasswordMatchValidator} from '../../Validators/registerPasswordMatchValidator';
 
 @Component({
   selector: 'app-register-user',
@@ -16,6 +17,16 @@ export class RegisterUser {
   registerUserForm!: FormGroup;
   submitted = false;
 
+// this.editUserForm = new FormGroup(
+//   {
+//     newEmail: new FormControl(''),
+//     currentPassword: new FormControl(''),
+//     newPassword: new FormControl(''),
+//     repeatNewPassword: new FormControl('')
+//   },
+//   { validators: passwordMatchValidator }
+// );
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -26,7 +37,9 @@ export class RegisterUser {
       email: ['', [Validators.required]],
       password: ['', [Validators.required]],
       confirmPassword: ['', [Validators.required]],
-    });
+    },
+      { validators: registerPasswordMatchValidator }
+    );
   }
   // , Validators.email
   onSubmit() {
@@ -34,17 +47,13 @@ export class RegisterUser {
 
     if (this.registerUserForm.invalid) {
       console.log(this.registerUserForm.errors);
-      console.log(this.registerUserForm.get('email')?.errors);
-      console.log(this.registerUserForm.get('password')?.errors);
-      console.log(this.registerUserForm.get('confirmPassword')?.errors);
       return;
     }
 
     const email = this.registerUserForm.value.email;
     const password = this.registerUserForm.value.password;
-    const confirmPassword = this.registerUserForm.value.confirmPassword;
 
-    this.authService.registerUserNorm(email, password, confirmPassword).subscribe({
+    this.authService.registerUserNorm(email, password).subscribe({
       next: (res) => {
         localStorage.setItem('jwt', res.jwt);
 

@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { UserService } from '../../Services/UserService';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import {passwordMatchValidator} from '../../Validators/passwordMatchValidator'
+import {changePasswordMatchValidator} from '../../Validators/changePasswordMatchValidator';
 
 @Component({
   selector: 'app-edit-user-password',
@@ -27,7 +27,7 @@ export class EditUserPassword {
         newPassword: ['', ],
         repeatNewPassword: ['', ],
       },
-      { validators: passwordMatchValidator }
+      { validators: changePasswordMatchValidator }
       );
     }
 

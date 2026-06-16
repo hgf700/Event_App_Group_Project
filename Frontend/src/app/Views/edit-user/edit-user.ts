@@ -18,10 +18,6 @@ export class EditUser {
       private router: Router,
     ) {}
   
-returnToLoginCallback() {
-    this.router.navigate(['/login-callback']);
-  }
-
   changeUserEmail() {
     this.router.navigate(['/edit-user-email']);
   }
