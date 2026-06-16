@@ -9,9 +9,7 @@ ressiliance np retry,circut breaker dla frontu w angular
 
 zamiast local storage to lepiej http cookies i same site strict ale to potem
 
-refresh tokeny z jwt
-
-w jwt ustawiac algorytm
+refresh tokeny z jwt dokonczyc
 
 terraform dla odpalenia dockeryzacji projektu , grafany i prometheus naraz
 
@@ -26,3 +24,5 @@ uzycie rate limit i innych zabezpieczen w controller
 poprawienei wyciaganie z local storage emailu uzytkownika dla wspoldzielonego widoku
 
 jesli uzytkownik jest zalogowany to odrazu rootuje go do widoku login callback
+
+jak zmieni email w user email to update jwt(pewnie usuniecie i nastawienie nowego lub nadpisanie)

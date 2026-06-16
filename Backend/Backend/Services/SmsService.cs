@@ -1,4 +1,5 @@
 ﻿using Twilio;
+using Twilio.Rest.Api.V2010.Account;
 
 namespace Backend.Services;
 
@@ -17,13 +18,13 @@ public class SmsService
 
             TwilioClient.Init(twilio_sid, twilio_token);
 
-            //var message = MessageResource.Create(
-            //    body: $"Zapisałeś się na event {url}",
-            //    from: new Twilio.Types.PhoneNumber($"{twilio_number}"),
-            //    to: new Twilio.Types.PhoneNumber($"{sms_receiver}")
-            //);
+            var message = MessageResource.Create(
+                body: $"Zapisałeś się na event {url}",
+                from: new Twilio.Types.PhoneNumber($"{twilio_number}"),
+                to: new Twilio.Types.PhoneNumber($"{sms_receiver}")
+            );
 
-            //Console.WriteLine(message.Body);
+            Console.WriteLine(message.Body);
         }
     }
 }

@@ -19,7 +19,7 @@ public class SeedDbService
         _context = context;
     }
 
-    public async Task FetchAndSaveEventsAsync()
+    public async Task SeedDatabase()
     {
         try
         {

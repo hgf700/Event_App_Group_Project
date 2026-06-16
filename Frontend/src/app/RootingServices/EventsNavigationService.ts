@@ -21,7 +21,7 @@ export class EventsNavigationService  {
     return this.router.navigate(['/seed-database']);
   }
 
-  searchAndDownloadEvents(): Promise<boolean>  {
-    return this.router.navigate(['/seed-database']);
-  }
+  // searchAndDownloadEvents(): Promise<boolean>  {
+  //   return this.router.navigate(['/seed-database']);
+  // }
 }
