@@ -154,3 +154,36 @@ button {
   .navbar .brand:hover {
     background-color: rgba(255, 255, 255, 0.25);
   }
+
+/* === AUTH BUTTONS (Logowanie / Rejestracja) === */
+.navbar .btn-login {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-weight: 600;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  padding: 0.45rem 1rem;
+  transition: var(--transition);
+}
+
+  .navbar .btn-login:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+    border-color: #fff;
+    color: #fff;
+  }
+
+.navbar .btn-register {
+  background-color: #fff;
+  color: var(--color-primary-dark);
+  font-weight: 700;
+  margin-left: 0.5rem;
+  padding: 0.45rem 1.25rem;
+  border: 2px solid #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+  .navbar .btn-register:hover {
+    background-color: var(--color-bg);
+    color: var(--color-primary-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
