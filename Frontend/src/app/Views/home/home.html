@@ -1,6 +1,48 @@
-<main class="main">
-  <h1>Hello</h1>
-  <button (click)="loginWithGoogle()">Zaloguj przez Google</button><br />
-  <button (click)="registerUserView()">registerUserView</button><br />
-  <button (click)="loginUserView()">loginUserView</button><br />
-</main>
+<section class="hero">
+  <div class="hero-content">
+    <h1 class="hero-title">Odkryj najlepsze wydarzenia w Twoim mieście</h1>
+    <p class="hero-subtitle">
+      Koncerty, festiwale, mecze i spektakle — wszystko w jednym miejscu.
+      Kup bilet w kilka sekund i nie przegap żadnej okazji.
+    </p>
+
+    <div class="hero-actions">
+      <button class="btn-cta" (click)="loginWithGoogle()">
+        Zaloguj się przez Google
+      </button>
+      <button class="btn-secondary" (click)="registerUserView()">
+        Załóż konto
+      </button>
+    </div>
+
+    <p class="hero-login">
+      Masz już konto?
+      <a (click)="loginUserView()">Zaloguj się</a>
+    </p>
+  </div>
+
+  <div class="hero-decoration">
+    <div class="floating-card card-1">🎵</div>
+    <div class="floating-card card-2">🎭</div>
+    <div class="floating-card card-3">⚽</div>
+    <div class="floating-card card-4">🎤</div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="feature">
+    <div class="feature-icon">🎫</div>
+    <h3>Szybki zakup</h3>
+    <p>Kup bilet w trzech kliknięciach i otrzymaj go natychmiast na maila.</p>
+  </div>
+  <div class="feature">
+    <div class="feature-icon">📱</div>
+    <h3>QR kod na telefonie</h3>
+    <p>Pokaż kod na wejściu — bez drukowania, bez kolejek.</p>
+  </div>
+  <div class="feature">
+    <div class="feature-icon">🔔</div>
+    <h3>Powiadomienia SMS</h3>
+    <p>Otrzymasz przypomnienie o wydarzeniu prosto na telefon.</p>
+  </div>
+</section>

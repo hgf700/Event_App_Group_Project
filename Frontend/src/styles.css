@@ -1,1 +1,59 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* === IMPORT MATERIAL THEMES === */
+@import '@angular/material/prebuilt-themes/magenta-violet.css';
+
+/* === RESET & FONT === */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  background-color: #fafafa;
+  color: #212121;
+  line-height: 1.6;
+}
+
+/* === COLOR PALETTE — można potem łatwo zmieniać === */
+:root {
+  --color-primary: #ff6f00; /* główny pomarańcz */
+  --color-primary-dark: #e65100; /* ciemniejszy do hover */
+  --color-primary-light: #ffa040; /* jaśniejszy */
+  --color-accent: #6a1b9a; /* fioletowy akcent - kontrast */
+  --color-bg: #fff8f0; /* ciepłe kremowe tło */
+  --color-surface: #ffffff; /* karty, navbar */
+  --color-text: #2c1810; /* ciemny brąz zamiast czerni */
+  --color-text-muted: #8b6f47; /* przygaszone */
+  --color-border: #f0e0d0; /* ciepłe obramowanie */
+  --shadow-sm: 0 2px 6px rgba(230, 81, 0, 0.08);
+  --shadow-md: 0 6px 16px rgba(230, 81, 0, 0.12);
+  --radius: 10px;
+  --transition: 0.2s ease;
+}
+
+/* === HELPER CLASSES === */
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  color: var(--color-text);
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+/* === BUTTONS GLOBAL === */
+button {
+  font-family: inherit;
+}

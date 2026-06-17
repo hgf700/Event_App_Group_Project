@@ -1,28 +1,63 @@
-<button (click)="returnToLoginCallback()">returnToLoginCallback</button>
+<div class="page-header">
+  <button class="btn-back" (click)="returnToLoginCallback()">
+    ← Wróć
+  </button>
+  <h1 class="page-title">Nadchodzące wydarzenia</h1>
+  <p class="page-subtitle">Znaleziono <strong>{{ events.length }}</strong> wydarzeń</p>
+</div>
 
-<p>{{ events.length }}</p>
-
-<main>
-  @if (events.length > 0) {
-    <ul>
-      @for (e of events; track e.eventId) {
-        <li>
-          {{ e.eventId }}
-          {{ e.address }}
-          {{ e.city }}
-          {{ e.country }}
-          {{ e.nameOfClub }}
-          {{ e.nameOfEvent }}
-          {{ e.photoUrl }}
-          {{ e.startOfEvent }}
-          {{ e.typeOfEvent }}
-          {{ e.urlOfEvent }}
-
-          <button (click)="eventDetails(e.eventId!)">eventDetails</button>
-        </li>
+@if (loading) {
+<div class="state-box">
+  <div class="spinner"></div>
+  <p>Ładowanie wydarzeń...</p>
+</div>
+} @else if (events.length > 0) {
+<div class="events-grid">
+  @for (e of events; track e.eventId) {
+  <article class="event-card">
+    <div class="event-image">
+      @if (e.photoUrl) {
+      <img [src]="e.photoUrl" [alt]="e.nameOfEvent" />
+      } @else {
+      <div class="event-placeholder">🎫</div>
       }
-    </ul>
-  } @else {
-    <p>Brak events</p>
+      @if (e.typeOfEvent) {
+      <span class="event-badge">{{ e.typeOfEvent }}</span>
+      }
+    </div>
+
+    <div class="event-body">
+      <h3 class="event-title">{{ e.nameOfEvent }}</h3>
+
+      @if (e.startOfEvent) {
+      <p class="event-date">
+        <span class="icon">📅</span>
+        {{ e.startOfEvent | date:'dd MMM yyyy, HH:mm' }}
+      </p>
+      }
+
+      @if (e.nameOfClub || e.city) {
+      <p class="event-location">
+        <span class="icon">📍</span>
+        <span>
+          @if (e.nameOfClub) { <strong>{{ e.nameOfClub }}</strong> }
+          @if (e.city) { , {{ e.city }} }
+          @if (e.country) { , {{ e.country }} }
+        </span>
+      </p>
+      }
+
+      <button class="btn-details" (click)="eventDetails(e.eventId!)">
+        Zobacz szczegóły →
+      </button>
+    </div>
+  </article>
   }
-</main>
+</div>
+} @else {
+<div class="state-box">
+  <div class="empty-icon">🔍</div>
+  <h2>Brak wydarzeń</h2>
+  <p>Nie znaleziono żadnych wydarzeń w bazie.</p>
+</div>
+}
