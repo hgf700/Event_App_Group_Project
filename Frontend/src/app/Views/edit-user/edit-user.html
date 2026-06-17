@@ -1,7 +1,25 @@
-<p>edit-user works!</p>
+<div class="page-header">
+  <button class="btn-back" routerLink="/login-callback">← Wróć do panelu</button>
+  <h1 class="page-title">Ustawienia konta</h1>
+  <p class="page-subtitle">Wybierz, co chcesz zmienić</p>
+</div>
 
-<main class="main">
-  <button (click)="changeUserEmail()">changeUserEmail</button><br />
-  <button (click)="changeUserPassword()">changeUserPassword</button><br />
-</main>
+<div class="settings-grid">
+  <button class="setting-card" (click)="changeUserEmail()">
+    <div class="setting-icon">📧</div>
+    <div class="setting-content">
+      <h3>Zmień adres email</h3>
+      <p>Zaktualizuj główny adres używany do logowania i powiadomień</p>
+    </div>
+    <div class="setting-arrow">→</div>
+  </button>
 
+  <button class="setting-card" (click)="changeUserPassword()">
+    <div class="setting-icon">🔑</div>
+    <div class="setting-content">
+      <h3>Zmień hasło</h3>
+      <p>Wprowadź nowe hasło dla większego bezpieczeństwa konta</p>
+    </div>
+    <div class="setting-arrow">→</div>
+  </button>
+</div>

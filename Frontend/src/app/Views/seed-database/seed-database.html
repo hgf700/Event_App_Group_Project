@@ -1,1 +1,18 @@
 <p>seed-database works!</p>
+<div class="seed-wrapper">
+  <div class="seed-card">
+    <div class="seed-icon">🌱</div>
+
+    @if (loading) {
+    <h1>Ładowanie danych testowych...</h1>
+    <p>Proszę czekać, baza danych jest właśnie wypełniana wydarzeniami.</p>
+    <div class="spinner"></div>
+    } @else {
+    <h1>✅ Dane załadowane</h1>
+    <p>Baza danych została uzupełniona testowymi wydarzeniami.</p>
+    <button class="btn-cta" routerLink="/get-events">
+      🎫 Zobacz wydarzenia
+    </button>
+    }
+  </div>
+</div>

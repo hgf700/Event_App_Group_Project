@@ -1,40 +1,72 @@
-<p>search-and-import-events works!</p>
+<div class="page-header">
+  <h1 class="page-title">Wyszukaj wydarzenia</h1>
+  <p class="page-subtitle">Znajdź wydarzenia w wybranym mieście i zaimportuj do bazy</p>
+</div>
 
-<p>london</p>
+<div class="search-card">
+  <form [formGroup]="searchAndImportEventsForm" (ngSubmit)="onSubmit()" class="search-form">
+    <div class="form-group">
+      <label for="city">Miasto</label>
+      <div class="search-input-wrap">
+        <span class="search-icon">📍</span>
+        <input id="city"
+               type="text"
+               formControlName="city"
+               placeholder="np. London, Warsaw, Berlin..."
+               autocomplete="off" />
+      </div>
+      @if (submitted && searchAndImportEventsForm.controls['city'].errors?.['required']) {
+      <span class="form-error">Podaj nazwę miasta</span>
+      }
+    </div>
 
-<main class="main">
-  <form [formGroup]="searchAndImportEventsForm" (ngSubmit)="onSubmit()">
-    <label>city name</label>
-    <input type="city" formControlName="city" placeholder="city" /> <br />
-
-    <button type="submit">Search</button>
+    <button type="submit" class="btn-search">
+      🔍 Szukaj
+    </button>
   </form>
-</main>
+</div>
 
-<main>
-@if(events.length > 0){
-    <ul>
-        @for(e of events; track e.eventId){
-            <li>
-                {{e.eventId}}
-                {{e.address}}
-                {{e.city}}
-                {{e.country}}
-                {{e.nameOfClub}}
-                {{e.nameOfEvent}}
-                {{e.photoUrl}}
-                {{e.startOfEvent}}
-                {{e.typeOfEvent}}
-                {{e.urlOfEvent}}
+@if (events.length > 0) {
+<div class="results-header">
+  <h2>Wyniki wyszukiwania</h2>
+  <span class="results-count">{{ events.length }} {{ events.length === 1 ? 'wydarzenie' : 'wydarzeń' }}</span>
+</div>
 
-                <!-- <button (click)="eventDetails(e.eventId!)">
-                    eventDetails
-                </button> -->
-            </li>
-        }
-    </ul>
-
-} @else {
-    <p>Brak Search event</p>
+<div class="events-grid">
+  @for (e of events; track e.eventId) {
+  <article class="event-card">
+    <div class="event-image">
+      @if (e.photoUrl) {
+      <img [src]="e.photoUrl" [alt]="e.nameOfEvent" />
+      } @else {
+      <div class="event-placeholder">🎫</div>
+      }
+      @if (e.typeOfEvent) {
+      <span class="event-badge">{{ e.typeOfEvent }}</span>
+      }
+    </div>
+    <div class="event-body">
+      <h3 class="event-title">{{ e.nameOfEvent }}</h3>
+      @if (e.startOfEvent) {
+      <p class="event-info"><span class="icon">📅</span> {{ e.startOfEvent | date:'dd MMM yyyy, HH:mm' }}</p>
+      }
+      @if (e.nameOfClub || e.city) {
+      <p class="event-info">
+        <span class="icon">📍</span>
+        <span>
+          @if (e.nameOfClub) { <strong>{{ e.nameOfClub }}</strong> }
+          @if (e.city) { , {{ e.city }} }
+        </span>
+      </p>
+      }
+    </div>
+  </article>
+  }
+</div>
+} @else if (submitted) {
+<div class="state-box">
+  <div class="empty-icon">🔍</div>
+  <h2>Brak wyników</h2>
+  <p>Nie znaleziono wydarzeń dla podanego miasta. Spróbuj innej lokalizacji.</p>
+</div>
 }
-</main>

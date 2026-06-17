@@ -1,10 +1,26 @@
-<p>edit-user-email works!</p>
-<p>potem</p>
-<main class="main">
-  <form [formGroup]="editUserEmailForm" (ngSubmit)="onSubmit()">
-    <label>newEmail</label>
-    <input type="email" formControlName="newEmail" placeholder="newEmail" /> <br />
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <button class="btn-back-inline" routerLink="/edit-user">← Wróć</button>
 
-    <button type="submit">Change User Credentials</button>
-  </form>
-</main>
+    <div class="auth-header">
+      <div class="auth-icon">📧</div>
+      <h1>Zmień email</h1>
+      <p>Podaj nowy adres email dla swojego konta</p>
+    </div>
+
+    <form [formGroup]="editUserEmailForm" (ngSubmit)="onSubmit()" class="auth-form">
+      <div class="form-group">
+        <label for="newEmail">Nowy email</label>
+        <input id="newEmail"
+               type="email"
+               formControlName="newEmail"
+               placeholder="nowy@email.com"
+               autocomplete="email" />
+      </div>
+
+      <button type="submit" class="btn-submit">
+        Zapisz zmianę
+      </button>
+    </form>
+  </div>
+</div>

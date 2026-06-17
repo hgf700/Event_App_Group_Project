@@ -1,27 +1,57 @@
-<button (click)="returnToLoginCallback()">returnToLoginCallback</button>
+<div class="page-header">
+  <button class="btn-back" (click)="returnToLoginCallback()">← Wróć do panelu</button>
+  <h1 class="page-title">Moje bilety</h1>
+  <p class="page-subtitle">Masz <strong>{{ events.length }}</strong> zakupionych biletów</p>
+</div>
 
-<p>{{ events.length }}</p>
+@if (loading) {
+<div class="state-box">
+  <div class="spinner"></div>
+  <p>Ładowanie biletów...</p>
+</div>
+} @else if (events.length > 0) {
+<div class="tickets-grid">
+  @for (e of events; track e.eventId) {
+  <article class="ticket-card">
+    <div class="ticket-stub">
+      <div class="ticket-emoji">🎟️</div>
+    </div>
 
-<main>
-  @if (events.length > 0) {
-    <ul>
-      @for (e of events; track e.eventId) {
-        <li>
-          {{ e.eventId }}
-          {{ e.address }}
-          {{ e.city }}
-          {{ e.country }}
-          {{ e.nameOfClub }}
-          {{ e.nameOfEvent }}
-          {{ e.photoUrl }}
-          {{ e.startOfEvent }}
-          {{ e.typeOfEvent }}
-          {{ e.urlOfEvent }}
-
-        </li>
+    <div class="ticket-body">
+      @if (e.typeOfEvent) {
+      <span class="ticket-badge">{{ e.typeOfEvent }}</span>
       }
-    </ul>
-  } @else {
-    <p>Brak events</p>
+      <h3 class="ticket-title">{{ e.nameOfEvent }}</h3>
+
+      @if (e.startOfEvent) {
+      <p class="ticket-info">
+        <span class="icon">📅</span>
+        {{ e.startOfEvent | date:'dd MMM yyyy, HH:mm' }}
+      </p>
+      }
+
+      @if (e.nameOfClub || e.city) {
+      <p class="ticket-info">
+        <span class="icon">📍</span>
+        <span>
+          @if (e.nameOfClub) { <strong>{{ e.nameOfClub }}</strong> }
+          @if (e.city) { , {{ e.city }} }
+        </span>
+      </p>
+      }
+
+      <div class="ticket-status">
+        ✓ Bilet aktywny
+      </div>
+    </div>
+  </article>
   }
-</main>
+</div>
+} @else {
+<div class="state-box">
+  <div class="empty-icon">🎫</div>
+  <h2>Brak biletów</h2>
+  <p>Nie masz jeszcze żadnych biletów. Przeglądaj wydarzenia i kup pierwszy!</p>
+  <button class="btn-cta-empty" routerLink="/get-events">Przeglądaj wydarzenia</button>
+</div>
+}

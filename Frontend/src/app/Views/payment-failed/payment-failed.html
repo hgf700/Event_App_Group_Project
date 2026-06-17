@@ -1,3 +1,32 @@
-<p>payment-failed works!</p>
+<div class="payment-wrapper">
+  <div class="payment-card failed">
+    <div class="payment-icon-circle">
+      <div class="cross">✕</div>
+    </div>
 
-<button (click)="returnToEvents()">returnToEvents</button><br />
+    <h1 class="payment-title">Płatność nieudana</h1>
+    <p class="payment-subtitle">
+      Coś poszło nie tak podczas przetwarzania płatności. Twoje konto nie zostało obciążone.
+    </p>
+
+    <div class="payment-info-box">
+      <div class="info-line">
+        <span>💳</span>
+        <span>Sprawdź dane karty i ponów próbę</span>
+      </div>
+      <div class="info-line">
+        <span>📞</span>
+        <span>W razie problemów skontaktuj się z bankiem</span>
+      </div>
+    </div>
+
+    <div class="payment-actions">
+      <button class="btn-primary-payment" (click)="returnToEvents()">
+        🔄 Spróbuj ponownie
+      </button>
+      <button class="btn-secondary-payment" routerLink="/login-callback">
+        Wróć do panelu
+      </button>
+    </div>
+  </div>
+</div>
