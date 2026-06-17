@@ -78,7 +78,7 @@ builder.Services.AddScoped<OauthRefreshService>();
 builder.Services.AddSingleton<RefreshTokenEncryptionService>();
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<SeedDbService>();
-//builder.Services.AddScoped<DownloadFromApi>();
+builder.Services.AddScoped<SendOrDownloadFromApiService>();
 
 builder.Services.AddAuthorization();
 
@@ -223,6 +223,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.UseDeveloperExceptionPage();
 }
+
+Console.WriteLine(app.Environment.EnvironmentName);
 
 app.UseHttpsRedirection();
 app.UseRouting();

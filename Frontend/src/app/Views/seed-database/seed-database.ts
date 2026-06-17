@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { EventService } from '../../Services/EventService';
+import { SearchOrDownloadEventService } from '../../Services/SearchOrDownloadEventService';
 
 @Component({
   selector: 'app-seed-database',
@@ -13,7 +14,10 @@ import { EventService } from '../../Services/EventService';
 export class SeedDatabase implements OnInit {
   loading = false;
 
-  constructor(private eventService: EventService) {}
+  constructor(
+    private eventService: EventService,
+    private searchOrDownloadEventService: SearchOrDownloadEventService,
+  ) {}
 
   ngOnInit(): void {
     this.seedDataBase();
@@ -21,7 +25,7 @@ export class SeedDatabase implements OnInit {
 
   seedDataBase() {
     this.loading = true;
-    this.eventService.seedDataBase().subscribe({
+    this.searchOrDownloadEventService.seedDataBase().subscribe({
       next: (data) => {
         console.log('seedDataBase');
         console.log(data);

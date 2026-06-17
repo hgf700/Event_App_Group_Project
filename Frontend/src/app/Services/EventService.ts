@@ -25,10 +25,5 @@ export class EventService {
     });
   }
 
-  seedDataBase() {
-    return this.http.post(`${this.apiUrl}/seed-database`, 
-      {},
-      { headers: getAuthHeaders() }
-    );
-  }
+
 }

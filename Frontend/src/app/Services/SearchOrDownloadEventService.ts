@@ -6,8 +6,7 @@ import { getEventDto } from '../Dto/getEventDto';
 
 @Injectable({ providedIn: 'root' })
 export class SearchOrDownloadEventService {
-  private apiUrl = 'https://localhost:7051/api/v1/Event';
-  // private apiUrlSearch = 'https://localhost:7051/api/v1/SearchAndImportEvents';
+  private apiUrl = 'https://localhost:7051/api/v1/SearchOrDownload';
 
   event: getEventDto[] = [];
 
@@ -16,9 +15,18 @@ export class SearchOrDownloadEventService {
   searchOrDownloadEvent(city: string) {
     let params = new HttpParams().set('city', city);
 
-    return this.http.get<getEventDto[]>(`${this.apiUrl}/search-event-or-download`, {
+    return this.http.post<getEventDto[]>(`${this.apiUrl}/search-event-or-download`, 
+      {},
+      {
       headers: getAuthHeaders(),
       params,
     });
+  }
+
+  seedDataBase() {
+    return this.http.post(`${this.apiUrl}/seed-database`, 
+      {},
+      { headers: getAuthHeaders() }
+    );
   }
 }

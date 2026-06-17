@@ -2,7 +2,7 @@
 
 namespace Backend.Models.Dto.RelEvent;
 
-public class getEventsQueryDto
+public class postSearchOrDownloadQueryDto
 {
     public int? eventId { get; set; }
     public string? typeOfEvent { get; set; }
@@ -16,10 +16,9 @@ public class getEventsQueryDto
     public DateTime? startOfEvent { get; set; }
     public string? address { get; set; }
 
-    [Required]
-    [MinLength(1)]
     [MaxLength(100)]
-    public string city { get; set; }
+    public string? city { get; set; }
     public string? country { get; set; }
     public string? nameOfClub { get; set; }
+
 }

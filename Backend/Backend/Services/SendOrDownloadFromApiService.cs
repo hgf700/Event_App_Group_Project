@@ -8,12 +8,12 @@ using System.Text.Json;
 
 namespace Backend.Services;
 
-public class DownloadAndSendEventsApi
+public class SendOrDownloadFromApiService
 {
     private readonly HttpClient _httpClient;
     private readonly ApplicationDbContext _context;
 
-    public DownloadAndSendEventsApi(HttpClient httpClient,
+    public SendOrDownloadFromApiService(HttpClient httpClient,
         ApplicationDbContext context
         )
     {
@@ -21,14 +21,14 @@ public class DownloadAndSendEventsApi
         _context = context;
     }
 
-    public async Task<List<getEventsDto>> FetchAndSaveEventsAsync(string? city = null)
+    public async Task<List<postSearchOrDownloadQueryDto>> FetchAndSaveEventsAsync(string? city = null)
     {
-        var finalCity = string.IsNullOrWhiteSpace(city) ? "warsaw" : city;
+        if (string.IsNullOrWhiteSpace(city))
+        {
+            throw new ArgumentException("City is required");
+        }
 
         string apiKey = Environment.GetEnvironmentVariable("TICKETMASTER_API_KEY");
-
-        //if (string.IsNullOrWhiteSpace(apiKey))
-            //return new List<getEventsDto>();
 
         string baseUrl = "https://app.ticketmaster.com/discovery/v2/events.json";
 
@@ -36,7 +36,7 @@ public class DownloadAndSendEventsApi
         {
             { "apikey", apiKey },
             { "size", "20" },
-            { "city", finalCity }
+            { "city", city }
         };
 
         string url = QueryHelpers.AddQueryString(baseUrl, query);
@@ -46,7 +46,7 @@ public class DownloadAndSendEventsApi
         if (!response.IsSuccessStatusCode)
         {
             Console.WriteLine($"Błąd API: {response.StatusCode}");
-            return new List<getEventsDto>();
+            return new List<postSearchOrDownloadQueryDto>();
         }
 
         string json = await response.Content.ReadAsStringAsync();
@@ -62,10 +62,10 @@ public class DownloadAndSendEventsApi
                 !ticketmasterData.Embedded.Events.Any())
         {
             Console.WriteLine("Brak wydarzeń do zapisania.");
-            return new List<getEventsDto>();
+            return new List<postSearchOrDownloadQueryDto>();
         }
 
-        var result = new List<getEventsDto>();
+        var result = new List<postSearchOrDownloadQueryDto>();
 
         foreach (var ev in ticketmasterData.Embedded.Events)
         {
@@ -96,7 +96,7 @@ public class DownloadAndSendEventsApi
 
             await _context.Events.AddAsync(newEvent);
 
-            result.Add(new getEventsDto
+            result.Add(new postSearchOrDownloadQueryDto
             {
                 eventId = newEvent.Id,
                 typeOfEvent = newEvent.TypeOfEvent,

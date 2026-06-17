@@ -22,18 +22,18 @@ namespace Backend.Controllers;
 //[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
-public class DownloadFromApiController : ControllerBase
+public class SearchOrDownloadController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
     private readonly SeedDbService _seedDbService;
-    private readonly DownloadAndSendEventsApi _downloadAndSendEventsApi;
+    private readonly SendOrDownloadFromApiService _downloadAndSendEventsApi;
     private readonly ILogger<EventController> _logger;
 
-    public DownloadFromApiController(
+    public SearchOrDownloadController(
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
             SeedDbService seedDbService,
-            DownloadAndSendEventsApi downloadAndSendEventsApi,
+            SendOrDownloadFromApiService downloadAndSendEventsApi,
             ILogger<EventController> logger
         )
     {
@@ -90,25 +90,31 @@ public class DownloadFromApiController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<List<getEventsQueryDto>>> SearchEventOrDownload([FromQuery] string city)
+    public async Task<ActionResult<List<postSearchOrDownloadQueryDto>>> SearchEventOrDownload(
+        [FromQuery] string? city,
+        [FromBody] SearchEventDto? body)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
         if (userId == null)
             return Unauthorized();
 
+        var finalCity = city ?? body?.City;
+
+        if (string.IsNullOrWhiteSpace(finalCity))
+            return BadRequest("City is required");
+
+        finalCity = NormalizeEvent(finalCity);
+
         try
         {
-            city = NormalizeEvent(city);
-
             var events = await _context.Events
-                .Where(e => e.City == city &&
+                .Where(e => e.City == finalCity &&
                             e.StartOfEvent >= DateTime.UtcNow)
                 .ToListAsync();
 
             if (events.Any())
             {
-                return Ok(events.Select(e => new getEventsQueryDto
+                return Ok(events.Select(e => new postSearchOrDownloadQueryDto
                 {
                     eventId = e.Id,
                     typeOfEvent = e.TypeOfEvent,
@@ -124,12 +130,13 @@ public class DownloadFromApiController : ControllerBase
             }
 
             var downloadedEvents =
-                await _downloadAndSendEventsApi.FetchAndSaveEventsAsync(city);
+                await _downloadAndSendEventsApi.FetchAndSaveEventsAsync(finalCity);
 
             return Ok(downloadedEvents);
         }
         catch (Exception ex)
         {
+            Console.WriteLine(ex.Message);
             _logger.LogError(ex, "Error while loading events");
             return StatusCode(500, "Internal server error");
         }
