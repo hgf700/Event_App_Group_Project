@@ -26,7 +26,6 @@ export class SearchAndImportEvents{
 
   constructor(
     private fb: FormBuilder,
-    private route: ActivatedRoute,
     private router: Router,
     private cdr: ChangeDetectorRef,
     private searchOrDownloadEventService: SearchOrDownloadEventService,

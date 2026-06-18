@@ -18,7 +18,6 @@ export class EditUserEmail {
 
   constructor(
       private fb: FormBuilder,
-      private route: ActivatedRoute,
       private router: Router,
       private userService: UserService,
     ) {

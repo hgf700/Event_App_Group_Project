@@ -19,7 +19,6 @@ export class GetEvents implements OnInit {
   loading = false;
 
   constructor(
-    private route: ActivatedRoute,
     private router: Router,
     private cdr: ChangeDetectorRef,
     private eventService: EventService,
