@@ -1,30 +1,4 @@
-# # Zobacz https://aka.ms/customizecontainer, aby dowiedzieć się, jak dostosować kontener debugowania i jak program Visual Studio używa tego pliku Dockerfile do kompilowania obrazów w celu szybszego debugowania.
-# # Ten etap jest używany podczas uruchamiania z programu VS w trybie szybkim (domyślnie dla konfiguracji debugowania)
-# FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
-# USER $APP_UID
-# WORKDIR /app
-# EXPOSE 8080
-# EXPOSE 8081
-# # Ten etap służy do kompilowania projektu usługi
-# FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
-# ARG BUILD_CONFIGURATION=Release
-# WORKDIR /src
-# COPY ["Backend/Backend.csproj", "Backend/"]
-# RUN dotnet restore "./Backend/Backend.csproj"
-# COPY . .
-# WORKDIR "/src/Backend"
-# RUN dotnet build "./Backend.csproj" -c $BUILD_CONFIGURATION -o /app/build
-# # Ten etap służy do publikowania projektu usługi do skopiowania do etapu końcowego
-# FROM build AS publish
-# ARG BUILD_CONFIGURATION=Release
-# RUN dotnet publish "./Backend.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
-# # Ten etap jest używany w środowisku produkcyjnym lub w przypadku uruchamiania z programu VS w trybie regularnym (domyślnie, gdy nie jest używana konfiguracja debugowania)
-# FROM base AS final
-# WORKDIR /app
-# COPY --from=publish /app/publish .
-# ENTRYPOINT ["dotnet", "Backend.dll"]
-
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 COPY *.csproj ./
@@ -33,7 +7,7 @@ RUN dotnet restore
 COPY . .
 RUN dotnet publish -c Release -o /app/publish
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /app
 COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "Backend.dll"]
