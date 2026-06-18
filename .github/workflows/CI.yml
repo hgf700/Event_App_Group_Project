@@ -73,4 +73,4 @@ jobs:
           cache-dependency-path: Frontend/package-lock.json
 
       - run: npm ci
-      - run: npx ng test --watch=false --browsers=ChromeHeadless --code-coverage
+      - run: npx ng test --watch=false --browsers=ChromeHeadless --coverage
