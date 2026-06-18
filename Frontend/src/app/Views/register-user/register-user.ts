@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -17,19 +17,8 @@ export class RegisterUser {
   registerUserForm!: FormGroup;
   submitted = false;
 
-// this.editUserForm = new FormGroup(
-//   {
-//     newEmail: new FormControl(''),
-//     currentPassword: new FormControl(''),
-//     newPassword: new FormControl(''),
-//     repeatNewPassword: new FormControl('')
-//   },
-//   { validators: passwordMatchValidator }
-// );
-
   constructor(
     private fb: FormBuilder,
-    private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
   ) {

@@ -1,6 +1,7 @@
 using Backend.Db;
 using Backend.ExtraTools;
 using Backend.Identity;
+using Backend.Interfaces;
 using Backend.Models.Model;
 using Backend.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -76,7 +77,7 @@ builder.Services.AddScoped<SmsService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<OauthRefreshService>();
 builder.Services.AddSingleton<RefreshTokenEncryptionService>();
-builder.Services.AddScoped<JwtService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<SeedDbService>();
 builder.Services.AddScoped<SendOrDownloadFromApiService>();
 

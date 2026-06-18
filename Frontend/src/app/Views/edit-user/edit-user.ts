@@ -14,7 +14,6 @@ import { UserService } from '../../Services/UserService';
 export class EditUser {
 
   constructor(
-      private route: ActivatedRoute,
       private router: Router,
     ) {}
   

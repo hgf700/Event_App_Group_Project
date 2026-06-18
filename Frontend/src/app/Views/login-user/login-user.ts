@@ -18,7 +18,6 @@ export class LoginUser {
 
   constructor(
     private fb: FormBuilder,
-    private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
   ) {

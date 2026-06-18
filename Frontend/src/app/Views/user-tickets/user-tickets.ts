@@ -17,7 +17,6 @@ export class UserTickets implements OnInit{
   loading = false;
 
   constructor(
-    private route: ActivatedRoute,
     private router: Router,
     private cdr: ChangeDetectorRef,
     private userService: UserService,

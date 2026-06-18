@@ -19,7 +19,6 @@ export class EditUserPassword {
 
   constructor(
       private fb: FormBuilder,
-      private route: ActivatedRoute,
       private router: Router,
       private userService: UserService,
     ) {

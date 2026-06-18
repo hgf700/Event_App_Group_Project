@@ -14,7 +14,6 @@ import { PaymentService } from '../../Services/PaymentService';
 export class PaymentFailed implements OnInit {
   constructor(
     private paymentService: PaymentService,
-    private route: ActivatedRoute,
     private router: Router,
   ) {}
 
