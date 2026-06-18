@@ -1,44 +1,67 @@
 services:
+
   postgres:
     image: postgres:16
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    container_name: event_postgres
-    restart: always
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
+    networks:
+      - app
 
   backend:
     build:
       context: ./Backend/Backend
-      dockerfile: Dockerfile
-    container_name: event_backend
-    restart: always
     ports:
       - "5000:8080"
     depends_on:
-      postgres:
-        condition: service_healthy
-    env_file:
-    - .env
+      - postgres
+    networks:
+      - app
 
   frontend:
     build:
       context: ./Frontend
-    container_name: event_frontend
     ports:
       - "4200:80"
     depends_on:
       - backend
+    networks:
+      - app
+
+  loki:
+    image: grafana/loki:2.9.0
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "3100:3100"
+    networks:
+      - app
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    depends_on:
+      - loki
+    networks:
+      - app
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - app
 
 volumes:
   pgdata:
+
+networks:
+  app:
