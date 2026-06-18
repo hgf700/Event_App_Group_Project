@@ -1,4 +1,5 @@
 ﻿using Backend.Identity;
+using Backend.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -34,7 +35,7 @@ namespace Backend.Services;
 //    }
 //}
 
-public class JwtService
+public class JwtService : IJwtService
 {
     //developing
     public string GenerateToken(ApplicationUser user)

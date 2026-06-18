@@ -1,5 +1,6 @@
 ﻿using Backend.Db;
 using Backend.Identity;
+using Backend.Interfaces;
 using Backend.Models.Dto.RelAuth;
 using Backend.Models.Model;
 using Backend.Services;
@@ -19,19 +20,16 @@ namespace Backend.Controllers;
 [Route("api/v1/[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly JwtService _jwtService;
+    private readonly IJwtService _jwtService;
     private readonly ILogger<AuthController> _logger;
 
     public AuthController(UserManager<ApplicationUser> userManager, 
-        ApplicationDbContext context,
-        JwtService jwtService,
+        IJwtService jwtService,
         ILogger<AuthController> logger
         )
     {
         _userManager = userManager;
-        _context = context;
         _jwtService = jwtService;
         _logger= logger;
     }
@@ -65,13 +63,13 @@ public class AuthController : ControllerBase
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
-            var jwt = _jwtService.GenerateToken(user);
+            var token = _jwtService.GenerateToken(user);
 
             _logger.LogInformation("User successfully register {email}", dto.email);
 
-            return Ok(new 
+            return Ok(new AuthResponseDto
             {
-                jwt = jwt
+                jwt = token
             });
 
         }
@@ -107,13 +105,13 @@ public class AuthController : ControllerBase
                 return Unauthorized("Invalid email or password");
             }
 
-            var jwt = _jwtService.GenerateToken(existingUser);
+            var token = _jwtService.GenerateToken(existingUser);
 
             _logger.LogInformation("User successfully login {email}", dto.email);
 
-            return Ok(new
+            return Ok(new AuthResponseDto
             {
-                jwt = jwt,
+                jwt = token,
             });
         }
         catch (Exception ex) {
@@ -222,12 +220,12 @@ public class AuthController : ControllerBase
                 _logger.LogInformation("OAuth user created successfully. UserId: {UserId}",user.Id);
             }
 
-            var jwt = _jwtService.GenerateToken(user);
+            var token = _jwtService.GenerateToken(user);
 
             _logger.LogInformation("User {UserId} logged in with Google OAuth",user.Id);
 
             return Redirect(
-                $"http://localhost:4200/login-callback?token={jwt}&email={Uri.EscapeDataString(email)}"
+                $"http://localhost:4200/login-callback?token={token}&email={Uri.EscapeDataString(email)}"
             );
         }
         catch (Exception ex)
