@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { EditUserEmail } from './edit-user-email';
 
@@ -9,6 +10,7 @@ describe('EditUserEmail', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [EditUserEmail],
+      providers: [provideRouter([])]
     }).compileComponents();
 
     fixture = TestBed.createComponent(EditUserEmail);
