@@ -1,18 +1,64 @@
-<p>register-user works!</p>
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-icon">🎉</div>
+      <h1>Załóż konto</h1>
+      <p>Wystarczy minuta. Zaczniesz kupować bilety od razu!</p>
+    </div>
 
-@if (registerUserForm.errors?.['passwordMismatch']){
-  <p>Hasła nie są takie same</p>
-}
+    @if (submitted && registerUserForm.errors?.['passwordMismatch']) {
+    <div class="form-alert">
+      ⚠️ Hasła nie są takie same
+    </div>
+    }
 
-<main class="main">
-  <form [formGroup]="registerUserForm" (ngSubmit)="onSubmit()">
-    <label>Email</label>
-    <input type="email" formControlName="email" placeholder="email" /> <br />
-    <label>password</label>
-    <input type="password" formControlName="password" placeholder="password" /><br />
-    <label>confirmPassword</label>
-    <input type="password" formControlName="confirmPassword" placeholder="confirmPassword" /><br />
+    <form [formGroup]="registerUserForm" (ngSubmit)="onSubmit()" class="auth-form">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input id="email"
+               type="email"
+               formControlName="email"
+               placeholder="twoj@email.com"
+               autocomplete="email" />
+        @if (submitted && registerUserForm.controls['email'].errors?.['required']) {
+        <span class="form-error">Email jest wymagany</span>
+        }
+      </div>
 
-    <button type="submit">Register</button>
-  </form>
-</main>
+      <div class="form-group">
+        <label for="password">Hasło</label>
+        <input id="password"
+               type="password"
+               formControlName="password"
+               placeholder="••••••••"
+               autocomplete="new-password" />
+        @if (submitted && registerUserForm.controls['password'].errors?.['required']) {
+        <span class="form-error">Hasło jest wymagane</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Powtórz hasło</label>
+        <input id="confirmPassword"
+               type="password"
+               formControlName="confirmPassword"
+               placeholder="••••••••"
+               autocomplete="new-password" />
+        @if (submitted && registerUserForm.controls['confirmPassword'].errors?.['required']) {
+        <span class="form-error">Powtórz hasło</span>
+        }
+      </div>
+
+      <button type="submit" class="btn-submit">
+        Załóż konto
+      </button>
+    </form>
+
+    <div class="auth-divider"><span>lub</span></div>
+
+    <p class="auth-footer">
+      Masz już konto?
+      <a routerLink="/login-user">Zaloguj się</a>
+    </p>
+  </div>
+</div>

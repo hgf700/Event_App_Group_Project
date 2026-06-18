@@ -1,19 +1,47 @@
-<p>logged as:</p>
-@if (userEmail) {
-  <li>{{userEmail}}</li>
-}
-@else {
-  <p>blad zalogowania</p>
-}
+<div class="dashboard-header">
+  <div class="user-info">
+    <div class="avatar">👤</div>
+    <div>
+      <p class="hello-text">Witaj z powrotem!</p>
+      @if (userEmail) {
+      <p class="user-email">{{ userEmail }}</p>
+      } @else {
+      <p class="user-email error">⚠️ Błąd logowania</p>
+      }
+    </div>
+  </div>
+</div>
 
-<main class="main">
-  <p>login-callback works!</p>
+<h2 class="section-title">Co chcesz dziś zrobić?</h2>
 
-  <button (click)="seedData()">seedData</button><br />
-  <button (click)="eventsView()">eventsView</button><br />
-  <button (click)="searchAndImportView()">searchAndImportView</button><br />
-  <button (click)="userBoughtTickets()">userBoughtTickets</button><br />
-  <button (click)="editCurrentUser()">editCurrentUser</button><br />
+<div class="actions-grid">
+  <button class="action-card" (click)="eventsView()">
+    <div class="action-icon">🎫</div>
+    <h3>Przeglądaj wydarzenia</h3>
+    <p>Zobacz wszystkie dostępne koncerty, mecze i spektakle</p>
+  </button>
 
-</main>
+  <button class="action-card" (click)="userBoughtTickets()">
+    <div class="action-icon">🎟️</div>
+    <h3>Moje bilety</h3>
+    <p>Wszystkie Twoje zakupione bilety w jednym miejscu</p>
+  </button>
 
+  <button class="action-card" (click)="editCurrentUser()">
+    <div class="action-icon">⚙️</div>
+    <h3>Ustawienia konta</h3>
+    <p>Zmień dane, email lub hasło</p>
+  </button>
+
+  <button class="action-card" (click)="searchAndImportView()">
+    <div class="action-icon">🔍</div>
+    <h3>Wyszukaj i importuj</h3>
+    <p>Znajdź nowe wydarzenia z Ticketmaster</p>
+  </button>
+
+  <button class="action-card admin" (click)="seedData()">
+    <div class="action-icon">🌱</div>
+    <h3>Seed Data</h3>
+    <p>Załaduj dane testowe (admin)</p>
+  </button>
+</div>

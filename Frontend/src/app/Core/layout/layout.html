@@ -2,8 +2,11 @@
   <nav class="navbar">
 
     <div class="left">
-      <a routerLink="/login-callback">login-callback</a>
-      <a routerLink="/get-events">get-events</a>
+      <a routerLink="/" class="brand">
+        🎫 EventApp
+      </a>
+      <a routerLink="/get-events">Wydarzenia</a>
+      <a routerLink="/login-callback">Mój panel</a>
     </div>
 
     <div class="right">
@@ -29,8 +32,8 @@
 
       } @else {
 
-        <a routerLink="/login">Login</a>
-        <a routerLink="/register">Register</a>
+        <a routerLink="/login-user" class="btn-register">Logowanie</a>
+        <a routerLink="/register-user" class="btn-register">Rejestracja</a>
 
       }
 
@@ -44,5 +47,5 @@
 </main>
 
 <footer class="footer">
-  © 2025
+  © 2026
 </footer>

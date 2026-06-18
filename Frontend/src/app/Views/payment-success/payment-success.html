@@ -1,3 +1,32 @@
-<p>payment-success works!</p>
+<div class="payment-wrapper">
+  <div class="payment-card success">
+    <div class="payment-icon-circle">
+      <div class="checkmark">✓</div>
+    </div>
 
-<button (click)="returnToEvents()">returnToEvents</button><br />
+    <h1 class="payment-title">Płatność udana!</h1>
+    <p class="payment-subtitle">
+      Dziękujemy za zakup. Twój bilet został dodany do konta i wkrótce otrzymasz go również na maila.
+    </p>
+
+    <div class="payment-info-box">
+      <div class="info-line">
+        <span>📧</span>
+        <span>Potwierdzenie wysłano na Twój email</span>
+      </div>
+      <div class="info-line">
+        <span>📱</span>
+        <span>QR kod dostępny w sekcji "Moje bilety"</span>
+      </div>
+    </div>
+
+    <div class="payment-actions">
+      <button class="btn-primary-payment" routerLink="/user-tickets">
+        🎟️ Zobacz moje bilety
+      </button>
+      <button class="btn-secondary-payment" (click)="returnToEvents()">
+        Wróć do wydarzeń
+      </button>
+    </div>
+  </div>
+</div>
