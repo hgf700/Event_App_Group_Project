@@ -26,6 +26,20 @@ export class EditUserEmail {
       });
     }
 
+
+  generateJWT(){
+    const tokenFromStorage = localStorage.getItem('jwt');
+
+    console.log({
+      tokenFromStorage,
+    });
+
+    if (!tokenFromStorage) {
+      console.error('Brak tokena – użytkownik niezalogowany');
+      return;
+    }
+  }
+
   onSubmit() {
     this.submitted = true;
 
@@ -38,6 +52,7 @@ export class EditUserEmail {
 
     this.userService.editCurrentUserEmail(newEmail).subscribe({
       next: (res) => {
+        this.generateJWT();
         console.log('success');
       },
       error: (err) => alert(err.error),
