@@ -129,145 +129,121 @@ public class UserController : ControllerBase
         }
     }
 
-    //private string NormalizeUser(string? value)
-    //{
-    //    return new Pipe()
-    //        .Add(new TrimFilter())
-    //        .Add(new EmptyIfNullOrWhitespaceFilter())
-    //        .Add(new NormalizeWhitespaceFilter())
-    //        .Execute(new StringContext { Value = value })
-    //        .Value!;
-    //}
+    [HttpPost("edit-user-password")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<postEditUserPassword>> EditUserPassword([FromBody] postEditUserPassword body)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
-    //[HttpPost("edit-user-password")]
-    //[ProducesResponseType(StatusCodes.Status200OK)]
-    //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-    //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    //[ProducesResponseType(StatusCodes.Status404NotFound)]
-    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    //public async Task<ActionResult<postEditUserDto>> EditUserPassword(string newPassword)
-    //{
-    //    if (!ModelState.IsValid)
-    //        return BadRequest(ModelState);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+            return Unauthorized();
 
-    //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-    //    if (userId == null)
-    //        return Unauthorized();
+        if (string.IsNullOrWhiteSpace(body.oldPassword))
+            return BadRequest("oldPassword password is required");
 
-    //    try
-    //    {
-    //        var user = await _userManager.FindByIdAsync(userId);
+        if (string.IsNullOrWhiteSpace(body.newPassword))
+            return BadRequest("newPassword password is required");
 
-    //        if (user == null)
-    //        {
-    //            _logger.LogWarning("User edit failed - user not found. UserId: {UserId}", userId);
-    //            return NotFound("User not found");
-    //        }
+        try
+        {
+            var user = await _userManager.FindByIdAsync(userId);
 
-    //        model.newEmail = NormalizeUser(model.newEmail);
-    //        model.currentPassword = NormalizeUser(model.currentPassword);
-    //        model.newPassword = NormalizeUser(model.newPassword);
+            if (user == null)
+            {
+                _logger.LogWarning("User edit failed - user not found. UserId: {UserId}", userId);
+                return NotFound("User not found");
+            }
 
-    //        var emailExists = await _userManager.FindByEmailAsync(model.newEmail);
+            var CheckCurrentPassword = await _userManager.CheckPasswordAsync(user, body.oldPassword);
+            if (CheckCurrentPassword == false)
+            {
+                return BadRequest("Current password is invalid");
+            }
 
-    //        if (emailExists != null)
-    //            return BadRequest("Email already exists");
+            var passwordResult = await _userManager.ChangePasswordAsync(
+                user,
+                body.oldPassword,
+                body.newPassword
+            );
 
-    //        user.Email = model.newEmail;
-    //        user.UserName = model.newEmail; // nick = email
+            if (!passwordResult.Succeeded)
+                return BadRequest(passwordResult.Errors);
 
-    //        if (string.IsNullOrWhiteSpace(model.currentPassword))
-    //            return BadRequest("Current password is required");
+            var result = await _userManager.UpdateAsync(user);
 
-    //        var passwordResult = await _userManager.ChangePasswordAsync(
-    //            user,
-    //            model.currentPassword,
-    //            model.newPassword
-    //        );
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
 
-    //        if (!passwordResult.Succeeded)
-    //            return BadRequest(passwordResult.Errors);
+            var userEmail= User.FindFirstValue(ClaimTypes.Email);
 
-    //        var result = await _userManager.UpdateAsync(user);
+            _logger.LogInformation("User successfully edited {email}", userEmail);
 
-    //        if (!result.Succeeded)
-    //            return BadRequest(result.Errors);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error while editing user. UserId: {UserId}", userId);
+            Console.WriteLine(ex);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+        }
+    }
 
-    //        _logger.LogInformation("User successfully edited {email}", model.newEmail);
+    [HttpPost("edit-user-email")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<postEditUserEmail>> EditUserEmail([FromBody] postEditUserEmail body)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
-    //        return Ok();
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError(ex, "Error while editing user. UserId: {UserId}", userId);
-    //        Console.WriteLine(ex);
-    //        return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
-    //    }
-    //}
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+            return Unauthorized();
 
-    //[HttpPost("edit-user-email")]
-    //[ProducesResponseType(StatusCodes.Status200OK)]
-    //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-    //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    //[ProducesResponseType(StatusCodes.Status404NotFound)]
-    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    //public async Task<ActionResult<postEditUserDto>> EditUserEmail(string newEmail)
-    //{
-    //    if (!ModelState.IsValid)
-    //        return BadRequest(ModelState);
+        if (string.IsNullOrWhiteSpace(body.newEmail))
+            return BadRequest("newEmail is required");
 
-    //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-    //    if (userId == null)
-    //        return Unauthorized();
+        try
+        {
+            var user = await _userManager.FindByIdAsync(userId);
 
-    //    try
-    //    {
-    //        var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                _logger.LogWarning("User edit failed - user not found. UserId: {UserId}", userId);
+                return NotFound("User not found");
+            }
 
-    //        if (user == null)
-    //        {
-    //            _logger.LogWarning("User edit failed - user not found. UserId: {UserId}", userId);
-    //            return NotFound("User not found");
-    //        }
+            var emailExists = await _userManager.FindByEmailAsync(body.newEmail);
 
-    //        model.newEmail = NormalizeUser(model.newEmail);
-    //        model.currentPassword = NormalizeUser(model.currentPassword);
-    //        model.newPassword = NormalizeUser(model.newPassword);
+            if (emailExists != null)
+                return BadRequest("Email already exists");
 
-    //        var emailExists = await _userManager.FindByEmailAsync(model.newEmail);
+            user.Email = body.newEmail;
+            user.UserName = body.newEmail; 
 
-    //        if (emailExists != null)
-    //            return BadRequest("Email already exists");
+            var result = await _userManager.UpdateAsync(user);
 
-    //        user.Email = model.newEmail;
-    //        user.UserName = model.newEmail; // nick = email
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
 
-    //        if (string.IsNullOrWhiteSpace(model.currentPassword))
-    //            return BadRequest("Current password is required");
+            _logger.LogInformation("User successfully edited email {email}", body.newEmail);
 
-    //        var passwordResult = await _userManager.ChangePasswordAsync(
-    //            user,
-    //            model.currentPassword,
-    //            model.newPassword
-    //        );
-
-    //        if (!passwordResult.Succeeded)
-    //            return BadRequest(passwordResult.Errors);
-
-    //        var result = await _userManager.UpdateAsync(user);
-
-    //        if (!result.Succeeded)
-    //            return BadRequest(result.Errors);
-
-    //        _logger.LogInformation("User successfully edited {email}", model.newEmail);
-
-    //        return Ok();
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError(ex, "Error while editing user. UserId: {UserId}", userId);
-    //        Console.WriteLine(ex);
-    //        return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
-    //    }
-    //}
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error while editing user. UserId: {UserId}", userId);
+            Console.WriteLine(ex);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+        }
+    }
 }

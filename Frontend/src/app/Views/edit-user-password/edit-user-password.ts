@@ -43,8 +43,10 @@ export class EditUserPassword {
     }
 
     const newPassword = this.editUserPasswordForm.value.newPassword;
+    const oldPassword = this.editUserPasswordForm.value.oldPassword;
 
-    this.userService.editCurrentUserPassword(newPassword).subscribe({
+
+    this.userService.editCurrentUserPassword(oldPassword, newPassword).subscribe({
       next: (res) => {
         console.log('success');
       },

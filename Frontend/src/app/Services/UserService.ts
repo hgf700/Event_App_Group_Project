@@ -4,6 +4,7 @@ import { getAuthHeaders } from '../helpers/GetAuthHeaders';
 import { getCurrentUserDto } from '../Dto/getCurrentUserDto';
 import { postEditUserDto } from '../Dto/postEditUserDto';
 import { getEventDto } from '../Dto/getEventDto';
+import { postEditUserPassword } from '../Dto/postEditUserPassword';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -30,16 +31,16 @@ export class UserService {
 
   editCurrentUserEmail(newEmail: string) {
     return this.http.post(
-      `${this.apiUrl}/edit-user`,
-      newEmail,
+      `${this.apiUrl}/edit-user-email`,
+      {newEmail},
       { headers: getAuthHeaders() },
     );
   }
 
-  editCurrentUserPassword(newPassword: string) {
-    return this.http.post(
-      `${this.apiUrl}/edit-user`,
-      newPassword,
+  editCurrentUserPassword(oldPassword: string, newPassword: string) {
+    return this.http.post<postEditUserPassword>(
+      `${this.apiUrl}/edit-user-password`,
+      { oldPassword, newPassword },
       { headers: getAuthHeaders() },
     );
   }

@@ -11,13 +11,7 @@ zamiast local storage to lepiej http cookies i same site strict ale to potem
 
 refresh tokeny z jwt dokonczyc
 
-terraform dla odpalenia dockeryzacji projektu , grafany i prometheus naraz
-
-dla github actions testy jednostkowe front i back
-
-wyglad frontu
-
-zrobienie nowych dockerow dla front i back
+dla github actions testy jednostkowe back
 
 uzycie rate limit i innych zabezpieczen w controller
 
@@ -30,3 +24,7 @@ jak zmieni email w user email to update jwt(pewnie usuniecie i nastawienie noweg
 gdzies maly problem z SearchEventOrDownload w backendzie
 
 frontend otrzymuje dto z jwt z backendu zamiast poprostu jwt dodac front dto
+
+rate limity dorobic moze ip lub jwt
+
+te co uzytkownik ma kupiony bilet to nie moze kupic 2 raz tego samego moze zeby nie byl widoczny

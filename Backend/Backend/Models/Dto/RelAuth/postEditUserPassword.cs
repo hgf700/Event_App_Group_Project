@@ -2,14 +2,15 @@
 
 namespace Backend.Models.Dto.RelAuth;
 
-public class postEditUserDto
+public class postEditUserPassword
 {
+    [Required]
+    [MinLength(1)]
     [MaxLength(100)]
-    public string newEmail { get; set; }
+    public string oldPassword { get; set; }
     
-    [MaxLength(100)]
-    public string currentPassword { get; set; }
-
+    [Required]
+    [MinLength(1)]
     [MaxLength(100)]
     public string newPassword { get; set; }
 }
