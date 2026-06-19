@@ -1,5 +1,6 @@
 ﻿using Backend.Db;
 using Backend.Identity;
+using Backend.Interfaces;
 using Backend.Models.Dto.RelAuth;
 using Backend.Models.Dto.RelEvent;
 using Backend.Models.Model;
@@ -16,6 +17,7 @@ using Stripe;
 using System.Security.Claims;
 using System.Text.Json;
 using Twilio.Http;
+using Twilio.TwiML.Messaging;
 
 namespace Backend.Controllers;
 
@@ -26,16 +28,19 @@ public class UserController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ApplicationDbContext _context;
+    private readonly IJwtService _jwtService;
     private readonly ILogger<UserController> _logger;
 
     public UserController(UserManager<ApplicationUser> userManager, 
         ApplicationDbContext context,
-        ILogger<UserController> logger
+        ILogger<UserController> logger,
+        IJwtService jwtService
         )
     {
         _userManager = userManager;
         _context = context;
         _logger = logger;
+        _jwtService = jwtService;
     }
 
     [HttpGet("current-user")]
@@ -135,7 +140,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<postEditUserPassword>> EditUserPassword([FromBody] postEditUserPassword body)
+    public async Task<ActionResult> EditUserPassword([FromBody] postEditUserPassword body)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -200,7 +205,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<postEditUserEmail>> EditUserEmail([FromBody] postEditUserEmail body)
+    public async Task<ActionResult<AuthResponseDto>> EditUserEmail([FromBody] string newEmail)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -209,7 +214,7 @@ public class UserController : ControllerBase
         if (userId == null)
             return Unauthorized();
 
-        if (string.IsNullOrWhiteSpace(body.newEmail))
+        if (string.IsNullOrWhiteSpace(newEmail))
             return BadRequest("newEmail is required");
 
         try
@@ -222,22 +227,27 @@ public class UserController : ControllerBase
                 return NotFound("User not found");
             }
 
-            var emailExists = await _userManager.FindByEmailAsync(body.newEmail);
+            var emailExists = await _userManager.FindByEmailAsync(newEmail);
 
             if (emailExists != null)
                 return BadRequest("Email already exists");
 
-            user.Email = body.newEmail;
-            user.UserName = body.newEmail; 
+            user.Email = newEmail;
+            user.UserName = newEmail; 
 
             var result = await _userManager.UpdateAsync(user);
 
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
-            _logger.LogInformation("User successfully edited email {email}", body.newEmail);
+            _logger.LogInformation("User successfully edited email {email}", newEmail);
 
-            return Ok();
+            var token = _jwtService.GenerateToken(user);
+
+            return Ok(new AuthResponseDto
+            {
+                jwt = token
+            });
         }
         catch (Exception ex)
         {

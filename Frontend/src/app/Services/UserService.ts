@@ -30,7 +30,7 @@ export class UserService {
   }
 
   editCurrentUserEmail(newEmail: string) {
-    return this.http.post(
+    return this.http.post<{jwt: string}>(
       `${this.apiUrl}/edit-user-email`,
       {newEmail},
       { headers: getAuthHeaders() },
