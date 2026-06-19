@@ -53,7 +53,7 @@ export class EditUserEmail {
     this.userService.editCurrentUserEmail(newEmail).subscribe({
       next: (res) => {
         this.generateJWT();
-        console.log('success');
+        console.log('success change newEmail');
       },
       error: (err) => alert(err.error),
     });

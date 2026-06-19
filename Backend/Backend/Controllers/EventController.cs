@@ -129,16 +129,33 @@ public class EventController : ControllerBase
         }
     }
 
-    //[HttpPost("save-event")]
-    //public async Task<IActionResult> SaveEvent(int id)
-    //{
-    //    var ev = await _context.Events.FindAsync(id);
-    //    if (ev == null)
-    //        return NotFound();
+    [HttpPost("bookmark-event/{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult> BookmarkEvent(int id)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
-    //    // Tu można dodać logikę zapisywania eventu do profilu użytkownika
-    //    TempData["Message"] = $"Event \"{ev.NameOfEvent}\" został zapisany.";
-    //    return RedirectToAction("Details", new { id });
-    //}
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+            return Unauthorized();
 
+        try
+        {
+            var ev = await _context.Events.FindAsync(id);
+            if (ev == null)
+                return NotFound();
+
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            _logger.LogError(ex, "Error while getting event details");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+        }
+    }
 }
