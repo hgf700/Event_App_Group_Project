@@ -28,3 +28,5 @@ frontend otrzymuje dto z jwt z backendu zamiast poprostu jwt dodac front dto
 rate limity dorobic moze ip lub jwt
 
 te co uzytkownik ma kupiony bilet to nie moze kupic 2 raz tego samego moze zeby nie byl widoczny
+
+uzycie when.all z tpl (parallel library) jesli 1 rzecz nie jest zalezna od drugiej dzieki temu szybko sie wykona
