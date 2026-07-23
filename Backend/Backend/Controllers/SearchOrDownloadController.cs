@@ -92,9 +92,14 @@ public class SearchOrDownloadController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<List<postSearchOrDownloadQueryDto>>> SearchEventOrDownload(
         [FromQuery] string? city,
-        [FromForm] postSearchEventDto? body
+        [FromBody] postSearchEventDto? body
         )
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null)
             return Unauthorized();

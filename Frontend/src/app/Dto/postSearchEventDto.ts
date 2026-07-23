@@ -1,3 +1,3 @@
 export interface postSearchEventDto {
-    city: string;
+    city?: string;
 }

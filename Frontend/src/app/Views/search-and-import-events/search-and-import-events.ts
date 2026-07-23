@@ -16,8 +16,8 @@ import { EventService } from '../../Services/EventService';
   styleUrl: './search-and-import-events.css',
 })
 
-// export class SearchAndImportEvents implements OnInit {
-export class SearchAndImportEvents{
+export class SearchAndImportEvents implements OnInit {
+// export class SearchAndImportEvents{
   searchAndImportEventsForm!: FormGroup;
   events: getEventDto[] = [];
   cityDto!: postCitySearchDto;
@@ -27,6 +27,7 @@ export class SearchAndImportEvents{
   constructor(
     private fb: FormBuilder,
     private router: Router,
+    private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     private searchOrDownloadEventService: SearchOrDownloadEventService,
     private eventService: EventService,
@@ -35,6 +36,33 @@ export class SearchAndImportEvents{
       city: ['', [Validators.required]],
     });
   }
+
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      const city = params['city'];
+
+      if (city) {
+        this.searchAndImportEventsForm.patchValue({
+          city: city
+        });
+
+        this.search(city);
+      }
+    });
+  }
+
+  search(city: string) {
+    this.searchOrDownloadEventService.searchOrDownloadEventQuery(city)
+      .subscribe({
+        next: (res) => {
+          this.events = res ?? [];
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+    }
 
   onSubmit() {
     this.submitted = true;
@@ -59,8 +87,4 @@ export class SearchAndImportEvents{
       },
     });
   }
-
-  // ngOnInit(): void {}
-
-
 }
