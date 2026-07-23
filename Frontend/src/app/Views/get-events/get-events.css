@@ -225,3 +225,29 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+
+/* === PAGINATION === */
+.pagination-size {
+  display: flex;
+  gap: 12px;
+  list-style: none;
+}
+
+.pagination-size li {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 1px solid #ccc;
+}
+
+.pagination-size li.active {
+  background: #333;
+  color: white;
+  border-color: #333;
+}

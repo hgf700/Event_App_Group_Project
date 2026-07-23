@@ -13,12 +13,13 @@ dla github actions testy jednostkowe back
 
 uzycie rate limit i innych zabezpieczen w controller
 
-gdzies maly problem z SearchEventOrDownload w backendzie
-
 rate limity dorobic moze na ip lub jwt
 
-te co uzytkownik ma kupiony bilet to nie moze kupic 2 raz tego samego moze zeby nie byl widoczny
+te co uzytkownik ma kupiony bilet to nie moze kupic 2 raz tego samego moze zeby nie byl widoczny albo byl widoczny
+tylko jakies inne id by nie wywalil exception w bazie?
 
 refresh token dla mojego jwt
 
 szybsze ladowanie zdjec 
+
+paginacja

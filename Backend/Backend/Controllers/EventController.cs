@@ -49,7 +49,7 @@ public class EventController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<List<getEventsDto>>> GetEvents()
+    public async Task<ActionResult<List<getEventsDto>>> GetEvents(int page = 1, int pageSize = 20)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -62,19 +62,27 @@ public class EventController : ControllerBase
         {
             var ev = await _context.Events.ToListAsync();
 
-            var dto = ev.Select(ev => new getEventsDto
+            int count = 0;
+            var dto;
+
+            while (pageSize != count)
             {
-                eventId = ev.Id,
-                typeOfEvent = ev.TypeOfEvent,
-                nameOfEvent=ev.NameOfEvent,
-                urlOfEvent=ev.UrlOfEvent,
-                photoUrl= ev.PhotoUrl,
-                startOfEvent = ev.StartOfEvent,
-                address = ev.Address,
-                city = ev.City,
-                country = ev.Country,
-                nameOfClub = ev.NameOfClub
-            }).ToList();
+                count++;
+
+                dto = ev.Select(ev => new getEventsDto
+                {
+                    eventId = ev.Id,
+                    typeOfEvent = ev.TypeOfEvent,
+                    nameOfEvent = ev.NameOfEvent,
+                    urlOfEvent = ev.UrlOfEvent,
+                    photoUrl = ev.PhotoUrl,
+                    startOfEvent = ev.StartOfEvent,
+                    address = ev.Address,
+                    city = ev.City,
+                    country = ev.Country,
+                    nameOfClub = ev.NameOfClub
+                }).ToList();
+            }
 
             return Ok(dto);
         }

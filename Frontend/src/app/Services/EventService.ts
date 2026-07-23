@@ -13,9 +13,14 @@ export class EventService {
 
   constructor(private http: HttpClient) {}
 
-  getEvents(): Observable<getEventDto[]> {
+  getEvents(page: number, pageSize: number): Observable<getEventDto[]> {
+    const params = new HttpParams()
+      .set('page', page)
+      .set('pageSize', pageSize);
+    
     return this.http.get<getEventDto[]>(`${this.apiUrl}/get-events`, {
-       headers: getAuthHeaders() 
+       headers: getAuthHeaders(), 
+       params,
       });
   }
 

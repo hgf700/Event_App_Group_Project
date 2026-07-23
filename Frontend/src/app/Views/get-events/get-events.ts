@@ -6,17 +6,22 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { getEventDto } from '../../Dto/getEventDto';
 import { EventService } from '../../Services/EventService';
 import { SubEventDetails } from '../sub-event-details/sub-event-details';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-get-events',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatDialogModule],
+  imports: [CommonModule, RouterModule, MatDialogModule, MatPaginatorModule],
   templateUrl: './get-events.html',
   styleUrl: './get-events.css',
 })
 export class GetEvents implements OnInit {
   events: getEventDto[] = [];
   loading = false;
+  totalItems = 0;
+  pageSize = 10;
+  pageIndex = 0;
 
   constructor(
     private router: Router,
@@ -45,7 +50,7 @@ export class GetEvents implements OnInit {
 
   getEvents() {
     this.loading = true;
-    this.eventService.getEvents().subscribe({
+    this.eventService.getEvents(1, 20).subscribe({
       next: (data) => {
         this.events = data ?? [];
         this.loading = false;
@@ -57,6 +62,22 @@ export class GetEvents implements OnInit {
         alert('Nie udało się getEvents');
       },
     });
+  }
+
+  onPageChange(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+
+    this.loadEvents();
+  }
+
+  loadEvents() {
+    this.eventService
+      .getEvents(this.pageIndex + 1, this.pageSize)
+      .subscribe(response => {
+        this.events = response.data;
+        this.totalItems = response.totalCount;
+      });
   }
 
   returnToLoginCallback() {
