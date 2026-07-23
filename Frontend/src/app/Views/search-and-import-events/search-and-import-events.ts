@@ -46,7 +46,7 @@ export class SearchAndImportEvents{
 
     const city = this.searchAndImportEventsForm.value.city;
 
-    this.searchOrDownloadEventService.searchOrDownloadEvent(city).subscribe({
+    this.searchOrDownloadEventService.searchOrDownloadEventForm(city).subscribe({
       next: (res) => {
         this.events = res ?? [];
         this.loading = false;

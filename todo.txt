@@ -18,3 +18,7 @@ gdzies maly problem z SearchEventOrDownload w backendzie
 rate limity dorobic moze na ip lub jwt
 
 te co uzytkownik ma kupiony bilet to nie moze kupic 2 raz tego samego moze zeby nie byl widoczny
+
+refresh token dla mojego jwt
+
+szybsze ladowanie zdjec 

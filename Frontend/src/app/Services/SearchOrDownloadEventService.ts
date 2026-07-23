@@ -3,6 +3,7 @@ import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { getAuthHeaders } from '../helpers/GetAuthHeaders';
 import { getEventDto } from '../Dto/getEventDto';
+import { postSearchEventDto } from '../Dto/postSearchEventDto';
 
 @Injectable({ providedIn: 'root' })
 export class SearchOrDownloadEventService {
@@ -12,15 +13,32 @@ export class SearchOrDownloadEventService {
 
   constructor(private http: HttpClient) {}
 
-  searchOrDownloadEvent(city: string) {
-    let params = new HttpParams().set('city', city);
+  searchOrDownloadEventForm(city: string) {
+    const dto: postSearchEventDto = {
+      city: city
+    };
 
-    return this.http.post<getEventDto[]>(`${this.apiUrl}/search-event-or-download`, 
-      {},
+    return this.http.post<getEventDto[]>(
+      `${this.apiUrl}/search-event-and-download`,
+      dto,
       {
-      headers: getAuthHeaders(),
-      params,
-    });
+        headers: getAuthHeaders()
+      }
+    );
+  }
+
+  searchOrDownloadEventQuery(city: string) {
+    const params = new HttpParams()
+      .set('city', city);
+
+    return this.http.post<getEventDto[]>(
+      `${this.apiUrl}/search-event-and-download`,
+      null,
+      {
+        headers: getAuthHeaders(),
+        params
+      }
+    );
   }
 
   seedDataBase() {

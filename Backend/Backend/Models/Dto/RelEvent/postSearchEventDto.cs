@@ -2,8 +2,8 @@
 
 namespace Backend.Models.Dto.RelEvent;
 
-public class SearchEventDto
+public class postSearchEventDto
 {
     [MaxLength(100)]
-    public string City { get; set; }
+    public string? city { get; set; }
 }

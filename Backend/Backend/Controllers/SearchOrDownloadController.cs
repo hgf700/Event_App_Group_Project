@@ -85,20 +85,21 @@ public class SearchOrDownloadController : ControllerBase
             .Value!;
     }
 
-    [HttpPost("search-event-or-download")]
+    [HttpPost("search-event-and-download")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<List<postSearchOrDownloadQueryDto>>> SearchEventOrDownload(
         [FromQuery] string? city,
-        [FromBody] SearchEventDto? body)
+        [FromForm] postSearchEventDto? body
+        )
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null)
             return Unauthorized();
 
-        var finalCity = city ?? body?.City;
+        var finalCity = city ?? body?.city;
 
         if (string.IsNullOrWhiteSpace(finalCity))
             return BadRequest("City is required");
