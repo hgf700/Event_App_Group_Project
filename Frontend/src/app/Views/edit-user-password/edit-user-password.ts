@@ -48,7 +48,7 @@ export class EditUserPassword {
 
     this.userService.editCurrentUserPassword(oldPassword, newPassword).subscribe({
       next: (res) => {
-        console.log('success');
+        console.log('success change password');
       },
       error: (err) => alert(err.error),
     });

@@ -183,20 +183,22 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddRateLimiter(options =>
 {
-    options.AddFixedWindowLimiter("RateLimitGet", opt =>
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
     {
-        opt.PermitLimit = 30;
-        opt.Window = TimeSpan.FromSeconds(2);
-        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-        opt.QueueLimit = 10;
-    });
+        var userId =
+            httpContext.User?.Identity?.Name ??
+            httpContext.Connection.RemoteIpAddress?.ToString() ??
+            "anonymous";
 
-    options.AddFixedWindowLimiter("RateLimitPost", opt =>
-    {
-        opt.PermitLimit = 3;
-        opt.Window = TimeSpan.FromSeconds(10);
-        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-        opt.QueueLimit = 2;
+        return RateLimitPartition.GetFixedWindowLimiter(
+            userId,
+            _ => new FixedWindowRateLimiterOptions
+            {
+                AutoReplenishment = true,
+                QueueLimit = 0,
+                PermitLimit = 100,
+                Window = TimeSpan.FromMinutes(1)
+            });
     });
 });
 

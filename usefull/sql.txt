@@ -1,4 +1,10 @@
 -- SELECT * FROM "Events"
--- SELECT * FROM "Sports"
--- SELECT * FROM "Teams"
--- SELECT * FROM "Venues"
+-- SELECT * FROM "AspNetUsers"
+-- SELECT * FROM "ExternalGoogleOAuthTokens"
+-- SELECT * FROM "NotificationLogs"
+-- SELECT * FROM "UserEvents"
+-- SELECT * FROM "AspNetUserTokens"
+
+
+
+

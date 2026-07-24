@@ -70,7 +70,6 @@ http://13.217.97.150/
 - GitHub Actions – CI/CD pipelines
 - Grafana + Loki – logging and visualization
 - Prometheus – metrics monitoring
-- Terraform – infrastructure as code
 
 ### External Services & APIs
 - Ticketmaster API

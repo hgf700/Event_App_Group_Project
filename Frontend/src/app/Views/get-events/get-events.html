@@ -4,6 +4,14 @@
   </button>
   <h1 class="page-title">Nadchodzące wydarzenia</h1>
   <p class="page-subtitle">Znaleziono <strong>{{ events.length }}</strong> wydarzeń</p>
+
+  <mat-paginator
+    [length]="totalItems"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[10, 25, 50, 75, 100]"
+    (page)="onPageChange($event)"
+    aria-label="Select page">
+  </mat-paginator>
 </div>
 
 @if (loading) {
