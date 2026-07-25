@@ -17,7 +17,6 @@ import { EventService } from '../../Services/EventService';
 })
 
 export class SearchAndImportEvents implements OnInit {
-// export class SearchAndImportEvents{
   searchAndImportEventsForm!: FormGroup;
   events: getEventDto[] = [];
   cityDto!: postCitySearchDto;
