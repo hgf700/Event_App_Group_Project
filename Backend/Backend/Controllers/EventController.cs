@@ -49,7 +49,9 @@ public class EventController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<List<getEventsDto>>> GetEvents(int page = 1, int pageSize = 20)
+    public async Task<ActionResult<paginatedResponse<getEventsDto>>> GetEvents(
+        int page = 1,
+        int pageSize = 20)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -60,31 +62,36 @@ public class EventController : ControllerBase
 
         try
         {
-            var ev = await _context.Events.ToListAsync();
+            var totalCount = await _context.Events.CountAsync();
 
-            int count = 0;
-            var dto;
-
-            while (pageSize != count)
-            {
-                count++;
-
-                dto = ev.Select(ev => new getEventsDto
+            var events = await _context.Events
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(e => new getEventsDto
                 {
-                    eventId = ev.Id,
-                    typeOfEvent = ev.TypeOfEvent,
-                    nameOfEvent = ev.NameOfEvent,
-                    urlOfEvent = ev.UrlOfEvent,
-                    photoUrl = ev.PhotoUrl,
-                    startOfEvent = ev.StartOfEvent,
-                    address = ev.Address,
-                    city = ev.City,
-                    country = ev.Country,
-                    nameOfClub = ev.NameOfClub
-                }).ToList();
-            }
+                    eventId = e.Id,
+                    typeOfEvent = e.TypeOfEvent,
+                    nameOfEvent = e.NameOfEvent,
+                    urlOfEvent = e.UrlOfEvent,
+                    photoUrl = e.PhotoUrl,
+                    startOfEvent = e.StartOfEvent,
+                    address = e.Address,
+                    city = e.City,
+                    country = e.Country,
+                    nameOfClub = e.NameOfClub
+                })
+                .ToArrayAsync();
 
-            return Ok(dto);
+
+            var response = new paginatedResponse<getEventsDto>
+            {
+                data = events,
+                totalCount = totalCount,
+                pageNumber = page,
+                pageSize = pageSize
+            };
+
+            return Ok(response);
         }
         catch (Exception ex) {
             Console.WriteLine(ex);

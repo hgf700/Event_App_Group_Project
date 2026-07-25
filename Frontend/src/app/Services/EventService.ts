@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 import { getAuthHeaders } from '../helpers/GetAuthHeaders';
 import { RetryHelper } from '../helpers/ResilianceHelpers';
 import { getEventDto } from '../Dto/getEventDto';
+import { paginatedResponse } from '../model/paginatedResponse';
 
 @Injectable({ providedIn: 'root' })
 export class EventService {
@@ -13,14 +14,11 @@ export class EventService {
 
   constructor(private http: HttpClient) {}
 
-  getEvents(page: number, pageSize: number): Observable<getEventDto[]> {
-    const params = new HttpParams()
-      .set('page', page)
-      .set('pageSize', pageSize);
+  getEvents(page: number, pageSize: number): Observable<paginatedResponse<getEventDto>> {
     
-    return this.http.get<getEventDto[]>(`${this.apiUrl}/get-events`, {
-       headers: getAuthHeaders(), 
-       params,
+    return this.http.get<paginatedResponse<getEventDto>>
+      (`${this.apiUrl}/get-events?page=${page}&pageSize=${pageSize}`, {
+       headers: getAuthHeaders(),
       });
   }
 

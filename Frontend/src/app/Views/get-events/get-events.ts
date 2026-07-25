@@ -31,7 +31,7 @@ export class GetEvents implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getEvents();
+    this.loadEvents();
   }
 
   eventDetails(eventId: number) {
@@ -48,22 +48,6 @@ export class GetEvents implements OnInit {
     });
   }
 
-  getEvents() {
-    this.loading = true;
-    this.eventService.getEvents(1, 20).subscribe({
-      next: (data) => {
-        this.events = data ?? [];
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        this.loading = false;
-        console.error(err);
-        alert('Nie udało się getEvents');
-      },
-    });
-  }
-
   onPageChange(event: PageEvent) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
@@ -71,7 +55,7 @@ export class GetEvents implements OnInit {
     this.loadEvents();
   }
 
-  loadEvents() {
+  loadEvents() : void{
     this.eventService
       .getEvents(this.pageIndex + 1, this.pageSize)
       .subscribe(response => {
