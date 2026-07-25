@@ -56,6 +56,10 @@ public class EventController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) 
+            return Unauthorized();
+
         try
         {
             var totalCount = await _context.Events.CountAsync();
@@ -89,15 +93,10 @@ public class EventController : ControllerBase
 
             return Ok(response);
         }
-        catch (Exception ex)
-        {
+        catch (Exception ex) {
             Console.WriteLine(ex);
             _logger.LogError(ex, "Error while getting events.");
-
-            return StatusCode(
-                StatusCodes.Status500InternalServerError,
-                "Internal server error"
-            );
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
 
