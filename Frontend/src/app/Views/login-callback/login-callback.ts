@@ -1,8 +1,9 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef , signal} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { UserService } from '../../Services/UserService';
+import { LayoutService } from '../../Services/LayoutService';
 import { getCurrentUserDto } from '../../Dto/getCurrentUserDto';
 import { EventsNavigationService }from '../../RootingServices/EventsNavigationService'
 import { UserNavigationService }from '../../RootingServices/UserNavigationService'
@@ -17,20 +18,19 @@ import { UserNavigationService }from '../../RootingServices/UserNavigationServic
 export class LoginCallback implements OnInit {
   loading = false;
   currentUser!: getCurrentUserDto;
-  userEmail!: string;
+  
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private userService: UserService,
+    private layoutService: LayoutService,
     private eventsNavigtionService: EventsNavigationService,
     private userNavigationService: UserNavigationService,
     private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
-    this.userEmail = localStorage.getItem('email') ?? 'brak email';
-    
     this.generateJWT();
     this.getCurrentUser();
   }
@@ -57,8 +57,7 @@ export class LoginCallback implements OnInit {
       next: (data) => {
         this.currentUser = data;
         this.loading = false;
-        this.userEmail = data.email;
-        localStorage.setItem('email', data.email);
+        this.layoutService.setUserEmail(data.email);
       },
       error: (err) => {
         this.loading = false;

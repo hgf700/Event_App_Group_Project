@@ -9,25 +9,18 @@ zamiast local storage to lepiej http cookies i same site strict ale to potem
 
 refresh tokeny z jwt dokonczyc
 
-dla github actions testy jednostkowe back
+dla github actions testy jednostkowe back i front
 
-uzycie rate limit i innych zabezpieczen w controller
-
-rate limity dorobic moze na ip lub jwt
+uzycie rate limit i innych zabezpieczen w controller rate limity dorobic moze na ip lub jwt
 
 te co uzytkownik ma kupiony bilet to nie moze kupic 2 raz tego samego moze zeby nie byl widoczny albo byl widoczny
 tylko jakies inne id by nie wywalil exception w bazie?
 
-refresh token dla mojego jwt
-
-szybsze ladowanie zdjec 
-
 frontend otrzymuje dto z jwt z backendu zamiast poprostu jwt dodac front dto
-
-rate limity dorobic moze ip lub jwt
-
-te co uzytkownik ma kupiony bilet to nie moze kupic 2 raz tego samego moze zeby nie byl widoczny
 
 uzycie when.all z tpl (parallel library) jesli 1 rzecz nie jest zalezna od drugiej dzieki temu szybko sie wykona
 paginacja
 
+dodac .AsNoTracking() tylko dla get readonly bo wtedy ef nie sledzi zmian i poprawia sie wydajnosc nawet jesli daje do dto Select bo wiadomo jaki jest cel funkcji
+
+uzytkownik po zalogowaniu nie dostaje w zakladce uzytkownika informacji bo get jest pozniej niz rejestracja

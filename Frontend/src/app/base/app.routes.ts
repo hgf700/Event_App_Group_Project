@@ -30,10 +30,6 @@ export const routes: Routes = [
   { path: 'edit-user', component: EditUser },
   { path: 'edit-user-email', component: EditUserEmail },
   { path: 'edit-user-password', component: EditUserPassword },
-  
-  
-  
-  
 ];
 
 @NgModule({

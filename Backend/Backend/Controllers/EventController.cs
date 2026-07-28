@@ -65,6 +65,7 @@ public class EventController : ControllerBase
             var totalCount = await _context.Events.CountAsync();
 
             var events = await _context.Events
+                .AsNoTracking()
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .Select(e => new getEventsDto

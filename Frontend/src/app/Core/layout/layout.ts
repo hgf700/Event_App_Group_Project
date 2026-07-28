@@ -6,10 +6,7 @@ import { LayoutService } from '../../Services/LayoutService';
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [
-    RouterOutlet,
-    RouterLink,
-  ],
+  imports: [RouterOutlet, RouterLink,],
   templateUrl: './layout.html',
   styleUrl: './layout.css',
 })
@@ -23,7 +20,7 @@ export class Layout {
     return this.layoutService.isAuthenticated();
   }
 
-  get userEmail(): string {
+  get userEmail(){
     return this.layoutService.userEmail();
   }
 
