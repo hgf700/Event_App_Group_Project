@@ -243,3 +243,21 @@
   font-size: 4rem;
   opacity: 0.5;
 }
+
+.btn-details {
+  margin-top: auto;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: #fff;
+  border: none;
+  padding: 0.7rem 1rem;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-details:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}

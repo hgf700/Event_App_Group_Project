@@ -45,6 +45,7 @@
       <span class="event-badge">{{ e.typeOfEvent }}</span>
       }
     </div>
+
     <div class="event-body">
       <h3 class="event-title">{{ e.nameOfEvent }}</h3>
       @if (e.startOfEvent) {
@@ -56,9 +57,13 @@
         <span>
           @if (e.nameOfClub) { <strong>{{ e.nameOfClub }}</strong> }
           @if (e.city) { , {{ e.city }} }
+          @if (e.country) { , {{ e.country }} }
         </span>
       </p>
       }
+      <button class="btn-details" (click)="eventDetails(e.eventId!)">
+        Zobacz szczegóły →
+      </button>
     </div>
   </article>
   }

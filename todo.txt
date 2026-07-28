@@ -16,8 +16,6 @@ uzycie rate limit i innych zabezpieczen w controller rate limity dorobic moze na
 te co uzytkownik ma kupiony bilet to nie moze kupic 2 raz tego samego moze zeby nie byl widoczny albo byl widoczny
 tylko jakies inne id by nie wywalil exception w bazie?
 
-frontend otrzymuje dto z jwt z backendu zamiast poprostu jwt dodac front dto
-
 uzycie when.all z tpl (parallel library) jesli 1 rzecz nie jest zalezna od drugiej dzieki temu szybko sie wykona
 paginacja
 

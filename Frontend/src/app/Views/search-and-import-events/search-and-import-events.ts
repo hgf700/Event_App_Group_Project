@@ -7,17 +7,19 @@ import { getEventDto } from '../../Dto/getEventDto';
 import { postCitySearchDto } from '../../Dto/postCitySearchDto';
 import { SearchOrDownloadEventService } from '../../Services/SearchOrDownloadEventService';
 import { EventService } from '../../Services/EventService';
+import { SubEventDetails } from '../sub-event-details/sub-event-details';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-search-and-import-events',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, MatDialogModule],
   templateUrl: './search-and-import-events.html',
   styleUrl: './search-and-import-events.css',
 })
 
 export class SearchAndImportEvents implements OnInit {
-// export class SearchAndImportEvents{
   searchAndImportEventsForm!: FormGroup;
   events: getEventDto[] = [];
   cityDto!: postCitySearchDto;
@@ -26,11 +28,10 @@ export class SearchAndImportEvents implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     private searchOrDownloadEventService: SearchOrDownloadEventService,
-    private eventService: EventService,
+    private dialog: MatDialog,
   ) {
     this.searchAndImportEventsForm = this.fb.group({
       city: ['', [Validators.required]],
@@ -51,6 +52,20 @@ export class SearchAndImportEvents implements OnInit {
     });
   }
 
+  eventDetails(eventId: number) {
+    const dialogRef = this.dialog.open(SubEventDetails, {
+      width: '600px',
+      height: '400px',
+      data: {
+        eventId,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('Dialog closed:', result);
+    });
+  }
+  
   search(city: string) {
     this.searchOrDownloadEventService.searchOrDownloadEventQuery(city)
       .subscribe({

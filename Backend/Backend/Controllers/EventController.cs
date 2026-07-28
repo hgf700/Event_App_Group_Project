@@ -29,7 +29,6 @@ public class EventController : ControllerBase
     private readonly SendOrDownloadFromApiService _downloadAndSendEventsApi;
     private readonly ILogger<EventController> _logger;
 
-
     public EventController(
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
