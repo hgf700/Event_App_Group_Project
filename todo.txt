@@ -20,7 +20,3 @@ tylko jakies inne id by nie wywalil exception w bazie?
 
 uzycie when.all z tpl (parallel library) jesli 1 rzecz nie jest zalezna od drugiej dzieki temu szybko sie wykona
 paginacja
-
-dodac .AsNoTracking() tylko dla get readonly bo wtedy ef nie sledzi zmian i poprawia sie wydajnosc nawet jesli daje do dto Select bo wiadomo jaki jest cel funkcji
-
-uzytkownik po zalogowaniu nie dostaje w zakladce uzytkownika informacji bo get jest pozniej niz rejestracja

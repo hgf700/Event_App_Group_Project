@@ -91,7 +91,7 @@ public class PaymentCallbackController : ControllerBase
             );
 
             string resourcesPath = Path.Combine(Directory.GetCurrentDirectory(), "Resources");
-            Directory.CreateDirectory(resourcesPath); // na wszelki wypadek
+            //Directory.CreateDirectory(resourcesPath); // na wszelki wypadek
 
             string pdfPath = Path.Combine(resourcesPath, "bilet.pdf");
             doc.GeneratePdf(pdfPath);

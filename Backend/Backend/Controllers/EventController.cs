@@ -48,9 +48,7 @@ public class EventController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<paginatedResponse<getEventsDto>>> GetEvents(
-        int page = 1,
-        int pageSize = 20)
+    public async Task<ActionResult<paginatedResponse<getEventsDto>>> GetEvents(int page = 1, int pageSize = 20)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);

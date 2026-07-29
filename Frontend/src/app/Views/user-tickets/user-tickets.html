@@ -9,10 +9,12 @@
   <div class="spinner"></div>
   <p>Ładowanie biletów...</p>
 </div>
-} @else if (events.length > 0) {
+} 
+@else if (events.length > 0) {
 <div class="tickets-grid">
   @for (e of events; track e.eventId) {
   <article class="ticket-card">
+
     <div class="ticket-stub">
       <div class="ticket-emoji">🎟️</div>
     </div>
@@ -39,11 +41,23 @@
         </span>
       </p>
       }
-
+      
       <div class="ticket-status">
-        ✓ Bilet aktywny
+        @if(isTicketActive(e.startOfEvent)){
+          <button class="action-card" (click)="userBoughtTicketInfo(e.eventId)">
+            <p>✓ Bilet aktywny</p>
+            <p>Zobacz Informacje do kontroli</p>
+          </button>
+        }
+        @else{
+          <button class="action-card" (click)="userBoughtTicketInfo(e.eventId)">
+            <p>Event się zaczął</p>
+            <p>Zobacz Informacje do kontroli</p>
+          </button>
+        }
       </div>
     </div>
+
   </article>
   }
 </div>
