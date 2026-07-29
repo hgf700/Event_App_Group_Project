@@ -116,7 +116,10 @@ public class EventController : ControllerBase
 
         try
         {
-            var ev = await _context.Events.FindAsync(id);
+            var ev = await _context.Events
+                .AsNoTracking()
+                .FirstOrDefaultAsync(e => e.Id == id);
+
             if (ev == null)
                 return NotFound();
 

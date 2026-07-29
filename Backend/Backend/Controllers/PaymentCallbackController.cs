@@ -22,7 +22,6 @@ public class PaymentCallbackController : ControllerBase
     private readonly EmailService _emailService;
     private readonly ILogger<PaymentCallbackController> _logger;
 
-
     public PaymentCallbackController(UserManager<ApplicationUser> userManager,
         ApplicationDbContext context,
         QrCodeService qrCodeService,
@@ -92,13 +91,13 @@ public class PaymentCallbackController : ControllerBase
             );
 
             string resourcesPath = Path.Combine(Directory.GetCurrentDirectory(), "Resources");
-            //Directory.CreateDirectory(resourcesPath); // na wszelki wypadek
+            Directory.CreateDirectory(resourcesPath); // na wszelki wypadek
 
             string pdfPath = Path.Combine(resourcesPath, "bilet.pdf");
             doc.GeneratePdf(pdfPath);
 
-            string docelowyemail = Environment.GetEnvironmentVariable("TARGET_EMAIL");
-            _emailService.SendEmail(docelowyemail, ev.UrlOfEvent);
+            string targetEmail = Environment.GetEnvironmentVariable("TARGET_EMAIL");
+            _emailService.SendEmail(targetEmail, ev.UrlOfEvent);
 
             _logger.LogInformation("User successfully bought ticket {userId}", userId);
 

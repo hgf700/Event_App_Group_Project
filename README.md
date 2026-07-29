@@ -26,7 +26,7 @@ http://13.217.97.150/
 - Authentication and authorization using **JWT (JSON Web Tokens)**.
 - User registration and login with **ASP.NET Identity** and **OAuth external providers**.
 - Integration with the **Ticketmaster API** to fetch event data.
-- **Pagination** and event search functionality via query parameters.
+- **Pagination** and **event search functionality** via form or query parameters.
 - Integration with **Stripe Payments** for ticket purchasing.
 
 ### 💳 After successful payment:
@@ -93,6 +93,5 @@ http://13.217.97.150/
 # Future Potential Improvements
 - Improve application security
 - Add unit and integration tests
-- Improve UI/UX
 - Add Kubernetes deployment
 - Add distributed tracing (OpenTelemetry)

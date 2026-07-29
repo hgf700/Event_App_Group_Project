@@ -102,6 +102,7 @@ public class UserController : ControllerBase
                 return NotFound("User not found");
 
             var events = await _context.UserEvents
+               .AsNoTracking()
                .Where(ue => ue.UserId == userId)
                .Include(ue => ue.Event)
                .Select(ue => new getEventsDto

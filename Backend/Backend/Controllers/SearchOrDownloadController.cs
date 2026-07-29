@@ -147,6 +147,4 @@ public class SearchOrDownloadController : ControllerBase
             return StatusCode(500, "Internal server error");
         }
     }
-
-
 }
