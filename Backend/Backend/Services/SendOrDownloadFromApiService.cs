@@ -65,7 +65,7 @@ public class SendOrDownloadFromApiService
             return new List<postSearchOrDownloadQueryDto>();
         }
 
-        var result = new List<postSearchOrDownloadQueryDto>();
+        var newEvents = new List<Event>();
 
         foreach (var ev in ticketmasterData.Embedded.Events)
         {
@@ -94,24 +94,25 @@ public class SendOrDownloadFromApiService
                 NameOfClub = venue?.Name,
             };
 
-            await _context.Events.AddAsync(newEvent);
-
-            result.Add(new postSearchOrDownloadQueryDto
-            {
-                eventId = newEvent.Id,
-                typeOfEvent = newEvent.TypeOfEvent,
-                nameOfEvent = newEvent.NameOfEvent,
-                urlOfEvent = newEvent.UrlOfEvent,
-                photoUrl = newEvent.PhotoUrl,
-                startOfEvent = newEvent.StartOfEvent,
-                address = newEvent.Address,
-                city = newEvent.City,
-                country = newEvent.Country,
-                nameOfClub = newEvent.NameOfClub
-            });
+            newEvents.Add(newEvent);
         }
 
+        await _context.Events.AddRangeAsync(newEvents);
         await _context.SaveChangesAsync();
+
+        var result = newEvents.Select(e => new postSearchOrDownloadQueryDto
+        {
+            eventId = e.Id,
+            typeOfEvent = e.TypeOfEvent,
+            nameOfEvent = e.NameOfEvent,
+            urlOfEvent = e.UrlOfEvent,
+            photoUrl = e.PhotoUrl,
+            startOfEvent = e.StartOfEvent,
+            address = e.Address,
+            city = e.City,
+            country = e.Country,
+            nameOfClub = e.NameOfClub,
+        }).ToList();
 
         return result;
     }

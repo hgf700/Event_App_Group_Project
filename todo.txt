@@ -2,7 +2,7 @@ popraw widok z wyszukiwaniem eventu logika najpierw musi zapisywac do bazy i wte
 inaczej jest 0
 
 uzycie notification model dla sledzenia stanu wyslania email 
-lub do potwierdzenia rejestracji bardziej przez email i dla emaili co najwyzej 2 stany
+i/lub do potwierdzenia rejestracji bardziej przez email i dla emaili co najwyzej 2 stany
 wyslane, i wysylany, i nie wyslany tylko nie wiem czy jest to mozliwy stan?
 
 ressiliance np retry,circut breaker dla frontu w angular
