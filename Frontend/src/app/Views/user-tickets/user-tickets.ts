@@ -2,11 +2,11 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { getEventDto } from '../../Dto/getEventDto';
 import { UserService } from '../../Services/UserService';
 import { EventService } from '../../Services/EventService';
 import { SubBoughtEventInfo } from '../sub-bought-event-info/sub-bought-event-info';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { getUserBoughtTickets } from '../../Dto/getUserBoughtTickets';
 
 @Component({
   selector: 'app-user-tickets',
@@ -16,7 +16,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
   styleUrl: './user-tickets.css',
 })
 export class UserTickets implements OnInit{
-  events: getEventDto[] = [];
+  events: getUserBoughtTickets[] = [];
   loading = false;
 
   constructor(

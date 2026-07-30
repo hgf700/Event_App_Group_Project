@@ -5,12 +5,14 @@ import { getCurrentUserDto } from '../Dto/getCurrentUserDto';
 import { postEditUserDto } from '../Dto/postEditUserDto';
 import { getEventDto } from '../Dto/getEventDto';
 import { postEditUserPassword } from '../Dto/postEditUserPassword';
+import { getUserBoughtTickets } from '../Dto/getUserBoughtTickets';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private apiUrl = 'https://localhost:7051/api/v1/User';
   editUser!: postEditUserDto;
   currentUser!: getCurrentUserDto;
+  userBought!: getUserBoughtTickets;
   event: getEventDto[] = [];
 
   constructor(private http: HttpClient) {}
@@ -23,7 +25,7 @@ export class UserService {
   }
 
   currentUserTickets() {
-    return this.http.get<getEventDto[]>(
+    return this.http.get<getUserBoughtTickets[]>(
       `${this.apiUrl}/user-tickets`,
       { headers: getAuthHeaders() },
     );

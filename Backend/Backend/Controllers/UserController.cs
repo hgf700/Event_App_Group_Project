@@ -86,7 +86,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<getEventsDto>> MyEvents()
+    public async Task<ActionResult<getUserBoughtTickets>> MyEvents()
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -105,17 +105,14 @@ public class UserController : ControllerBase
                .AsNoTracking()
                .Where(ue => ue.UserId == userId)
                .Include(ue => ue.Event)
-               .Select(ue => new getEventsDto
+               .Select(ue => new getUserBoughtTickets
                {
                    eventId = ue.Event.Id,
                    typeOfEvent = ue.Event.TypeOfEvent,
                    nameOfEvent = ue.Event.NameOfEvent,
-                   urlOfEvent = ue.Event.UrlOfEvent,
-                   photoUrl = ue.Event.PhotoUrl,
                    startOfEvent = ue.Event.StartOfEvent,
                    address = ue.Event.Address,
                    city = ue.Event.City,
-                   country = ue.Event.Country,
                    nameOfClub = ue.Event.NameOfClub
                })
                .ToListAsync();

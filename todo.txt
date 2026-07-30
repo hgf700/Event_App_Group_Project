@@ -1,6 +1,3 @@
-popraw widok z wyszukiwaniem eventu logika najpierw musi zapisywac do bazy i wtedy moge zwrocic id bo 
-inaczej jest 0
-
 uzycie notification model dla sledzenia stanu wyslania email 
 i/lub do potwierdzenia rejestracji bardziej przez email i dla emaili co najwyzej 2 stany
 wyslane, i wysylany, i nie wyslany tylko nie wiem czy jest to mozliwy stan?
@@ -9,14 +6,17 @@ ressiliance np retry,circut breaker dla frontu w angular
 
 zamiast local storage to lepiej http cookies i same site strict ale to potem
 
-refresh tokeny z jwt dokonczyc
+refresh tokeny z jwt zrobic moje
 
-dla github actions testy jednostkowe back i front
+dla github actions testy jednostkowe back i front dorobic
 
-uzycie rate limit i innych zabezpieczen w controller rate limity dorobic moze na ip lub jwt
+uzycie rate limit i innych zabezpieczen w controller rate limity dorobic moze na ip lub jwt lepiej ale mozna 
+chyba tez na ip?
 
 te co uzytkownik ma kupiony bilet to nie moze kupic 2 raz tego samego moze zeby nie byl widoczny albo byl widoczny
 tylko jakies inne id by nie wywalil exception w bazie?
 
 uzycie when.all z tpl (parallel library) jesli 1 rzecz nie jest zalezna od drugiej dzieki temu szybko sie wykona
-paginacja
+akcja
+
+dokonczyc widok z kupionymi biletami
