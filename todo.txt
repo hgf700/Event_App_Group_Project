@@ -20,3 +20,5 @@ uzycie when.all z tpl (parallel library) jesli 1 rzecz nie jest zalezna od drugi
 akcja
 
 dokonczyc widok z kupionymi biletami
+
+moge zrobic logike do wyszukiwania ze jak nie ma miasta to moze 2 wyszukanie po panstwie?

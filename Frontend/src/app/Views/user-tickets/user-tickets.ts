@@ -4,9 +4,10 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { UserService } from '../../Services/UserService';
 import { EventService } from '../../Services/EventService';
+import { UserTicketService } from '../../Services/UserTicketService';
 import { SubBoughtEventInfo } from '../sub-bought-event-info/sub-bought-event-info';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { getUserBoughtTickets } from '../../Dto/getUserBoughtTickets';
+import { getUserBoughtTicketDto } from '../../Dto/getUserBoughtTicketDto';
 
 @Component({
   selector: 'app-user-tickets',
@@ -16,15 +17,14 @@ import { getUserBoughtTickets } from '../../Dto/getUserBoughtTickets';
   styleUrl: './user-tickets.css',
 })
 export class UserTickets implements OnInit{
-  events: getUserBoughtTickets[] = [];
+  events: getUserBoughtTicketDto[] = [];
   loading = false;
 
   constructor(
     private router: Router,
     private cdr: ChangeDetectorRef,
     private dialog: MatDialog,
-    private userService: UserService,
-    private eventService: EventService,
+    private userTicketService: UserTicketService,
   ) {}
 
   ngOnInit(): void {
@@ -33,7 +33,7 @@ export class UserTickets implements OnInit{
 
   getUserTickets() {
     this.loading = true;
-    this.userService.currentUserTickets().subscribe({
+    this.userTicketService.currentUserTickets().subscribe({
       next: (data) => {
         this.events = data ?? [];
         this.loading = false;

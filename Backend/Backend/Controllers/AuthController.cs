@@ -1,7 +1,7 @@
 ﻿using Backend.Db;
+using Backend.Dto.RelAuth;
 using Backend.Identity;
 using Backend.Interfaces;
-using Backend.Models.Dto.RelAuth;
 using Backend.Models.Model;
 using Backend.Services;
 using Microsoft.AspNetCore.Authentication;

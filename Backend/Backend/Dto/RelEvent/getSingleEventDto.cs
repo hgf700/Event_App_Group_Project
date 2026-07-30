@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Backend.Models.Dto.RelEvent;
+namespace Backend.Dto.RelEvent;
 
-public class getEventsDto
+public class getSingleEventDto
 {
-    public int? eventId { get; set; }
     public string? typeOfEvent { get; set; }
     public string? nameOfEvent { get; set; }
 

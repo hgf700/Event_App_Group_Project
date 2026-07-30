@@ -1,5 +1,5 @@
 ﻿using Backend.Db;
-using Backend.Models.Dto.RelEvent;
+using Backend.Dto.RelEvent;
 using Backend.Models.Model;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;

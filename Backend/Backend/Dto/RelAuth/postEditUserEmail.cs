@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Backend.Models.Dto.RelAuth;
+namespace Backend.Dto.RelAuth;
 
 public class postEditUserEmail
 {

@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Backend.Models.Dto.RelEvent;
+namespace Backend.Dto.RelEvent;
 
-public class getSingleEventDto
+public class postSearchOrDownloadQueryDto
 {
+    public int? eventId { get; set; }
     public string? typeOfEvent { get; set; }
     public string? nameOfEvent { get; set; }
 
@@ -14,7 +15,10 @@ public class getSingleEventDto
     public string? photoUrl { get; set; }
     public DateTime? startOfEvent { get; set; }
     public string? address { get; set; }
+
+    [MaxLength(100)]
     public string? city { get; set; }
     public string? country { get; set; }
     public string? nameOfClub { get; set; }
+
 }

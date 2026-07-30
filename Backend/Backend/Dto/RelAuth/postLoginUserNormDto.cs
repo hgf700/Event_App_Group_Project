@@ -1,17 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Backend.Models.Dto.RelAuth;
+namespace Backend.Dto.RelAuth;
 
-public class postCreateUserNormDto
+public class postLoginUserNormDto
 {
     [Required]
     [MinLength(1)]
     [MaxLength(100)]
-    public string email { get; set; }
+    public string email {  get; set; }
 
     [Required]
     [MinLength(1)]
     [MaxLength(100)]
     public string password { get; set; }
-
 }

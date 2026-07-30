@@ -1,8 +1,8 @@
 ﻿using Backend.Db;
+using Backend.Dto.RelAuth;
+using Backend.Dto.RelEvent;
 using Backend.Identity;
 using Backend.Interfaces;
-using Backend.Models.Dto.RelAuth;
-using Backend.Models.Dto.RelEvent;
 using Backend.Models.Model;
 using Backend.Patterns;
 using Backend.Services;
@@ -76,58 +76,6 @@ public class UserController : ControllerBase
         {
             Console.WriteLine(ex);
             _logger.LogError(ex, "Error while getting current user. email UserId: {UserId}", userId);
-            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
-        }
-    }
-
-    [HttpGet("user-tickets")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<getUserBoughtTickets>> MyEvents()
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId == null)
-            return Unauthorized();
-
-        try
-        {
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-                return NotFound("User not found");
-
-            var events = await _context.UserEvents
-               .AsNoTracking()
-               .Where(ue => ue.UserId == userId)
-               .Include(ue => ue.Event)
-               .Select(ue => new getUserBoughtTickets
-               {
-                   eventId = ue.Event.Id,
-                   typeOfEvent = ue.Event.TypeOfEvent,
-                   nameOfEvent = ue.Event.NameOfEvent,
-                   startOfEvent = ue.Event.StartOfEvent,
-                   address = ue.Event.Address,
-                   city = ue.Event.City,
-                   nameOfClub = ue.Event.NameOfClub
-               })
-               .ToListAsync();
-
-            if (!events.Any())
-            {
-                return NotFound("No events found for this user");
-            }
-
-            return Ok(events);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error while getting user. tickets UserId: {UserId}", userId);
-            Console.WriteLine(ex);
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }

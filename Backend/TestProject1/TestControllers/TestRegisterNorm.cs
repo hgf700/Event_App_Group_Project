@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Backend.Interfaces;
+using Backend.Dto.RelAuth;
 
 namespace TestProject1.TestControllers;
 

@@ -1,6 +1,6 @@
 ﻿using Backend.Db;
+using Backend.Dto.RelEvent;
 using Backend.Identity;
-using Backend.Models.Dto.RelEvent;
 using Backend.Models.Model;
 using Backend.Patterns;
 using Backend.Services;

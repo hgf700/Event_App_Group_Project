@@ -15,7 +15,8 @@ import { getEventDto } from '../../Dto/getEventDto';
   styleUrl: './sub-bought-event-info.css',
 })
 export class SubBoughtEventInfo implements OnInit{
-
+  loading = false;
+  
   constructor(){}
 
   ngOnInit(): void {

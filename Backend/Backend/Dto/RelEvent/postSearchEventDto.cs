@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Backend.Models.Dto.RelEvent;
+namespace Backend.Dto.RelEvent;
 
 public class postSearchEventDto
 {

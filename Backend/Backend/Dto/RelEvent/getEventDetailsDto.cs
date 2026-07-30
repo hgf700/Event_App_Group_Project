@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Backend.Models.Dto.RelEvent;
+namespace Backend.Dto.RelEvent;
 
-public class postSearchOrDownloadQueryDto
+public class getEventDetailsDto
 {
     public int? eventId { get; set; }
     public string? typeOfEvent { get; set; }
@@ -15,10 +15,7 @@ public class postSearchOrDownloadQueryDto
     public string? photoUrl { get; set; }
     public DateTime? startOfEvent { get; set; }
     public string? address { get; set; }
-
-    [MaxLength(100)]
     public string? city { get; set; }
     public string? country { get; set; }
     public string? nameOfClub { get; set; }
-
 }
