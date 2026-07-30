@@ -80,4 +80,56 @@ public class UserTicketController : ControllerBase
         }
     }
 
+    [HttpGet("ticket-detail-with-qr")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<getEventQrCodeInfoDto>> TicketDetailsWithQr()
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+            return Unauthorized();
+
+        try
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return NotFound("User not found");
+
+            var events = await _context.UserEvents
+               .AsNoTracking()
+               .Where(ue => ue.UserId == userId)
+               .Include(ue => ue.Event)
+               .Select(ue => new getEventQrCodeInfoDto
+               {
+                   eventId = ue.Event.Id,
+                   typeOfEvent = ue.Event.TypeOfEvent,
+                   nameOfEvent = ue.Event.NameOfEvent,
+                   startOfEvent = ue.Event.StartOfEvent,
+                   address = ue.Event.Address,
+                   city = ue.Event.City,
+                   nameOfClub = ue.Event.NameOfClub
+               })
+               .ToListAsync();
+
+            if (!events.Any())
+            {
+                return NotFound("No events found for this user");
+            }
+
+            return Ok(events);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error while getting user. tickets UserId: {UserId}", userId);
+            Console.WriteLine(ex);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+        }
+    }
+
 }

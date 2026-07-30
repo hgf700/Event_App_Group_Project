@@ -1,6 +1,8 @@
-﻿using QuestPDF.Fluent;
+﻿using QRCoder;
+using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
+using static QRCoder.PayloadGenerator;
 
 namespace Backend.Services;
 
@@ -10,13 +12,24 @@ public class InvoiceDocument : IDocument
     public string EventDate { get; set; }
     public string EventAddress { get; set; }
     public string EventType { get; set; }
+    public string EventUrl { get; set; }
 
-    public InvoiceDocument(string eventName, string eventDate, string eventAddress, string eventType)
+    private readonly byte[] _qrCode;
+
+    public InvoiceDocument(
+        string eventName,
+        string eventDate,
+        string eventAddress,
+        string eventType,
+        string eventUrl,
+        byte[] qrCode)
     {
         EventName = eventName;
         EventDate = eventDate;
         EventAddress = eventAddress;
         EventType = eventType;
+        EventUrl = eventUrl;
+        _qrCode = qrCode;
     }
 
     public DocumentSettings GetSettings() => DocumentSettings.Default;
@@ -85,30 +98,16 @@ public class InvoiceDocument : IDocument
                 col.Item().Text($"Typ wydarzenia: {EventType}")
                     .FontSize(14);
 
-                // Dodaj kod QR z pliku
-                string qrPath = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "QR.PNG");
-
-                if (File.Exists(qrPath))
+                col.Item().PaddingTop(200).Row(row =>
                 {
-                    var qrBytes = File.ReadAllBytes(qrPath);
 
-                    col.Item().PaddingTop(200).Row(row =>
-                    {
+                    row.RelativeItem(); // lewa pusta przestrzeń
 
+                    row.ConstantItem(300).Height(300).Image(_qrCode).FitArea();
 
-                        row.RelativeItem(); // lewa pusta przestrzeń
+                    row.RelativeItem(); // prawa pusta przestrzeń
+                });
 
-                        row.ConstantItem(300).Height(300).Image(qrBytes).FitArea();
-
-                        row.RelativeItem(); // prawa pusta przestrzeń
-                    });
-                }
-
-                else
-                {
-                    col.Item().Text("Kod QR nie został znaleziony.")
-                        .FontColor(Colors.Red.Medium);
-                }
             });
         }
         catch (Exception ex)
