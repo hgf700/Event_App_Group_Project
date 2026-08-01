@@ -1,7 +1,7 @@
 ﻿using Backend.Db;
 using Backend.Dto.RelEvent;
-using Backend.Identity;
 using Backend.Interfaces;
+using Backend.Model;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

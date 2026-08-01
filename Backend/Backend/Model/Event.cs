@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
-namespace Backend.Models.Model;
+namespace Backend.Model;
 
 //[Index(nameof(EventId))]
 public class Event

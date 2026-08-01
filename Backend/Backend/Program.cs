@@ -1,8 +1,7 @@
 using Backend.Db;
 using Backend.ExtraTools;
-using Backend.Identity;
 using Backend.Interfaces;
-using Backend.Models.Model;
+using Backend.Model;
 using Backend.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;

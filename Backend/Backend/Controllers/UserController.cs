@@ -1,9 +1,8 @@
 ﻿using Backend.Db;
 using Backend.Dto.RelAuth;
 using Backend.Dto.RelEvent;
-using Backend.Identity;
 using Backend.Interfaces;
-using Backend.Models.Model;
+using Backend.Model;
 using Backend.Patterns;
 using Backend.Services;
 using Microsoft.AspNetCore.Authentication;

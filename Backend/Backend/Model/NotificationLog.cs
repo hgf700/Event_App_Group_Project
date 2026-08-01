@@ -1,6 +1,4 @@
-﻿using Backend.Identity;
-
-namespace Backend.Models.Model;
+﻿namespace Backend.Model;
 
 public class NotificationLog
 {

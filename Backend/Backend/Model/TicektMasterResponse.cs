@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Backend.Models.Model;
+namespace Backend.Model;
 
 public class TicketmasterResponse
 {

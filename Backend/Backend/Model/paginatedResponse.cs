@@ -1,4 +1,4 @@
-﻿namespace Backend.Models.Model;
+﻿namespace Backend.Model;
 
 public class paginatedResponse<T>
 {

@@ -1,8 +1,7 @@
 ﻿using Backend.Db;
 using Backend.Dto.RelAuth;
-using Backend.Identity;
 using Backend.Interfaces;
-using Backend.Models.Model;
+using Backend.Model;
 using Backend.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -23,15 +22,19 @@ public class AuthController : ControllerBase
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IJwtService _jwtService;
     private readonly ILogger<AuthController> _logger;
+    private readonly ApplicationDbContext _dbContext;
+
 
     public AuthController(UserManager<ApplicationUser> userManager, 
         IJwtService jwtService,
-        ILogger<AuthController> logger
+        ILogger<AuthController> logger,
+        ApplicationDbContext dbContext
         )
     {
         _userManager = userManager;
         _jwtService = jwtService;
         _logger= logger;
+        _dbContext= dbContext;
     }
 
     // [EnableRateLimiting("RateLimitGet")]
@@ -57,13 +60,19 @@ public class AuthController : ControllerBase
                 IsOAuth = false
             };
 
-            //od razu hashuje haslo
             var result = await _userManager.CreateAsync(user, dto.password);
 
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
             var token = _jwtService.GenerateToken(user);
+
+            string generatedRefreshToken = _jwtService.GenerateRefreshToken();
+
+            //var refresh = _dbContext.RefreshTokens.FirstOrDefault()
+
+            //if 
+                //Add(refreshToken);
 
             _logger.LogInformation("User successfully register {email}", dto.email);
 

@@ -1,5 +1,5 @@
 ﻿using Backend.Db;
-using Backend.Models.Model;
+using Backend.Model;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;

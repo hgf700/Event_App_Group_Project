@@ -1,7 +1,6 @@
 ﻿using Backend.Db;
 using Backend.Dto.RelEvent;
-using Backend.Identity;
-using Backend.Models.Model;
+using Backend.Model;
 using Backend.Patterns;
 using Backend.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -145,33 +144,35 @@ public class EventController : ControllerBase
         }
     }
 
-    [HttpPost("bookmark-event/{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> BookmarkEvent(int id)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+    //do innej tabeli i dodac opcje na usuniecie 
+    //[HttpPost("bookmark-event/{id}")]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+    //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //public async Task<ActionResult> BookmarkEvent(int id)
+    //{
+    //    if (!ModelState.IsValid)
+    //        return BadRequest(ModelState);
 
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId == null)
-            return Unauthorized();
+    //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    //    if (userId == null)
+    //        return Unauthorized();
 
-        try
-        {
-            var ev = await _context.Events.FindAsync(id);
-            if (ev == null)
-                return NotFound();
+    //    try
+    //    {
+    //        var ev = await _context.Events.FindAsync(id);
+    //        if (ev == null)
+    //            return NotFound();
 
-            return Ok();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex);
-            _logger.LogError(ex, "Error while getting event details");
-            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
-        }
-    }
+    //        return Ok();
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Console.WriteLine(ex);
+    //        _logger.LogError(ex, "Error while getting event details");
+    //        return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+    //    }
+    //}
+
 }

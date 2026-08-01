@@ -1,5 +1,4 @@
-﻿using Backend.Identity;
-using Backend.Models.Model;
+﻿using Backend.Model;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Twilio.TwiML.Voice;
@@ -19,6 +18,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<UserEvent> UserEvents { get; set; }
     public DbSet<NotificationLog> NotificationLogs { get; set; }
     public DbSet<ExternalGoogleOAuthToken> ExternalGoogleOAuthTokens { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<Bookmark> Bookmarks { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -50,5 +52,21 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasOne(e => e.Event)
             .WithMany()
             .HasForeignKey(e => e.EventId);
+
+        modelBuilder.Entity<RefreshToken>()
+            .HasOne(rt => rt.User)
+            .WithMany(u => u.RefreshTokens)
+            .HasForeignKey(rt => rt.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Bookmark>()
+            .HasOne(e => e.Event)
+            .WithMany()
+            .HasForeignKey(e => e.EventId);
+
+        modelBuilder.Entity<Bookmark>()
+            .HasOne(e => e.User)
+            .WithMany()
+            .HasForeignKey(e => e.UserId);
     }
 }

@@ -1,6 +1,4 @@
 ﻿using Backend.Db;
-using Backend.Identity;
-using Backend.Models.Model;
 using Backend.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +6,7 @@ using Stripe;
 using Stripe.Checkout;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using Backend.Model;
 
 namespace Backend.Controllers;
 

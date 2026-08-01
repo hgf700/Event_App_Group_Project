@@ -1,5 +1,4 @@
 ﻿using Backend.Controllers;
-using Backend.Identity;
 using Backend.Models.Dto.RelAuth;
 using Backend.Services;
 using Microsoft.AspNetCore.Identity;
@@ -12,6 +11,7 @@ using System.Collections.Generic;
 using System.Text;
 using Backend.Interfaces;
 using Backend.Dto.RelAuth;
+using Backend.Model;
 
 namespace TestProject1.TestControllers;
 

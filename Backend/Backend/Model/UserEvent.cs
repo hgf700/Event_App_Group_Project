@@ -1,8 +1,7 @@
-﻿using Backend.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
-namespace Backend.Models.Model;
+namespace Backend.Model;
 
 [Index(nameof(UserId))]
 [Index(nameof(EventId))]

@@ -1,6 +1,6 @@
 ﻿using Backend.Db;
 using Backend.Dto.RelEvent;
-using Backend.Models.Model;
+using Backend.Model;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Superpower.Model;
