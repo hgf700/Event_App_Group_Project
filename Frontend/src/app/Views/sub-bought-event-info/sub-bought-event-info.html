@@ -1,18 +1,13 @@
 <div class="main-body">
 
-<!-- @if (loading && !event) {
+@if (loading && !event) {
 <div class="dialog-loading">
   <div class="spinner"></div>
   <p>Ładowanie szczegółów...</p>
-</div> -->
-<!-- 
-} @else if (event) {
+</div>
+} 
+@else if (event) {
 <div class="dialog-header">
-  @if (event.photoUrl) {
-  <img [src]="event.photoUrl" [alt]="event.nameOfEvent" class="dialog-image" />
-  } @else {
-  <div class="dialog-image-placeholder">🎫</div>
-  }
   @if (event.typeOfEvent) {
   <span class="dialog-badge">{{ event.typeOfEvent }}</span>
   }
@@ -20,6 +15,15 @@
 
 <div class="dialog-body">
   <h2 class="dialog-title">{{ event.nameOfEvent }}</h2>
+
+  @if (event.qrCode) {
+  <div class="qr-container">
+    <img 
+      [src]="'data:image/png;base64,' + event.qrCode"
+      alt="QR Code"
+      class="qr-code">
+  </div>
+}
 
   <div class="dialog-info-grid">
     @if (event.startOfEvent) {
@@ -42,7 +46,7 @@
     </div>
     }
 
-    @if (event.address || event.city || event.country) {
+    @if (event.address || event.city) {
     <div class="info-row">
       <span class="info-icon">📍</span>
       <div>
@@ -50,7 +54,6 @@
         <p class="info-value">
           @if (event.address) { {{ event.address }} }
           @if (event.city) { , {{ event.city }} }
-          @if (event.country) { , {{ event.country }} }
         </p>
       </div>
     </div>
@@ -62,14 +65,6 @@
     🔗 Zobacz na oficjalnej stronie
   </a>
   }
-
-  <button class="btn-buy" (click)="buyTicket(event.eventId!)" [disabled]="loading">
-    @if (loading) {
-    Przekierowywanie do płatności...
-    } @else {
-    🎟️ Kup bilet
-    }
-  </button> -->
-<!-- </div>
-} -->
+</div>
+}
 </div>

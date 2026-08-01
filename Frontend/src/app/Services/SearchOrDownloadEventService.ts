@@ -9,8 +9,6 @@ import { postSearchEventDto } from '../Dto/postSearchEventDto';
 export class SearchOrDownloadEventService {
   private apiUrl = 'https://localhost:7051/api/v1/SearchOrDownload';
 
-  event: getEventDto[] = [];
-
   constructor(private http: HttpClient) {}
 
   searchOrDownloadEventForm(city: string) {

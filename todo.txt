@@ -2,6 +2,8 @@ uzycie notification model dla sledzenia stanu wyslania email
 i/lub do potwierdzenia rejestracji bardziej przez email i dla emaili co najwyzej 2 stany
 wyslane, i wysylany, i nie wyslany tylko nie wiem czy jest to mozliwy stan?
 
+zrobic logike dla  bookbmark
+
 ressiliance np retry,circut breaker dla frontu w angular
 
 zamiast local storage to lepiej http cookies i same site strict ale to potem
@@ -22,8 +24,6 @@ akcja
 dokonczyc widok z kupionymi biletami i wyswietlac ma qr
 
 admin pannel przeglądania list uczestników, seed bazy podglądu statystyk (liczba zapisów, frekwencja),
-admina tworze przy migracji
-
-zrobic logike dla notification model i bookbmark
+admina tworze przy migracji jesli moge przy migracji hashowac haslo
 
 zrobic revoked dla refersh token jesli jest expired

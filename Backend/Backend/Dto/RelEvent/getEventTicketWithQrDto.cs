@@ -2,7 +2,7 @@
 
 namespace Backend.Dto.RelEvent;
 
-public class getEventQrCodeInfoDto
+public class getEventTicketWithQrDto
 {
     public int? eventId { get; set; }
     public string? typeOfEvent { get; set; }
@@ -11,5 +11,6 @@ public class getEventQrCodeInfoDto
     public string? address { get; set; }
     public string? city { get; set; }
     public string? nameOfClub { get; set; }
-    public string? qrCode { get; set; }
+    public string? urlOfEvent { get; set; }
+    public byte[]? qrCode { get; set; }
 }

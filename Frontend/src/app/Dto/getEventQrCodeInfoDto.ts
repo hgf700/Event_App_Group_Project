@@ -1,10 +1,11 @@
-export interface getEventQrCodeInfoDto {
-  eventId?: string;
-  typeOfEvent?: string;
-  nameOfEvent?: string;
+export interface getEventTicketWithQrDto {
+  eventId: number;
+  typeOfEvent: string;
+  nameOfEvent: string;
   startOfEvent: Date;
-  address?: string;
-  city?: string;
-  nameOfClub?: string;
-    qrCode?: string;
+  address: string;
+  city: string;
+  nameOfClub: string;
+  urlOfEvent: string;
+  qrCode: string;
 }

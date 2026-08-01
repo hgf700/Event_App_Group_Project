@@ -10,10 +10,6 @@ import { getUserBoughtTicketDto } from '../Dto/getUserBoughtTicketDto';
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private apiUrl = 'https://localhost:7051/api/v1/User';
-  editUser!: postEditUserDto;
-  currentUser!: getCurrentUserDto;
-  userBought!: getUserBoughtTicketDto;
-  event: getEventDto[] = [];
 
   constructor(private http: HttpClient) {}
 

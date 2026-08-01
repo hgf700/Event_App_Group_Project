@@ -6,11 +6,12 @@ import { getAuthHeaders } from '../helpers/GetAuthHeaders';
 import { RetryHelper } from '../helpers/ResilianceHelpers';
 import { getEventDto } from '../Dto/getEventDto';
 import { paginatedResponse } from '../model/paginatedResponse';
+import { getEventTicketWithQrDto } from '../Dto/getEventQrCodeInfoDto';
 
 @Injectable({ providedIn: 'root' })
 export class EventService {
   private apiUrl = 'https://localhost:7051/api/v1/Event';
-  event: getEventDto[] = [];
+  private apiUserTicketUrl = 'https://localhost:7051/api/v1/UserTicket';
 
   constructor(private http: HttpClient) {}
 
@@ -26,6 +27,13 @@ export class EventService {
     return this.http.get<getEventDto>(`${this.apiUrl}/event-details/${eventId}`, {
       headers: getAuthHeaders(),
     });
+  }
+
+  getTicketsWithQr(eventId: number): Observable<getEventTicketWithQrDto> {
+    return this.http.get<getEventTicketWithQrDto>(
+      `${this.apiUserTicketUrl}/ticket-detail-with-qr/${eventId}`,
+      { headers: getAuthHeaders() },
+    );
   }
 
 }

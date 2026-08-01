@@ -41,12 +41,9 @@ public class RefreshTokenController : ControllerBase
         try
         {
             var token = await _context.RefreshTokens
-                .FirstOrDefaultAsync(x => x.UserId == userId);
+                .FirstOrDefaultAsync(x => x.UserId == userId && x.Expires < DateTime.UtcNow || x.Revoked != null);
 
             if (token == null)
-                return Unauthorized();
-
-            if (!IsRefreshTokenActive(token))
                 return Unauthorized();
 
             var user = await _userManager.FindByIdAsync(token.UserId);
