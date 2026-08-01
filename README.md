@@ -28,6 +28,8 @@ http://13.217.97.150/
 - Integration with the **Ticketmaster API** to fetch event data.
 - **Pagination** and **event search functionality** via form or query parameters.
 - Integration with **Stripe Payments** for ticket purchasing.
+- Generation and display of **QR codes for purchased tickets** directly in the application.
+- Interactive **event details view** displayed in a modal subwindow.
 
 ### 💳 After successful payment:
 - A **QR code** containing the event URL is generated using **QRCoder**.

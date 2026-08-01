@@ -9,6 +9,7 @@ ressiliance np retry,circut breaker dla frontu w angular
 zamiast local storage to lepiej http cookies i same site strict ale to potem
 
 refresh tokeny z jwt zrobic moje
+zrobic revoked dla refersh token jesli jest expired
 
 dla github actions testy jednostkowe back i front dorobic
 
@@ -21,9 +22,5 @@ tylko jakies inne id by nie wywalil exception w bazie?
 uzycie when.all z tpl (parallel library) jesli 1 rzecz nie jest zalezna od drugiej dzieki temu szybko sie wykona
 akcja
 
-dokonczyc widok z kupionymi biletami i wyswietlac ma qr
-
 admin pannel przeglądania list uczestników, seed bazy podglądu statystyk (liczba zapisów, frekwencja),
 admina tworze przy migracji jesli moge przy migracji hashowac haslo
-
-zrobic revoked dla refersh token jesli jest expired
