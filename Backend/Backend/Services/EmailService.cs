@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
+using Twilio.TwiML.Messaging;
 
 namespace Backend.Services;
 
@@ -22,16 +23,81 @@ public class EmailService
             var toAddress = new MailAddress($"{toEmail}", "test email");
 
             string body = $@"
-                    <html>
-                      <body style='background-color:#f0f0f0; padding:20px; font-family:Arial;'>
-                        <h2 style='color:#333;'>Wiadomość testowa</h2>
-                        <p>To jest testowy email z grafiką.</p>
-                        <p>url do eventu</p>
-                        <p><a href='{url}'>{url}</a></p>
-                        <img src='cid:testImage' alt='test'>
-                        <img src='cid:QRimage' alt='QR'>
-                      </body>
-                    </html>";
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset='UTF-8'>
+                <title>Email</title>
+            </head>
+
+            <body style='margin:0; padding:0; background-color:#f0f0f0; font-family:Arial, sans-serif;'>
+
+                <table width='100%' cellpadding='0' cellspacing='0'>
+                    <tr>
+                        <td align='center' style='padding:30px;'>
+
+                            <table width='600' cellpadding='0' cellspacing='0' 
+                                   style='background:#ffffff; border-radius:8px; padding:30px;'>
+
+                                <tr>
+                                    <td align='center'>
+                                        <h2 style='color:#333; margin-bottom:20px;'>
+                                            Email with event
+                                        </h2>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style='color:#555; font-size:15px; line-height:1.5;'>
+
+                                        <p>
+                                            Kliknij w poniższy link:
+                                        </p>
+
+                                        <!-- EVENT URL -->
+                                        <p>
+                                            <a href='{url}' 
+                                               style='color:#0066cc; text-decoration:none;'>
+                                                {url}
+                                            </a>
+                                        </p>
+
+                                        <hr style='border:none; border-top:1px solid #ddd; margin:25px 0;'>
+
+                                        <!-- MAIN IMAGE -->
+                                        <div style='text-align:center;'>
+                                            <img src='cid:testImage' 
+                                                 alt='test'
+                                                 style='max-width:100%; height:auto;' />
+                                        </div>
+
+                                        <br />
+
+                                        <!-- QR CODE -->
+                                        <div style='text-align:center;'>
+                                            <img src='cid:QRimage' 
+                                                 alt='QR'
+                                                 style='width:200px; height:200px;' />
+                                        </div>
+
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td align='center' 
+                                        style='padding-top:30px; color:#999; font-size:12px;'>
+                                        Wiadomość wygenerowana automatycznie.
+                                    </td>
+                                </tr>
+
+                            </table>
+
+                        </td>
+                    </tr>
+                </table>
+
+            </body>
+            </html>";
 
             var plainView = AlternateView.CreateAlternateViewFromString("To jest tekstowa wersja wiadomości", null, "text/plain");
             AlternateView htmlView = AlternateView.CreateAlternateViewFromString(body, null, MediaTypeNames.Text.Html);
