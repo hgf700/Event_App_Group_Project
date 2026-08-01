@@ -40,6 +40,6 @@ public class QrCodeService
 
         var qrCode = new PngByteQRCode(qrCodeData);
 
-        return qrCode.GetGraphic(20);
+        return qrCode.GetGraphic(10);
     }
 }

@@ -50,7 +50,7 @@ export class UserTickets implements OnInit{
   userBoughtTicketInfo(eventId: number) {
     const dialogRef = this.dialog.open(SubBoughtEventInfo, {
       width: '600px',
-      height: '400px',
+      height: '600px',
       data: {
         eventId,
       },

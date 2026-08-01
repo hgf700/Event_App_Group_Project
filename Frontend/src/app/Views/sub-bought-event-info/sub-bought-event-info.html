@@ -1,70 +1,119 @@
 <div class="main-body">
 
 @if (loading && !event) {
-<div class="dialog-loading">
-  <div class="spinner"></div>
-  <p>Ładowanie szczegółów...</p>
-</div>
-} 
+  <div class="dialog-loading">
+    <div class="spinner"></div>
+    <p>Ładowanie szczegółów...</p>
+  </div>
+}
+
 @else if (event) {
-<div class="dialog-header">
-  @if (event.typeOfEvent) {
-  <span class="dialog-badge">{{ event.typeOfEvent }}</span>
-  }
-</div>
 
-<div class="dialog-body">
-  <h2 class="dialog-title">{{ event.nameOfEvent }}</h2>
+  <div class="ticket-card">
 
-  @if (event.qrCode) {
-  <div class="qr-container">
-    <img 
-      [src]="'data:image/png;base64,' + event.qrCode"
-      alt="QR Code"
-      class="qr-code">
+    <div class="ticket-header">
+      @if (event.typeOfEvent) {
+        <span class="dialog-badge">
+          {{ event.typeOfEvent }}
+        </span>
+      }
+    </div>
+
+
+    <div class="ticket-body">
+
+      <h2 class="dialog-title">
+        {{ event.nameOfEvent }}
+      </h2>
+
+
+      @if (event.qrCode) {
+        <div class="qr-box">
+
+          <img 
+            [src]="'data:image/png;base64,' + event.qrCode"
+            alt="QR Code"
+            class="qr-code">
+
+          <p class="qr-text">
+            Pokaż kod przy wejściu
+          </p>
+
+        </div>
+      }
+
+
+      <div class="dialog-info-grid">
+
+        @if (event.startOfEvent) {
+        <div class="info-row">
+          <span class="info-icon">📅</span>
+
+          <div>
+            <p class="info-label">Data</p>
+            <p class="info-value">
+              {{ event.startOfEvent | date:'dd MMMM yyyy, HH:mm' }}
+            </p>
+          </div>
+        </div>
+        }
+
+
+        @if (event.nameOfClub) {
+        <div class="info-row">
+          <span class="info-icon">🏛️</span>
+
+          <div>
+            <p class="info-label">Miejsce</p>
+            <p class="info-value">
+              {{ event.nameOfClub }}
+            </p>
+          </div>
+        </div>
+        }
+
+
+        @if (event.address || event.city) {
+        <div class="info-row">
+          <span class="info-icon">📍</span>
+
+          <div>
+            <p class="info-label">Adres</p>
+
+            <p class="info-value">
+              @if(event.address) {
+                {{event.address}}
+              }
+
+              @if(event.city) {
+                , {{event.city}}
+              }
+            </p>
+
+          </div>
+        </div>
+        }
+
+      </div>
+
+
+      @if(event.urlOfEvent) {
+        <a 
+          [href]="event.urlOfEvent"
+          target="_blank"
+          rel="noopener"
+          class="dialog-link">
+
+          🔗 Oficjalna strona wydarzenia
+
+        </a>
+      }
+
+
+    </div>
+
   </div>
+
 }
 
-  <div class="dialog-info-grid">
-    @if (event.startOfEvent) {
-    <div class="info-row">
-      <span class="info-icon">📅</span>
-      <div>
-        <p class="info-label">Data</p>
-        <p class="info-value">{{ event.startOfEvent | date:'dd MMMM yyyy, HH:mm' }}</p>
-      </div>
-    </div>
-    }
-
-    @if (event.nameOfClub) {
-    <div class="info-row">
-      <span class="info-icon">🏛️</span>
-      <div>
-        <p class="info-label">Miejsce</p>
-        <p class="info-value">{{ event.nameOfClub }}</p>
-      </div>
-    </div>
-    }
-
-    @if (event.address || event.city) {
-    <div class="info-row">
-      <span class="info-icon">📍</span>
-      <div>
-        <p class="info-label">Adres</p>
-        <p class="info-value">
-          @if (event.address) { {{ event.address }} }
-          @if (event.city) { , {{ event.city }} }
-        </p>
-      </div>
-    </div>
-    }
-  </div>
-
-  @if (event.urlOfEvent) {
-  <a [href]="event.urlOfEvent" target="_blank" rel="noopener" class="dialog-link">
-    🔗 Zobacz na oficjalnej stronie
-  </a>
-  }
-</div>
-}
 </div>
