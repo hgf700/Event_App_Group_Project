@@ -19,6 +19,15 @@ export class LayoutService {
     return !!localStorage.getItem('jwt');
   }
 
+  // isAdmin(): boolean{
+  //   const token = this.getToken();
+  //   if (!token) return false;
+
+  //   const payload = jwtDecode<any>(token);
+
+  //   return payload.role === 'Admin';
+  // }
+
   userEmail(): string {
     return this.userEmailData();
   }

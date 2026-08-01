@@ -12,7 +12,7 @@ export class UserNavigationService  {
     return this.router.navigate(['/edit-user']);
   }
 
-userBoughtTickets(): Promise<boolean> {
+  userBoughtTickets(): Promise<boolean> {
     return this.router.navigate(['/user-tickets']);
   }
 

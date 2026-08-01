@@ -18,7 +18,6 @@ import { UserNavigationService }from '../../RootingServices/UserNavigationServic
 export class LoginCallback implements OnInit {
   loading = false;
   currentUser!: getCurrentUserDto;
-  
 
   constructor(
     private route: ActivatedRoute,
@@ -67,8 +66,8 @@ export class LoginCallback implements OnInit {
     });
   }
 
-  seedData() {
-    this.eventsNavigtionService.seedDatabase()
+  adminView() {
+    this.eventsNavigtionService.adminPanel()
   }
 
   eventsView() {

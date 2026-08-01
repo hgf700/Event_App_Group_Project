@@ -16,6 +16,10 @@ export class Layout {
     public layoutService: LayoutService
   ) {}
 
+  // isAdmin(): boolean {
+  //   return this.layoutService.isAdmin();
+  // }
+
   isLoggedIn(): boolean {
     return this.layoutService.isAuthenticated();
   }
