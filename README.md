@@ -24,6 +24,7 @@ http://13.217.97.150/
 ## ✨ Features
 
 - Authentication and authorization using **JWT (JSON Web Tokens)**.
+- Secure session management using **JWT access tokens and refresh tokens**.
 - User registration and login with **ASP.NET Identity** and **OAuth external providers**.
 - Integration with the **Ticketmaster API** to fetch event data.
 - **Pagination** and **event search functionality** via form or query parameters.
