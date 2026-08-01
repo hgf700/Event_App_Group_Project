@@ -46,10 +46,7 @@ public class RefreshTokenController : ControllerBase
             if (token == null)
                 return Unauthorized();
 
-            if (token.Expires < DateTime.UtcNow)
-                return Unauthorized();
-
-            if (token.Revoked == true)
+            if (!IsRefreshTokenActive(token))
                 return Unauthorized();
 
             var user = await _userManager.FindByIdAsync(token.UserId);

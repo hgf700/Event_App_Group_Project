@@ -69,7 +69,7 @@ public class AuthController : ControllerBase
             string generatedRefreshToken = _jwtService.GenerateRefreshToken();
 
             var existsRefresh = await _dbContext.RefreshTokens
-                .AnyAsync(b => b.UserId == user.Id && b.Revoked == true);
+                .AnyAsync(b => b.UserId == user.Id && b.Expires < DateTime.UtcNow && b.Revoked != null);
 
             if (!existsRefresh)
             {
@@ -79,7 +79,6 @@ public class AuthController : ControllerBase
                     Token = _jwtService.GenerateRefreshToken(),
                     Expires = DateTime.UtcNow.AddDays(30),
                     Created = DateTime.UtcNow,
-                    Revoked = false,
                 };
 
                 _dbContext.RefreshTokens.Add(refreshToken);
@@ -129,7 +128,7 @@ public class AuthController : ControllerBase
             var token = _jwtService.GenerateToken(existingUser);
 
             var existsRefresh = await _dbContext.RefreshTokens
-                .AnyAsync(b => b.UserId == existingUser.Id && b.Revoked == true);
+                .AnyAsync(b => b.UserId == existingUser.Id && b.Expires < DateTime.UtcNow && b.Revoked != null);
 
             if (!existsRefresh)
             {
@@ -139,7 +138,6 @@ public class AuthController : ControllerBase
                     Token = _jwtService.GenerateRefreshToken(),
                     Expires = DateTime.UtcNow.AddDays(30),
                     Created = DateTime.UtcNow,
-                    Revoked = false,
                 };
 
                 _dbContext.RefreshTokens.Add(refreshToken);
@@ -262,7 +260,7 @@ public class AuthController : ControllerBase
             var token = _jwtService.GenerateToken(user);
 
             var existsRefresh = await _dbContext.RefreshTokens
-                .AnyAsync(b => b.UserId == user.Id && b.Revoked == true);
+                .AnyAsync(b => b.UserId == user.Id && b.Expires < DateTime.UtcNow && b.Revoked != null);
 
             if (!existsRefresh)
             {
@@ -272,7 +270,6 @@ public class AuthController : ControllerBase
                     Token = _jwtService.GenerateRefreshToken(),
                     Expires = DateTime.UtcNow.AddDays(30),
                     Created = DateTime.UtcNow,
-                    Revoked = false,
                 };
 
                 _dbContext.RefreshTokens.Add(refreshToken);

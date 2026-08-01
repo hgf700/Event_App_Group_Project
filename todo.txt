@@ -25,3 +25,5 @@ admin pannel przeglądania list uczestników, seed bazy podglądu statystyk (lic
 admina tworze przy migracji
 
 zrobic logike dla notification model i bookbmark
+
+zrobic revoked dla refersh token jesli jest expired
