@@ -49,6 +49,8 @@ export class GetEvents implements OnInit {
   }
 
   onPageChange(event: PageEvent) {
+    // console.log('PAGE EVENT', event);
+
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
 
@@ -59,8 +61,10 @@ export class GetEvents implements OnInit {
     this.eventService
       .getEvents(this.pageIndex + 1, this.pageSize)
       .subscribe(response => {
+        // console.log('RESPONSE', response);
         this.events = response.data;
         this.totalItems = response.totalCount;
+        this.cdr.detectChanges();
       });
   }
 

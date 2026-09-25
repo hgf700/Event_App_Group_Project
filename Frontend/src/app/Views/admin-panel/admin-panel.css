@@ -1,0 +1,41 @@
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.action-card {
+  background-color: var(--color-surface);
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  padding: 1.75rem 1.5rem;
+  text-align: left;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+  .action-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-md);
+  }
+
+  .action-card.admin {
+    background: linear-gradient(135deg, #fff8f0 0%, #ffe8d0 100%);
+    border: 2px dashed var(--color-primary-light);
+  }
+
+    .action-card.admin:hover {
+      border-style: solid;
+    }

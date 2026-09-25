@@ -34,6 +34,21 @@ app.UseOutputCache();
 [HttpGet]
 [OutputCache(Duration = 60)]
 
+uzycie when.all z tpl (parallel library) jesli 1 rzecz nie jest zalezna od drugiej dzieki temu szybko sie wykona
+akcja
+
+admin pannel przeglądania list uczestników, seed bazy podglądu statystyk (liczba zapisów, frekwencja),
+admina tworze przy migracji jesli moge przy migracji hashowac haslo
+
+uzycie observer do serwisu z sms i email?
+
+zrobienie Single Responsibility Principle np dla backendu dla zcytywajnia emailu z jwt
+
+caching np 
+app.UseOutputCache();
+[HttpGet]
+[OutputCache(Duration = 60)]
+
 healthcheck
 builder.Services.AddHealthChecks();
 app.MapHealthChecks("/healthz");

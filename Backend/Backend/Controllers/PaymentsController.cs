@@ -1,13 +1,16 @@
-﻿using Backend.Db;
-using Backend.Identity;
-using Backend.Models.Model;
-using Backend.Services;
+﻿using EventApp.Infrastructure.Db;
+using EventApp.Services.Dto.RelAuth;
+using EventApp.Services.Dto.RelEvent;
+using EventApp.Services.Interfaces;
+using EventApp.Services.Model;
+using EventApp.Services.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
 using Stripe.Checkout;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using EventApp.Domain.Model;
 
 namespace Backend.Controllers;
 
