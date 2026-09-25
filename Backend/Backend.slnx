@@ -1,4 +1,7 @@
 <Solution>
   <Project Path="Backend/Backend.csproj" />
+  <Project Path="EventApp.Domain/EventApp.Domain.csproj" Id="d2060ac7-44e4-4e19-82a2-7288cd357f9b" />
+  <Project Path="EventApp.Infrastructure/EventApp.Infrastructure.csproj" Id="a9b764ad-05e7-470c-a0a0-51c5b33abda5" />
+  <Project Path="EventApp.Services/EventApp.Services.csproj" Id="217681c2-4297-440c-9da5-63baf5f12651" />
   <Project Path="TestProject1/TestProject1.csproj" />
 </Solution>

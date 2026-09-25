@@ -1,21 +1,35 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { signal } from '@angular/core';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root', })
 export class LayoutService {
-
-  private apiUrl = 'https://localhost:7051/api/v1/auth';
+  userEmailData = signal(
+    localStorage.getItem('email') ?? ''
+  );
 
   constructor(private http: HttpClient) {}
+
+  setUserEmail(email: string) {
+    this.userEmailData.set(email);
+    localStorage.setItem('email', email);
+  }
 
   isAuthenticated(): boolean {
     return !!localStorage.getItem('jwt');
   }
 
+  // isAdmin(): boolean{
+  //   const token = this.getToken();
+  //   if (!token) return false;
+
+  //   const payload = jwtDecode<any>(token);
+
+  //   return payload.role === 'Admin';
+  // }
+
   userEmail(): string {
-    return localStorage.getItem('email') ?? 'brak email';
+    return this.userEmailData();
   }
 
   logout(): void {

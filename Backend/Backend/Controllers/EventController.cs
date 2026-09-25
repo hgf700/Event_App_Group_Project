@@ -1,9 +1,10 @@
-﻿using Backend.Db;
-using Backend.Identity;
-using Backend.Models.Dto.RelEvent;
-using Backend.Models.Model;
-using Backend.Patterns;
-using Backend.Services;
+﻿using EventApp.Domain.Model;
+using EventApp.Infrastructure.Db;
+using EventApp.Services.Dto.RelAuth;
+using EventApp.Services.Dto.RelEvent;
+using EventApp.Services.Interfaces;
+using EventApp.Services.Model;
+using EventApp.Services.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
@@ -29,7 +30,6 @@ public class EventController : ControllerBase
     private readonly SendOrDownloadFromApiService _downloadAndSendEventsApi;
     private readonly ILogger<EventController> _logger;
 
-
     public EventController(
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
@@ -49,9 +49,7 @@ public class EventController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<paginatedResponse<getEventsDto>>> GetEvents(
-        int page = 1,
-        int pageSize = 20)
+    public async Task<ActionResult<paginatedResponse<getEventsDto>>> GetEvents(int page = 1, int pageSize = 20)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -65,6 +63,7 @@ public class EventController : ControllerBase
             var totalCount = await _context.Events.CountAsync();
 
             var events = await _context.Events
+                .AsNoTracking()
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .Select(e => new getEventsDto
@@ -116,7 +115,10 @@ public class EventController : ControllerBase
 
         try
         {
-            var ev = await _context.Events.FindAsync(id);
+            var ev = await _context.Events
+                .AsNoTracking()
+                .FirstOrDefaultAsync(e => e.Id == id);
+
             if (ev == null)
                 return NotFound();
 
@@ -135,36 +137,6 @@ public class EventController : ControllerBase
             };
 
             return Ok(dto);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex);
-            _logger.LogError(ex, "Error while getting event details");
-            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
-        }
-    }
-
-    [HttpPost("bookmark-event/{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> BookmarkEvent(int id)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId == null)
-            return Unauthorized();
-
-        try
-        {
-            var ev = await _context.Events.FindAsync(id);
-            if (ev == null)
-                return NotFound();
-
-            return Ok();
         }
         catch (Exception ex)
         {

@@ -1,9 +1,11 @@
-﻿using Backend.Db;
-using Backend.Identity;
-using Backend.Models.Dto.RelEvent;
-using Backend.Models.Model;
-using Backend.Patterns;
-using Backend.Services;
+﻿using EventApp.Domain.Model;
+using EventApp.Infrastructure.Db;
+using EventApp.Services.Dto.RelAuth;
+using EventApp.Services.Dto.RelEvent;
+using EventApp.Services.Interfaces;
+using EventApp.Services.Model;
+using EventApp.Services.Patterns;
+using EventApp.Services.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
@@ -147,6 +149,4 @@ public class SearchOrDownloadController : ControllerBase
             return StatusCode(500, "Internal server error");
         }
     }
-
-
 }

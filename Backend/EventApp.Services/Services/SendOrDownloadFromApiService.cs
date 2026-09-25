@@ -1,0 +1,120 @@
+﻿using EventApp.Domain.Model;
+using EventApp.Infrastructure.Db;
+using EventApp.Services.Dto.RelEvent;
+using EventApp.Services.Model;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
+using Superpower.Model;
+using System.Text.Json;
+
+namespace EventApp.Services.Services;
+
+public class SendOrDownloadFromApiService
+{
+    private readonly HttpClient _httpClient;
+    private readonly ApplicationDbContext _context;
+
+    public SendOrDownloadFromApiService(HttpClient httpClient,
+        ApplicationDbContext context
+        )
+    {
+        _httpClient = httpClient;
+        _context = context;
+    }
+
+    public async Task<List<postSearchOrDownloadQueryDto>> FetchAndSaveEventsAsync(string? city = null)
+    {
+        if (string.IsNullOrWhiteSpace(city))
+        {
+            throw new ArgumentException("City is required");
+        }
+
+        string apiKey = Environment.GetEnvironmentVariable("TICKETMASTER_API_KEY");
+
+        string baseUrl = "https://app.ticketmaster.com/discovery/v2/events.json";
+
+        var query = new Dictionary<string, string?>
+        {
+            { "apikey", apiKey },
+            { "size", "20" },
+            { "city", city }
+        };
+
+        string url = QueryHelpers.AddQueryString(baseUrl, query);
+
+        HttpResponseMessage response = await _httpClient.GetAsync(url);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            Console.WriteLine($"Błąd API: {response.StatusCode}");
+            return new List<postSearchOrDownloadQueryDto>();
+        }
+
+        string json = await response.Content.ReadAsStringAsync();
+
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
+        var ticketmasterData = JsonSerializer.Deserialize<TicketmasterResponse>(json, options);
+
+        if (ticketmasterData?.Embedded?.Events == null ||
+                !ticketmasterData.Embedded.Events.Any())
+        {
+            Console.WriteLine("Brak wydarzeń do zapisania.");
+            return new List<postSearchOrDownloadQueryDto>();
+        }
+
+        var newEvents = new List<Event>();
+
+        foreach (var ev in ticketmasterData.Embedded.Events)
+        {
+            bool exists = await _context.Events
+                .AnyAsync(e => e.ExternalEventId == ev.Id);
+
+            if (exists)
+                continue;
+
+            var venue = ev.Embedded?.Venues?.FirstOrDefault();
+
+            var newEvent = new Event
+            {
+                ExternalEventId = ev.Id,
+                TypeOfEvent = ev.Type,
+                NameOfEvent = ev.Name,
+                UrlOfEvent = ev.Url,
+                PhotoUrl = ev.Images?.FirstOrDefault()?.Url,
+                StartOfEvent = DateTime.TryParse(ev.Dates?.Start?.DateTime, out var eventStart)
+                    ? eventStart.ToUniversalTime()
+                    : DateTime.UtcNow,
+
+                Address = venue?.Address?.Line1,
+                City = venue?.City?.Name,
+                Country = venue?.Country?.Name,
+                NameOfClub = venue?.Name,
+            };
+
+            newEvents.Add(newEvent);
+        }
+
+        await _context.Events.AddRangeAsync(newEvents);
+        await _context.SaveChangesAsync();
+
+        var result = newEvents.Select(e => new postSearchOrDownloadQueryDto
+        {
+            eventId = e.Id,
+            typeOfEvent = e.TypeOfEvent,
+            nameOfEvent = e.NameOfEvent,
+            urlOfEvent = e.UrlOfEvent,
+            photoUrl = e.PhotoUrl,
+            startOfEvent = e.StartOfEvent,
+            address = e.Address,
+            city = e.City,
+            country = e.Country,
+            nameOfClub = e.NameOfClub,
+        }).ToList();
+
+        return result;
+    }
+}

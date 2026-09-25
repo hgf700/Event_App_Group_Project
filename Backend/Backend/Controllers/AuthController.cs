@@ -1,9 +1,8 @@
-﻿using Backend.Db;
-using Backend.Identity;
-using Backend.Interfaces;
-using Backend.Models.Dto.RelAuth;
-using Backend.Models.Model;
-using Backend.Services;
+﻿using EventApp.Domain.Model;
+using EventApp.Infrastructure.Db;
+using EventApp.Services.Dto.RelAuth;
+using EventApp.Services.Interfaces;
+using EventApp.Services.Model;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -23,22 +22,25 @@ public class AuthController : ControllerBase
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IJwtService _jwtService;
     private readonly ILogger<AuthController> _logger;
+    private readonly ApplicationDbContext _dbContext;
 
     public AuthController(UserManager<ApplicationUser> userManager, 
         IJwtService jwtService,
-        ILogger<AuthController> logger
+        ILogger<AuthController> logger,
+        ApplicationDbContext dbContext
         )
     {
         _userManager = userManager;
         _jwtService = jwtService;
         _logger= logger;
+        _dbContext= dbContext;
     }
 
+    // [EnableRateLimiting("RateLimitGet")]
     [HttpPost("register-norm")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    // [EnableRateLimiting("RateLimitGet")]
     public async Task<ActionResult<postCreateUserNormDto>> RegisterUserNormal([FromBody] postCreateUserNormDto dto)
     {
         if (!ModelState.IsValid)
@@ -57,13 +59,31 @@ public class AuthController : ControllerBase
                 IsOAuth = false
             };
 
-            //od razu hashuje haslo
             var result = await _userManager.CreateAsync(user, dto.password);
 
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
             var token = _jwtService.GenerateToken(user);
+
+            string generatedRefreshToken = _jwtService.GenerateRefreshToken();
+
+            var existsRefresh = await _dbContext.RefreshTokens
+                .AnyAsync(b => b.UserId == user.Id && b.Expires < DateTime.UtcNow || b.Revoked != null);
+
+            if (!existsRefresh)
+            {
+                var refreshToken = new RefreshToken
+                {
+                    UserId = user.Id,
+                    Token = _jwtService.GenerateRefreshToken(),
+                    Expires = DateTime.UtcNow.AddDays(30),
+                    Created = DateTime.UtcNow,
+                };
+
+                _dbContext.RefreshTokens.Add(refreshToken);
+                await _dbContext.SaveChangesAsync();
+            }
 
             _logger.LogInformation("User successfully register {email}", dto.email);
 
@@ -106,6 +126,23 @@ public class AuthController : ControllerBase
             }
 
             var token = _jwtService.GenerateToken(existingUser);
+
+            var existsRefresh = await _dbContext.RefreshTokens
+                .AnyAsync(b => b.UserId == existingUser.Id && b.Expires < DateTime.UtcNow || b.Revoked != null);
+
+            if (!existsRefresh)
+            {
+                var refreshToken = new RefreshToken
+                {
+                    UserId = existingUser.Id,
+                    Token = _jwtService.GenerateRefreshToken(),
+                    Expires = DateTime.UtcNow.AddDays(30),
+                    Created = DateTime.UtcNow,
+                };
+
+                _dbContext.RefreshTokens.Add(refreshToken);
+                await _dbContext.SaveChangesAsync();
+            }
 
             _logger.LogInformation("User successfully login {email}", dto.email);
 
@@ -221,6 +258,23 @@ public class AuthController : ControllerBase
             }
 
             var token = _jwtService.GenerateToken(user);
+
+            var existsRefresh = await _dbContext.RefreshTokens
+                .AnyAsync(b => b.UserId == user.Id && b.Expires < DateTime.UtcNow || b.Revoked != null);
+
+            if (!existsRefresh)
+            {
+                var refreshToken = new RefreshToken
+                {
+                    UserId = user.Id,
+                    Token = _jwtService.GenerateRefreshToken(),
+                    Expires = DateTime.UtcNow.AddDays(30),
+                    Created = DateTime.UtcNow,
+                };
+
+                _dbContext.RefreshTokens.Add(refreshToken);
+                await _dbContext.SaveChangesAsync();
+            }
 
             _logger.LogInformation("User {UserId} logged in with Google OAuth",user.Id);
 

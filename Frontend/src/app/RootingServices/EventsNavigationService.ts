@@ -8,10 +8,9 @@ export class EventsNavigationService  {
     private router: Router,
   ) {}
 
-
-  //   eventsView() {
-  //   this.router.navigate(['/get-events']);
-  // }
+  adminPanel(): Promise<boolean> {
+    return this.router.navigate(['/admin-panel']);
+  }
 
   goToEvents(): Promise<boolean> {
     return this.router.navigate(['/get-events']);

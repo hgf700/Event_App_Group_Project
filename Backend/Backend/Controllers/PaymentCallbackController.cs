@@ -1,12 +1,16 @@
-﻿using Backend.Db;
-using Backend.Identity;
-using Backend.Models.Model;
-using Backend.Services;
+﻿using EventApp.Domain.Model;
+using EventApp.Infrastructure.Db;
+using EventApp.Services.Dto.RelAuth;
+using EventApp.Services.Dto.RelEvent;
+using EventApp.Services.Interfaces;
+using EventApp.Services.Model;
+using EventApp.Services.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using QRCoder;
 using QuestPDF.Fluent;
 using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Controllers;
 
@@ -21,7 +25,6 @@ public class PaymentCallbackController : ControllerBase
     private readonly SmsService _smsservice;
     private readonly EmailService _emailService;
     private readonly ILogger<PaymentCallbackController> _logger;
-
 
     public PaymentCallbackController(UserManager<ApplicationUser> userManager,
         ApplicationDbContext context,
@@ -76,19 +79,21 @@ public class PaymentCallbackController : ControllerBase
             _context.UserEvents.Add(userEvent);
             await _context.SaveChangesAsync();
 
-            _qrCodeService.GenerateQrCode(ev.UrlOfEvent);
-
             bool.TryParse(Environment.GetEnvironmentVariable("TWILIO_SMS_SEND_STATE"), out bool twilio_sms_state);
             if (twilio_sms_state)
             {
                 _smsservice.SendSMS(ev.UrlOfEvent);
             }
 
+            var qrBytes = _qrCodeService.GenerateQrCodeBytes(ev.UrlOfEvent);
+
             var doc = new InvoiceDocument(
                 eventName: ev.NameOfEvent,
                 eventDate: ev.StartOfEvent.ToString(),
                 eventAddress: ev.Address,
-                eventType: ev.TypeOfEvent
+                eventType: ev.TypeOfEvent,
+                eventUrl: ev.UrlOfEvent,
+                qrCode: qrBytes
             );
 
             string resourcesPath = Path.Combine(Directory.GetCurrentDirectory(), "Resources");
@@ -97,8 +102,8 @@ public class PaymentCallbackController : ControllerBase
             string pdfPath = Path.Combine(resourcesPath, "bilet.pdf");
             doc.GeneratePdf(pdfPath);
 
-            string docelowyemail = Environment.GetEnvironmentVariable("TARGET_EMAIL");
-            _emailService.SendEmail(docelowyemail, ev.UrlOfEvent);
+            string targetEmail = Environment.GetEnvironmentVariable("TARGET_EMAIL");
+            _emailService.SendEmail(targetEmail, ev.UrlOfEvent);
 
             _logger.LogInformation("User successfully bought ticket {userId}", userId);
 

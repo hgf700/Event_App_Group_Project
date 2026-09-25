@@ -20,6 +20,9 @@
           <div class="dropdown-content">
             <a routerLink="/edit-user">edytuj Konto</a>
             <a routerLink="/user-tickets">Moje eventy</a>
+            <!-- @if (isAdmin()) {
+              <a routerLink="/admin-panel">Panel admin</a>
+            } -->
           </div>
         </div>
 
@@ -32,6 +35,10 @@
         </button>
 
       } @else {
+
+        <ng-template #loadingEmail>
+          Ładowanie...
+        </ng-template>
 
         <a routerLink="/login-user" class="btn-register">Logowanie</a>
         <a routerLink="/register-user" class="btn-register">Rejestracja</a>

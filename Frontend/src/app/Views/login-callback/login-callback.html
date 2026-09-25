@@ -3,11 +3,6 @@
     <div class="avatar">👤</div>
     <div>
       <p class="hello-text">Witaj z powrotem!</p>
-      @if (userEmail) {
-      <p class="user-email">{{ userEmail }}</p>
-      } @else {
-      <p class="user-email error">⚠️ Błąd logowania</p>
-      }
     </div>
   </div>
 </div>
@@ -38,10 +33,6 @@
     <h3>Wyszukaj i importuj</h3>
     <p>Znajdź nowe wydarzenia z Ticketmaster</p>
   </button>
-
-  <button class="action-card admin" (click)="seedData()">
-    <div class="action-icon">🌱</div>
-    <h3>Seed Data</h3>
-    <p>Załaduj dane testowe (admin)</p>
-  </button>
 </div>
+
+<button class="action-card" (click)="adminView()"> adminView</button> 

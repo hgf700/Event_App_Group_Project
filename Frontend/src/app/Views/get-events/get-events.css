@@ -167,10 +167,10 @@
   transition: var(--transition);
 }
 
-  .btn-details:hover {
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-sm);
-  }
+.btn-details:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
 
 /* === STATES (loading, empty) === */
 .state-box {
@@ -225,8 +225,6 @@
     grid-template-columns: 1fr;
   }
 }
-
-
 
 /* === PAGINATION === */
 .pagination-size {
