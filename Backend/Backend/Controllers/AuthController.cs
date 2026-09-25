@@ -38,14 +38,15 @@ public class AuthController : ControllerBase
 
     // [EnableRateLimiting("RateLimitGet")]
     [HttpPost("register-norm")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<postCreateUserNormDto>> RegisterUserNormal([FromBody] postCreateUserNormDto dto)
     {
         var existingUser = await _userManager.FindByEmailAsync(dto.email);
         if (existingUser != null)
-            return BadRequest("User already exists");
+            return Conflict("User already exists");
 
         try
         {
@@ -63,10 +64,11 @@ public class AuthController : ControllerBase
 
             var token = _jwtService.GenerateToken(user);
 
-            string generatedRefreshToken = _jwtService.GenerateRefreshToken();
-
             var existsRefresh = await _dbContext.RefreshTokens
-                .AnyAsync(b => b.UserId == user.Id && b.Expires < DateTime.UtcNow || b.Revoked != null);
+                .AnyAsync(b =>
+                    b.UserId == user.Id &&
+                    b.Expires >= DateTime.UtcNow &&
+                    b.Revoked == null);
 
             if (!existsRefresh)
             {
@@ -84,11 +86,10 @@ public class AuthController : ControllerBase
 
             _logger.LogInformation("User successfully register {email}", dto.email);
 
-            return Ok(new AuthResponseDto
+            return StatusCode(StatusCodes.Status201Created, new AuthResponseDto
             {
                 jwt = token
             });
-
         }
         catch (Exception ex) 
         {
@@ -122,7 +123,10 @@ public class AuthController : ControllerBase
             var token = _jwtService.GenerateToken(existingUser);
 
             var existsRefresh = await _dbContext.RefreshTokens
-                .AnyAsync(b => b.UserId == existingUser.Id && b.Expires < DateTime.UtcNow || b.Revoked != null);
+                 .AnyAsync(b =>
+                     b.UserId == existingUser.Id &&
+                     b.Expires >= DateTime.UtcNow &&
+                     b.Revoked == null);
 
             if (!existsRefresh)
             {
@@ -253,7 +257,10 @@ public class AuthController : ControllerBase
             var token = _jwtService.GenerateToken(user);
 
             var existsRefresh = await _dbContext.RefreshTokens
-                .AnyAsync(b => b.UserId == user.Id && b.Expires < DateTime.UtcNow || b.Revoked != null);
+                .AnyAsync(b =>
+                    b.UserId == user.Id &&
+                    b.Expires >= DateTime.UtcNow &&
+                    b.Revoked == null);
 
             if (!existsRefresh)
             {

@@ -36,8 +36,8 @@ public class UserTicketController : ControllerBase
     }
 
     [HttpGet("user-tickets")]
+    //[Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -84,7 +84,8 @@ public class UserTicketController : ControllerBase
         }
     }
 
-    [HttpGet("ticket-detail-with-qr/{eventId}")]
+    [HttpGet("ticket-detail-with-qr/{eventId:int:min(0)}")]
+    //[Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -96,6 +97,9 @@ public class UserTicketController : ControllerBase
 
         if (userId == null)
             return Unauthorized();
+
+        if (eventId == null)
+            return BadRequest();
 
         var ticket = await _context.UserEvents
             .AsNoTracking()

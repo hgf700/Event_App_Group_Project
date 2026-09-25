@@ -46,8 +46,8 @@ public class SearchOrDownloadController : ControllerBase
     }
 
     [HttpPost("seed-database")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    //[Authorize]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> SeedDatabase()
@@ -60,7 +60,7 @@ public class SearchOrDownloadController : ControllerBase
         {
             await _seedDbService.SeedDatabase();
 
-            return Ok(new
+            return StatusCode(StatusCodes.Status201Created, new
             {
                 message = "Database seeded successfully"
             });
@@ -85,9 +85,11 @@ public class SearchOrDownloadController : ControllerBase
     }
 
     [HttpPost("search-event-and-download")]
+    //[Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<List<postSearchOrDownloadQueryDto>>> SearchEventOrDownload(
         [FromQuery] string? city,
@@ -132,7 +134,10 @@ public class SearchOrDownloadController : ControllerBase
             var downloadedEvents =
                 await _downloadAndSendEventsApi.FetchAndSaveEventsAsync(finalCity);
 
-            return Ok(downloadedEvents);
+            if (downloadedEvents == null)
+                return NotFound();
+
+            return StatusCode(StatusCodes.Status201Created, downloadedEvents);
         }
         catch (Exception ex)
         {

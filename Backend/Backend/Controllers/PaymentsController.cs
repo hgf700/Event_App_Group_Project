@@ -34,11 +34,12 @@ public class PaymentsController : ControllerBase
         _logger = logger;
     }
 
-    [HttpPost("buy-ticket/{id}")]
+    [HttpPost("buy-ticket/{id:int:min(0)}")]
+    //[Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> BuyTicket(int id)
     {
@@ -54,7 +55,7 @@ public class PaymentsController : ControllerBase
             .AnyAsync(x => x.UserId == userId && x.EventId == id);
 
         if (alreadyBought)
-            return BadRequest("User already owns this ticket");
+            return Conflict("User already owns this ticket");
 
         try
         {
@@ -93,7 +94,9 @@ public class PaymentsController : ControllerBase
 
             _logger.LogInformation("User successfully bought ticket UserId: {UserId}", userId);
 
-            return Ok(new { url = session.Url });
+            return StatusCode(StatusCodes.Status201Created, 
+                new { url = session.Url }
+                );
         }
         catch (Exception ex) {
             Console.WriteLine(ex);

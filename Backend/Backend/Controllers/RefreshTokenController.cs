@@ -33,6 +33,10 @@ public class RefreshTokenController : ControllerBase
     }
 
     [HttpPost("refresh")]
+    //[Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> Refresh(string refreshToken)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -42,18 +46,18 @@ public class RefreshTokenController : ControllerBase
         try
         {
             var token = await _context.RefreshTokens
-                .FirstOrDefaultAsync(x => x.UserId == userId && x.Expires < DateTime.UtcNow || x.Revoked != null);
+                .FirstOrDefaultAsync(x => x.UserId == userId && x.Expires >= DateTime.UtcNow && x.Revoked == null);
 
             if (token == null)
                 return Unauthorized();
 
             var user = await _userManager.FindByIdAsync(token.UserId);
 
-            var newJwt = _jwtService.GenerateToken(user);
+            var newRefreshJwt = _jwtService.GenerateToken(user);
 
             return Ok(new
             {
-                accessToken = newJwt
+                accessToken = newRefreshJwt
             });
         }
         catch (Exception ex) {

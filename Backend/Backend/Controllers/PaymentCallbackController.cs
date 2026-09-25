@@ -43,11 +43,12 @@ public class PaymentCallbackController : ControllerBase
         _logger = logger;
     }
 
-    [HttpPost("payment-success/{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [HttpPost("payment-success/{id:int:min(0)}")]
+    //[Authorize]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> PaymentSuccess(int id)
     {
@@ -65,7 +66,7 @@ public class PaymentCallbackController : ControllerBase
                 .AnyAsync(x => x.UserId == userId && x.EventId == id);
 
             if (alreadyExists)
-                return BadRequest("Ticket already assigned");
+                return Conflict("Ticket already assigned");
 
             var userEvent = new UserEvent
             {
@@ -104,7 +105,7 @@ public class PaymentCallbackController : ControllerBase
 
             _logger.LogInformation("User successfully bought ticket {userId}", userId);
 
-            return Ok();
+            return Created();
         }
         catch (Exception ex)
         {
@@ -115,6 +116,7 @@ public class PaymentCallbackController : ControllerBase
     }
 
     [HttpPost("payment-failed")]
+    //[Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

@@ -43,8 +43,8 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("current-user")]
+    //[Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -77,6 +77,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("edit-user-password")]
+    //[Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -106,9 +107,7 @@ public class UserController : ControllerBase
 
             var CheckCurrentPassword = await _userManager.CheckPasswordAsync(user, body.oldPassword);
             if (CheckCurrentPassword == false)
-            {
-                return BadRequest("Current password is invalid");
-            }
+                return BadRequest("error in email or password");
 
             var passwordResult = await _userManager.ChangePasswordAsync(
                 user,
@@ -139,10 +138,12 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("edit-user-email")]
+    //[Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<AuthResponseDto>> EditUserEmail([FromBody] string newEmail)
     {
@@ -166,7 +167,7 @@ public class UserController : ControllerBase
             var emailExists = await _userManager.FindByEmailAsync(newEmail);
 
             if (emailExists != null)
-                return BadRequest("Email already exists");
+                return Conflict("Email already exists");
 
             user.Email = newEmail;
             user.UserName = newEmail; 
