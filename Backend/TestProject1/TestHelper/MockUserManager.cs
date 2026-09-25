@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Text;
-using Backend.Model;
+using EventApp.Services.Model;
 
 namespace TestProject1.TestHelper;
 

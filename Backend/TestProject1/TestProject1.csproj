@@ -28,11 +28,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="TestServices\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Backend\Backend.csproj" />
+    <ProjectReference Include="..\EventApp.Infrastructure\EventApp.Infrastructure.csproj" />
+    <ProjectReference Include="..\EventApp.Services\EventApp.Services.csproj" />
   </ItemGroup>
 
 </Project>

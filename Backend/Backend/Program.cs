@@ -1,8 +1,8 @@
-using Backend.Db;
-using Backend.ExtraTools;
-using Backend.Interfaces;
-using Backend.Model;
-using Backend.Services;
+using EventApp.Domain.Model;
+using EventApp.Infrastructure.Db;
+using EventApp.Services.Interfaces;
+using EventApp.Services.Model;
+using EventApp.Services.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

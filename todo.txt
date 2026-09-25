@@ -61,9 +61,6 @@ https://learn.microsoft.com/en-us/aspnet/core/fundamentals/error-handling?view=a
 app.UseStatusCodePages(async context => {}) // to jest jesli wpisze np https://www.youtube.com/asd i mam 
 not found
 
-jesli nei korzystam z dto moge dodac do modelu takie zadania crudowe np ze dodaje item 
-usuwam itd...
-
 [BindNever]
 jesli tylko aplikacja moze nadac user miec pole isadmina 
  nie jest to dobre podejscie ale sie da

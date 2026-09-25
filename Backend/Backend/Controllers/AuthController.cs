@@ -1,8 +1,8 @@
-﻿using Backend.Db;
-using Backend.Dto.RelAuth;
-using Backend.Interfaces;
-using Backend.Model;
-using Backend.Services;
+﻿using EventApp.Domain.Model;
+using EventApp.Infrastructure.Db;
+using EventApp.Services.Dto.RelAuth;
+using EventApp.Services.Interfaces;
+using EventApp.Services.Model;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Http.HttpResults;
