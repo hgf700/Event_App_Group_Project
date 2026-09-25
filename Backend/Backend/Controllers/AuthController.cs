@@ -36,8 +36,8 @@ public class AuthController : ControllerBase
         _dbContext= dbContext;
     }
 
-    // [EnableRateLimiting("RateLimitGet")]
     [HttpPost("register-norm")]
+    // [EnableRateLimiting("RateLimitGet")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -98,6 +98,39 @@ public class AuthController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
+
+    //[HttpPost("register-norm")]
+    // [EnableRateLimiting("RateLimitGet")]
+    //[ProducesResponseType(StatusCodes.Status201Created)]
+    //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+    //[ProducesResponseType(StatusCodes.Status409Conflict)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //public async Task<ActionResult<AuthResponseDto>> RegisterUserNormal(
+    //[FromBody] postCreateUserNormDto dto)
+    //{
+    //    try
+    //    {
+    //        var result = await _authService.RegisterNormalAsync(dto);
+
+    //        if (result.UserAlreadyExists)
+    //            return Conflict("User already exists");
+
+    //        if (result.Errors != null)
+    //            return BadRequest(result.Errors);
+
+    //        return StatusCode(
+    //            StatusCodes.Status201Created,
+    //            result.Response);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        _logger.LogError(ex, "Error while registering user");
+
+    //        return StatusCode(
+    //            StatusCodes.Status500InternalServerError,
+    //            "Internal server error");
+    //    }
+    //}
 
     [HttpPost("login-norm")]
     [ProducesResponseType(StatusCodes.Status200OK)]

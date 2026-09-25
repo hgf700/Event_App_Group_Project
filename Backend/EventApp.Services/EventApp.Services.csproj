@@ -23,4 +23,8 @@
     <ProjectReference Include="..\EventApp.Infrastructure\EventApp.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Repository\Interface\" />
+  </ItemGroup>
+
 </Project>

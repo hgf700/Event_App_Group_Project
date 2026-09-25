@@ -16,9 +16,11 @@ dla github actions testy jednostkowe back i front dorobic
 uzycie rate limit i innych zabezpieczen w controller rate limity dorobic moze na ip lub jwt lepiej ale mozna 
 chyba tez na ip?
 
+tu mam rozkmine wlasnie
 te co uzytkownik ma kupiony bilet to nie moze kupic 2 raz tego samego moze zeby nie byl widoczny albo byl widoczny
 tylko jakies inne id by nie wywalil exception w bazie?
 
+mozna ale raczej ciezko uzyc
 uzycie when.all z tpl (parallel library) jesli 1 rzecz nie jest zalezna od drugiej dzieki temu szybko sie wykona
 akcja
 
@@ -26,23 +28,6 @@ admin pannel przeglądania list uczestników, seed bazy podglądu statystyk (lic
 admina tworze przy migracji jesli moge przy migracji hashowac haslo
 
 uzycie observer do serwisu z sms i email?
-
-zrobienie Single Responsibility Principle np dla backendu dla zcytywajnia emailu z jwt
-
-caching np 
-app.UseOutputCache();
-[HttpGet]
-[OutputCache(Duration = 60)]
-
-uzycie when.all z tpl (parallel library) jesli 1 rzecz nie jest zalezna od drugiej dzieki temu szybko sie wykona
-akcja
-
-admin pannel przeglądania list uczestników, seed bazy podglądu statystyk (liczba zapisów, frekwencja),
-admina tworze przy migracji jesli moge przy migracji hashowac haslo
-
-uzycie observer do serwisu z sms i email?
-
-zrobienie Single Responsibility Principle np dla backendu dla zcytywajnia emailu z jwt
 
 caching np 
 app.UseOutputCache();
@@ -82,23 +67,20 @@ jesli tylko aplikacja moze nadac user miec pole isadmina
 
 dla takich abstrakcji warto korzystac z repozytorium i bardziej zaawansowanych
 public interface IOrderRepository
-{
-    Order? GetOrderWithDetails(int id);
-    IEnumerable<Order> GetUnshippedOrders();
-}
- public Order? GetOrderWithDetails(int id)
-{
-    return context.Orders
+{Order? GetOrderWithDetails(int id);
+IEnumerable<Order> GetUnshippedOrders();}
+public Order? GetOrderWithDetails(int id)
+{return context.Orders
         .Include(o => o.Lines)
         .ThenInclude(l => l.Product)
-        .FirstOrDefault(o => o.OrderId == id);
-}
+        .FirstOrDefault(o => o.OrderId == id);}
 
 powinienem dawac id uzytkownika w url czesciej mysle
 app.MapGet("/users/{userId}/books/{bookId}")
 
 powinienem przy tworzeniu zamiast dawac ok 200 to 
-CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product) 201
+CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product) 201 lub
+return StatusCode(StatusCodes.Status201Created, new AuthResponseDto { jwt = token }); 201
 204 No Content Operacja zakończona sukcesem, ale nie zwracasz treści
 400 Bad Request Nieprawidłowe dane wejściowe
 409 Conflict Konflikt, np. próba utworzenia zasobu, który już istnieje 
@@ -117,7 +99,7 @@ https://dotnettutorials.net/lesson/token-based-authentication-web-api/?redirectU
 
 Nie rób throw ex Złe: catch (Exception ex) { throw ex; } 
 Lepsze: catch (Exception) { throw; }
-bo trace stack (informacje trace)
+bo trace stack (informacje trace) ale tylko podczas dev
 
 [Flags] 
 enum Permissions { None = 0, Read = 1, Write = 2, Delete = 4 }
@@ -157,7 +139,3 @@ _service.SomethingHappened += OnSomethingHappened; }
 private void OnSomethingHappened( object? sender, EventArgs e) { } 
 public void Dispose() { _service.SomethingHappened -= OnSomethingHappened; } }
 Użycie: using (var window = new TemporaryWindow(service)) { // Praca z obiektem }
-
-i mysle ze dla mamy muslial bym jesli by cos chciala to robic kolejke
-
-by dobrze zrobic di trzeba interface dla service
