@@ -10,9 +10,9 @@ namespace EventApp.Services.Services;
 public class OauthRefreshService : IOauthRefreshService
 {
     private readonly ApplicationDbContext _context;
-    private readonly RefreshTokenEncryptionService _encryption;
+    private readonly IRefreshTokenEncryptionService _encryption;
 
-    public OauthRefreshService(ApplicationDbContext context, RefreshTokenEncryptionService encryption)
+    public OauthRefreshService(ApplicationDbContext context, IRefreshTokenEncryptionService encryption)
     {
         _context = context;
         _encryption = encryption;
