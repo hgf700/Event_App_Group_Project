@@ -1,12 +1,13 @@
 ﻿using EventApp.Domain.Model;
 using EventApp.Infrastructure.Db;
+using EventApp.Services.Interfaces;
 using EventApp.Services.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
 namespace EventApp.Services.Services;
 
-public class OauthRefreshService
+public class OauthRefreshService : IOauthRefreshService
 {
     private readonly ApplicationDbContext _context;
     private readonly RefreshTokenEncryptionService _encryption;

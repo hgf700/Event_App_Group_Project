@@ -1,4 +1,5 @@
-﻿using QRCoder;
+﻿using EventApp.Services.Interfaces;
+using QRCoder;
 
 namespace EventApp.Services.Services;
 
@@ -28,7 +29,7 @@ namespace EventApp.Services.Services;
 //    }
 //}
 
-public class QrCodeService
+public class QrCodeService : IQrCodeService
 {
     public byte[] GenerateQrCodeBytes(string content)
     {

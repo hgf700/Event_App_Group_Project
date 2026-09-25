@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.DataProtection;
+﻿using EventApp.Services.Interfaces;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace EventApp.Services.Services;
 
-public class RefreshTokenEncryptionService
+public class RefreshTokenEncryptionService : IRefreshTokenEncryptionService
 {
     private readonly IDataProtector _protector;
 

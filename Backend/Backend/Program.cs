@@ -70,14 +70,14 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 
 //builder.Services.AddTransient<IEmailSender, NullEmailSender>();
-builder.Services.AddScoped<QrCodeService>();
-builder.Services.AddScoped<SmsService>();
-builder.Services.AddScoped<EmailService>();
-builder.Services.AddScoped<OauthRefreshService>();
-builder.Services.AddSingleton<RefreshTokenEncryptionService>();
+builder.Services.AddScoped<IQrCodeService, QrCodeService>();
+builder.Services.AddScoped<ISmsService, SmsService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IOauthRefreshService, OauthRefreshService>();
+builder.Services.AddSingleton<IRefreshTokenEncryptionService, RefreshTokenEncryptionService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
-builder.Services.AddScoped<SeedDbService>();
-builder.Services.AddScoped<SendOrDownloadFromApiService>();
+builder.Services.AddScoped<ISeedDbService, SeedDbService>();
+builder.Services.AddScoped<ISendOrDownloadFromApiService, SendOrDownloadFromApiService>();
 
 builder.Services.AddAuthorization();
 

@@ -26,15 +26,15 @@ public class EventController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SeedDbService _seedDbService;
-    private readonly SendOrDownloadFromApiService _downloadAndSendEventsApi;
+    private readonly ISeedDbService _seedDbService;
+    private readonly ISendOrDownloadFromApiService _downloadAndSendEventsApi;
     private readonly ILogger<EventController> _logger;
 
     public EventController(
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
-            SeedDbService seedDbService,
-            SendOrDownloadFromApiService downloadAndSendEventsApi,
+            ISeedDbService seedDbService,
+            ISendOrDownloadFromApiService downloadAndSendEventsApi,
             ILogger<EventController> logger
         )
     {

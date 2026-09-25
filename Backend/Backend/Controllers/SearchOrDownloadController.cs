@@ -27,15 +27,15 @@ namespace Backend.Controllers;
 public class SearchOrDownloadController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
-    private readonly SeedDbService _seedDbService;
-    private readonly SendOrDownloadFromApiService _downloadAndSendEventsApi;
+    private readonly ISeedDbService _seedDbService;
+    private readonly ISendOrDownloadFromApiService _downloadAndSendEventsApi;
     private readonly ILogger<EventController> _logger;
 
     public SearchOrDownloadController(
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
-            SeedDbService seedDbService,
-            SendOrDownloadFromApiService downloadAndSendEventsApi,
+            ISeedDbService seedDbService,
+            ISendOrDownloadFromApiService downloadAndSendEventsApi,
             ILogger<EventController> logger
         )
     {

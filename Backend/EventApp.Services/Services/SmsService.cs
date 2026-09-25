@@ -1,9 +1,10 @@
-﻿using Twilio;
+﻿using EventApp.Services.Interfaces;
+using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 
 namespace EventApp.Services.Services;
 
-public class SmsService
+public class SmsService : ISmsService
 {
     public void SendSMS(string url)
     {

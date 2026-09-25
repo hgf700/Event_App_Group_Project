@@ -20,14 +20,14 @@ public class UserTicketController : ControllerBase
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ApplicationDbContext _context;
     private readonly ILogger<UserController> _logger;
-    private readonly QrCodeService _qrCodeService;
+    private readonly IQrCodeService _qrCodeService;
 
 
     public UserTicketController(UserManager<ApplicationUser> userManager,
         ApplicationDbContext context,
         ILogger<UserController> logger,
         IJwtService jwtService,
-        QrCodeService qrCodeService
+        IQrCodeService qrCodeService
         )
     {
         _userManager = userManager;

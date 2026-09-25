@@ -21,17 +21,17 @@ public class PaymentCallbackController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ApplicationDbContext _context;
-    private readonly QrCodeService _qrCodeService;
-    private readonly SmsService _smsservice;
-    private readonly EmailService _emailService;
+    private readonly IQrCodeService _qrCodeService;
+    private readonly ISmsService _smsservice;
+    private readonly IEmailService _emailService;
     private readonly ILogger<PaymentCallbackController> _logger;
 
     public PaymentCallbackController(UserManager<ApplicationUser> userManager,
         ApplicationDbContext context,
-        QrCodeService qrCodeService,
-        SmsService smsservice,
-        EmailService emailService,
-        OauthRefreshService oauthRefreshService,
+        IQrCodeService qrCodeService,
+        ISmsService smsservice,
+        IEmailService emailService,
+        IOauthRefreshService oauthRefreshService,
         ILogger<PaymentCallbackController> logger
         )
     {
