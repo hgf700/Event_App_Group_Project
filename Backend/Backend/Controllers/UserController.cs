@@ -50,9 +50,6 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<getCurrentUserDto>> MyAccount()
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null)
             return Unauthorized();
@@ -87,9 +84,6 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> EditUserPassword([FromBody] postEditUserPassword body)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null)
             return Unauthorized();
@@ -152,9 +146,6 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<AuthResponseDto>> EditUserEmail([FromBody] string newEmail)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null)
             return Unauthorized();

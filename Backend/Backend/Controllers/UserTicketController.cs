@@ -22,7 +22,6 @@ public class UserTicketController : ControllerBase
     private readonly ILogger<UserController> _logger;
     private readonly IQrCodeService _qrCodeService;
 
-
     public UserTicketController(UserManager<ApplicationUser> userManager,
         ApplicationDbContext context,
         ILogger<UserController> logger,
@@ -44,9 +43,6 @@ public class UserTicketController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<getUserBoughtTicketDto>> MyEvents()
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null)
             return Unauthorized();

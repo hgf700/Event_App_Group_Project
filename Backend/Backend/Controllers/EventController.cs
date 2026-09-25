@@ -25,23 +25,14 @@ namespace Backend.Controllers;
 public class EventController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly ISeedDbService _seedDbService;
-    private readonly ISendOrDownloadFromApiService _downloadAndSendEventsApi;
     private readonly ILogger<EventController> _logger;
 
     public EventController(
             ApplicationDbContext context,
-            UserManager<ApplicationUser> userManager,
-            ISeedDbService seedDbService,
-            ISendOrDownloadFromApiService downloadAndSendEventsApi,
             ILogger<EventController> logger
         )
     {
         _context = context;
-        _userManager = userManager;
-        _seedDbService= seedDbService;
-        _downloadAndSendEventsApi = downloadAndSendEventsApi;
         _logger = logger;
     }
 
@@ -51,9 +42,6 @@ public class EventController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<paginatedResponse<getEventsDto>>> GetEvents(int page = 1, int pageSize = 20)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) 
             return Unauthorized();
@@ -106,9 +94,6 @@ public class EventController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<getEventDetailsDto>> EventDetails(int id)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null)
             return Unauthorized();

@@ -52,9 +52,6 @@ public class SearchOrDownloadController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> SeedDatabase()
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null)
             return Unauthorized();
@@ -97,11 +94,6 @@ public class SearchOrDownloadController : ControllerBase
         [FromBody] postSearchEventDto? body
         )
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null)
             return Unauthorized();

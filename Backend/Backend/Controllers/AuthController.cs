@@ -43,9 +43,6 @@ public class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<postCreateUserNormDto>> RegisterUserNormal([FromBody] postCreateUserNormDto dto)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
         var existingUser = await _userManager.FindByEmailAsync(dto.email);
         if (existingUser != null)
             return BadRequest("User already exists");
@@ -107,9 +104,6 @@ public class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> LoginUserNorm([FromBody] postLoginUserNormDto dto)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
         var existingUser = await _userManager.FindByEmailAsync(dto.email);
 
         if (existingUser == null)
@@ -161,7 +155,6 @@ public class AuthController : ControllerBase
     [HttpGet("sign-in-google")]
     public ActionResult SignInWithGoogle(string returnUrl = "/")
     {
-
         var redirectUrl = Url.Action(
             "GoogleResponse",
             "Auth",

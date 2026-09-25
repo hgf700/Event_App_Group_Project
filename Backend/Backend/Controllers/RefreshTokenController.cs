@@ -35,9 +35,6 @@ public class RefreshTokenController : ControllerBase
     [HttpPost("refresh")]
     public async Task<ActionResult> Refresh(string refreshToken)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null)
             return Unauthorized();
