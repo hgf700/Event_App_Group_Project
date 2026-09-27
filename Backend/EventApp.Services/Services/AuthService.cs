@@ -18,7 +18,7 @@ public class AuthService : IAuthService
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IJwtService _jwtService;
     private readonly ILogger<AuthService> _logger;
-    private readonly ApplicationDbContext _dbContext;
+    private readonly ApplicationDbContext _context;
 
     public AuthService(UserManager<ApplicationUser> userManager,
         IJwtService jwtService,
@@ -29,7 +29,7 @@ public class AuthService : IAuthService
         _userManager = userManager;
         _jwtService = jwtService;
         _logger = logger;
-        _dbContext = dbContext;
+        _context = dbContext;
     }
 
     public async Task<RegisterResult> RegisterNormalAsync(postCreateUserNormDto dto)
@@ -63,25 +63,16 @@ public class AuthService : IAuthService
 
         var token = _jwtService.GenerateToken(user);
 
-        var existsRefresh = await _dbContext.RefreshTokens
-            .AnyAsync(b =>
-                b.UserId == user.Id &&
-                b.Expires >= DateTime.UtcNow &&
-                b.Revoked == null);
-
-        if (!existsRefresh)
+        var refreshToken = new RefreshToken
         {
-            var refreshToken = new RefreshToken
-            {
-                UserId = user.Id,
-                Token = _jwtService.GenerateRefreshToken(),
-                Expires = DateTime.UtcNow.AddDays(30),
-                Created = DateTime.UtcNow
-            };
+            UserId = user.Id,
+            Token = _jwtService.GenerateRefreshToken(),
+            Expires = DateTime.UtcNow.AddDays(30),
+            Created = DateTime.UtcNow
+        };
 
-            _dbContext.RefreshTokens.Add(refreshToken);
-            await _dbContext.SaveChangesAsync();
-        }
+        _context.RefreshTokens.Add(refreshToken);
+        await _context.SaveChangesAsync();
 
         _logger.LogInformation(
             "User successfully registered {Email}",

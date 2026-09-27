@@ -3,6 +3,7 @@ using EventApp.Infrastructure.Db;
 using EventApp.Services.Dto.RelAuth;
 using EventApp.Services.Interfaces;
 using EventApp.Services.Model;
+using EventApp.Services.Services.Interface;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -23,114 +24,53 @@ public class AuthController : ControllerBase
     private readonly IJwtService _jwtService;
     private readonly ILogger<AuthController> _logger;
     private readonly ApplicationDbContext _dbContext;
+    private readonly IAuthService _authService;
 
     public AuthController(UserManager<ApplicationUser> userManager, 
         IJwtService jwtService,
         ILogger<AuthController> logger,
-        ApplicationDbContext dbContext
+        ApplicationDbContext dbContext,
+        IAuthService authService
         )
     {
         _userManager = userManager;
         _jwtService = jwtService;
         _logger= logger;
         _dbContext= dbContext;
+        _authService = authService;
     }
 
     [HttpPost("register-norm")]
-    // [EnableRateLimiting("RateLimitGet")]
+    //[EnableRateLimiting("RateLimitGet")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<postCreateUserNormDto>> RegisterUserNormal([FromBody] postCreateUserNormDto dto)
+    public async Task<ActionResult<AuthResponseDto>> RegisterUserNormal([FromBody] postCreateUserNormDto dto)
     {
-        var existingUser = await _userManager.FindByEmailAsync(dto.email);
-        if (existingUser != null)
-            return Conflict("User already exists");
-
         try
         {
-            var user = new ApplicationUser
-            {
-                UserName = dto.email,
-                Email = dto.email,
-                IsOAuth = false
-            };
+            var result = await _authService.RegisterNormalAsync(dto);
 
-            var result = await _userManager.CreateAsync(user, dto.password);
+            if (result.UserAlreadyExists)
+                return Conflict("User already exists");
 
-            if (!result.Succeeded)
+            if (result.Errors != null)
                 return BadRequest(result.Errors);
 
-            var token = _jwtService.GenerateToken(user);
-
-            var existsRefresh = await _dbContext.RefreshTokens
-                .AnyAsync(b =>
-                    b.UserId == user.Id &&
-                    b.Expires >= DateTime.UtcNow &&
-                    b.Revoked == null);
-
-            if (!existsRefresh)
-            {
-                var refreshToken = new RefreshToken
-                {
-                    UserId = user.Id,
-                    Token = _jwtService.GenerateRefreshToken(),
-                    Expires = DateTime.UtcNow.AddDays(30),
-                    Created = DateTime.UtcNow,
-                };
-
-                _dbContext.RefreshTokens.Add(refreshToken);
-                await _dbContext.SaveChangesAsync();
-            }
-
-            _logger.LogInformation("User successfully register {email}", dto.email);
-
-            return StatusCode(StatusCodes.Status201Created, new AuthResponseDto
-            {
-                jwt = token
-            });
+            return StatusCode(
+                StatusCodes.Status201Created,
+                result.Response);
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
-            Console.WriteLine(ex);
-            _logger.LogError(ex, "Error while register user");
-            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            _logger.LogError(ex, "Error while registering user");
+
+            return StatusCode(
+                StatusCodes.Status500InternalServerError,
+                "Internal server error");
         }
     }
-
-    //[HttpPost("register-norm")]
-    // [EnableRateLimiting("RateLimitGet")]
-    //[ProducesResponseType(StatusCodes.Status201Created)]
-    //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-    //[ProducesResponseType(StatusCodes.Status409Conflict)]
-    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    //public async Task<ActionResult<AuthResponseDto>> RegisterUserNormal(
-    //[FromBody] postCreateUserNormDto dto)
-    //{
-    //    try
-    //    {
-    //        var result = await _authService.RegisterNormalAsync(dto);
-
-    //        if (result.UserAlreadyExists)
-    //            return Conflict("User already exists");
-
-    //        if (result.Errors != null)
-    //            return BadRequest(result.Errors);
-
-    //        return StatusCode(
-    //            StatusCodes.Status201Created,
-    //            result.Response);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        _logger.LogError(ex, "Error while registering user");
-
-    //        return StatusCode(
-    //            StatusCodes.Status500InternalServerError,
-    //            "Internal server error");
-    //    }
-    //}
 
     [HttpPost("login-norm")]
     [ProducesResponseType(StatusCodes.Status200OK)]

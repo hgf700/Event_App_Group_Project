@@ -3,6 +3,7 @@ using EventApp.Infrastructure.Db;
 using EventApp.Services.Interfaces;
 using EventApp.Services.Model;
 using EventApp.Services.Services;
+using EventApp.Services.Services.Interface;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -78,6 +79,7 @@ builder.Services.AddSingleton<IRefreshTokenEncryptionService, RefreshTokenEncryp
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<ISeedDbService, SeedDbService>();
 builder.Services.AddScoped<ISendOrDownloadFromApiService, SendOrDownloadFromApiService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddAuthorization();
 

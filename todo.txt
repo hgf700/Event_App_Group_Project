@@ -139,3 +139,15 @@ _service.SomethingHappened += OnSomethingHappened; }
 private void OnSomethingHappened( object? sender, EventArgs e) { } 
 public void Dispose() { _service.SomethingHappened -= OnSomethingHappened; } }
 Użycie: using (var window = new TemporaryWindow(service)) { // Praca z obiektem }
+
+
+where T : class
+Domyślnie T może być niemal dowolnym typem. Czasami chcemy narzucić ograniczenia. 
+Służy do tego where.
+T musi być typem referencyjnym.
+referencyjne: string, double, object, bool, List<int>, struct, Własne class, enum, 
+int[]
+where T : struct
+public void Process<T>(T value) where T : struct { }
+Process(10);
+Process(DateTime.Now);
