@@ -25,6 +25,7 @@ public class AuthController : ControllerBase
     private readonly ILogger<AuthController> _logger;
     private readonly ApplicationDbContext _dbContext;
     private readonly IAuthService _authService;
+    private readonly string Host = "http://localhost:4200";
 
     public AuthController(UserManager<ApplicationUser> userManager, 
         IJwtService jwtService,
@@ -74,58 +75,26 @@ public class AuthController : ControllerBase
 
     [HttpPost("login-norm")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> LoginUserNorm([FromBody] postLoginUserNormDto dto)
+    public async Task<ActionResult> LoginUserNormal([FromBody] postLoginUserNormDto dto)
     {
-        var existingUser = await _userManager.FindByEmailAsync(dto.email);
-
-        if (existingUser == null)
-            return Unauthorized("Invalid email or password");
-
         try
         {
-            var validPassword = await _userManager.CheckPasswordAsync(existingUser, dto.password);
+            var result = await _authService.LoginNormalAsync(dto);
 
-            if (!validPassword)
-            {
-                _logger.LogWarning("Invalid login attempt for email {email}", dto.email);
+            if(result.IncorrectUserCredentials)
                 return Unauthorized("Invalid email or password");
-            }
 
-            var token = _jwtService.GenerateToken(existingUser);
-
-            var existsRefresh = await _dbContext.RefreshTokens
-                 .AnyAsync(b =>
-                     b.UserId == existingUser.Id &&
-                     b.Expires >= DateTime.UtcNow &&
-                     b.Revoked == null);
-
-            if (!existsRefresh)
-            {
-                var refreshToken = new RefreshToken
-                {
-                    UserId = existingUser.Id,
-                    Token = _jwtService.GenerateRefreshToken(),
-                    Expires = DateTime.UtcNow.AddDays(30),
-                    Created = DateTime.UtcNow,
-                };
-
-                _dbContext.RefreshTokens.Add(refreshToken);
-                await _dbContext.SaveChangesAsync();
-            }
-
-            _logger.LogInformation("User successfully login {email}", dto.email);
-
-            return Ok(new AuthResponseDto
-            {
-                jwt = token,
-            });
+            return Ok(result.Response);
         }
-        catch (Exception ex) {
-            Console.WriteLine(ex);
-            _logger.LogError(ex, "Error while login user");
-            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+        catch(Exception ex)
+        {
+            _logger.LogError(ex, "Error while logging user");
+
+            return StatusCode(
+                StatusCodes.Status500InternalServerError,
+                "Internal server error");
         }
     }
 
@@ -155,111 +124,51 @@ public class AuthController : ControllerBase
             var authenticateResult = await HttpContext.AuthenticateAsync(
                 IdentityConstants.ExternalScheme);
 
-            if (authenticateResult?.Principal == null)
+            if (authenticateResult?.Principal == null ||
+                !authenticateResult.Succeeded)
             {
-                _logger.LogWarning("Google OAuth failed - Principal is null");
-                return Unauthorized();
-            }
+                _logger.LogWarning(
+                    "Google OAuth authentication failed");
 
-            if (!authenticateResult.Succeeded)
-            {
-                _logger.LogWarning("Google OAuth authentication failed");
                 return Unauthorized();
             }
 
             if (!authenticateResult.Principal.Identities
                 .Any(i => i.AuthenticationType == "Google"))
             {
-                _logger.LogWarning("Authentication type is not Google");
+                _logger.LogWarning(
+                    "Authentication type is not Google");
+
                 return Unauthorized();
             }
 
-            var principal = authenticateResult.Principal;
+            var result = await _authService.LoginGoogleOauth(
+                authenticateResult.Principal);
 
-            var email = principal.FindFirstValue(ClaimTypes.Email);
-            var googleId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
-
-
-            if (string.IsNullOrWhiteSpace(email))
+            if (result.Errors?.Any() == true)
             {
-                _logger.LogWarning("Google OAuth missing email claim");
-                return BadRequest("Brak emaila z Google");
+                _logger.LogWarning("Google OAuth login failed: {Errors}",
+                    string.Join("; ",
+                        result.Errors.Select(e => $"{e.Code}: {e.Description}")
+                    ));
+
+                return BadRequest("Google login failed");
             }
-
-            if (string.IsNullOrWhiteSpace(googleId))
-            {
-                _logger.LogWarning("Google OAuth missing Google ID");
-                return BadRequest("Brak Google ID");
-            }
-
-            var user = await _userManager.FindByEmailAsync(email);
-
-            if (user == null)
-            {
-                user = new ApplicationUser
-                {
-                    UserName = email,
-                    Email = email,
-                    EmailConfirmed = true,
-                    IsOAuth = true
-                };
-
-                var createResult = await _userManager.CreateAsync(user);
-
-                if (!createResult.Succeeded)
-                {
-                    _logger.LogWarning("Failed to create OAuth user for email {Email}",email);
-                    return BadRequest(createResult.Errors);
-                }
-
-                var loginInfo = new UserLoginInfo(
-                    "Google",
-                    googleId,
-                    "Google");
-
-                var addLoginResult = await _userManager.AddLoginAsync(user, loginInfo);
-
-                if (!addLoginResult.Succeeded)
-                {
-                    _logger.LogWarning("Failed to add Google login for user {UserId}",user.Id);
-                    return BadRequest(addLoginResult.Errors);
-                }
-                _logger.LogInformation("OAuth user created successfully. UserId: {UserId}",user.Id);
-            }
-
-            var token = _jwtService.GenerateToken(user);
-
-            var existsRefresh = await _dbContext.RefreshTokens
-                .AnyAsync(b =>
-                    b.UserId == user.Id &&
-                    b.Expires >= DateTime.UtcNow &&
-                    b.Revoked == null);
-
-            if (!existsRefresh)
-            {
-                var refreshToken = new RefreshToken
-                {
-                    UserId = user.Id,
-                    Token = _jwtService.GenerateRefreshToken(),
-                    Expires = DateTime.UtcNow.AddDays(30),
-                    Created = DateTime.UtcNow,
-                };
-
-                _dbContext.RefreshTokens.Add(refreshToken);
-                await _dbContext.SaveChangesAsync();
-            }
-
-            _logger.LogInformation("User {UserId} logged in with Google OAuth",user.Id);
 
             return Redirect(
-                $"http://localhost:4200/login-callback?token={token}&email={Uri.EscapeDataString(email)}"
-            );
+                $"{Host}/login-callback" +
+                $"?token={Uri.EscapeDataString(result.Response!.jwt)}" +
+                $"&email={Uri.EscapeDataString(result.Email!)}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
-            _logger.LogError(ex, "Error while oauth");
-            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            _logger.LogError(
+                ex,
+                "Error while Google OAuth login");
+
+            return StatusCode(
+                StatusCodes.Status500InternalServerError,
+                "Internal server error");
         }
     }
 }

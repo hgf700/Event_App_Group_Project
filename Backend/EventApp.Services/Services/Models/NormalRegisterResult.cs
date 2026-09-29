@@ -6,7 +6,7 @@ using System.Text;
 
 namespace EventApp.Services.Services.model;
 
-public class RegisterResult
+public class NormalRegisterResult
 {
     public AuthResponseDto? Response { get; init; }
     public bool UserAlreadyExists { get; init; }
