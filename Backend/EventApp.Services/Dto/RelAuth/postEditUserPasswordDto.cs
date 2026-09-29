@@ -3,7 +3,7 @@
 
 namespace EventApp.Services.Dto.RelAuth;
 
-public class postEditUserPassword
+public class postEditUserPasswordDto
 {
     [Required]
     [MinLength(1)]

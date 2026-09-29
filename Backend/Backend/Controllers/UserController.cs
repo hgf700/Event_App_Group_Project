@@ -5,6 +5,8 @@ using EventApp.Services.Dto.RelEvent;
 using EventApp.Services.Interfaces;
 using EventApp.Services.Model;
 using EventApp.Services.Services;
+using EventApp.Services.Services.Interface;
+using EventApp.Services.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
@@ -26,20 +28,17 @@ namespace Backend.Controllers;
 public class UserController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly ApplicationDbContext _context;
-    private readonly IJwtService _jwtService;
+    private readonly IUserService _userService;
     private readonly ILogger<UserController> _logger;
 
-    public UserController(UserManager<ApplicationUser> userManager, 
-        ApplicationDbContext context,
-        ILogger<UserController> logger,
-        IJwtService jwtService
+    public UserController(UserManager<ApplicationUser> userManager,
+        IUserService userService,
+        ILogger<UserController> logger
         )
     {
         _userManager = userManager;
-        _context = context;
+        _userService = userService;
         _logger = logger;
-        _jwtService = jwtService;
     }
 
     [HttpGet("current-user")]
@@ -83,57 +82,60 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> EditUserPassword([FromBody] postEditUserPassword body)
+    public async Task<ActionResult> EditUserPassword([FromBody] postEditUserPasswordDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId == null)
+        if (string.IsNullOrWhiteSpace(userId))
             return Unauthorized();
 
-        if (string.IsNullOrWhiteSpace(body.oldPassword))
-            return BadRequest("oldPassword password is required");
+        if (string.IsNullOrWhiteSpace(dto.oldPassword))
+            return BadRequest("Old password is required");
 
-        if (string.IsNullOrWhiteSpace(body.newPassword))
-            return BadRequest("newPassword password is required");
+        if (string.IsNullOrWhiteSpace(dto.newPassword))
+            return BadRequest("New password is required");
 
         try
         {
-            var user = await _userManager.FindByIdAsync(userId);
+            var result = await _userService.EditUserPasswordAsync(
+                userId,
+                dto);
 
-            if (user == null)
+            if (result.UserNotFound)
             {
-                _logger.LogWarning("User edit failed - user not found. UserId: {UserId}", userId);
+                _logger.LogWarning(
+                    "User edit password failed - user not found. UserId: {UserId}",
+                    userId);
+
                 return NotFound("User not found");
             }
 
-            var CheckCurrentPassword = await _userManager.CheckPasswordAsync(user, body.oldPassword);
-            if (CheckCurrentPassword == false)
-                return BadRequest("error in email or password");
+            if (result.IncorrectPassword)
+            {
+                return BadRequest("Incorrect password");
+            }
 
-            var passwordResult = await _userManager.ChangePasswordAsync(
-                user,
-                body.oldPassword,
-                body.newPassword
-            );
+            if (result.Errors?.Any() == true)
+            {
+                //_logger.LogWarning(result.Errors);
+                return BadRequest("error");
+            }
 
-            if (!passwordResult.Succeeded)
-                return BadRequest(passwordResult.Errors);
-
-            var result = await _userManager.UpdateAsync(user);
-
-            if (!result.Succeeded)
-                return BadRequest(result.Errors);
-
-            var userEmail= User.FindFirstValue(ClaimTypes.Email);
-
-            _logger.LogInformation("User successfully edited {email}", userEmail);
+            _logger.LogInformation(
+                "User successfully changed password. UserId: {UserId}",
+                userId);
 
             return Ok();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error while editing user. UserId: {UserId}", userId);
-            Console.WriteLine(ex);
-            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            _logger.LogError(
+                ex,
+                "Error while editing user password. UserId: {UserId}",
+                userId);
+
+            return StatusCode(
+                StatusCodes.Status500InternalServerError,
+                "Internal server error");
         }
     }
 
@@ -156,40 +158,39 @@ public class UserController : ControllerBase
 
         try
         {
-            var user = await _userManager.FindByIdAsync(userId);
+            var result = await _userService.EditUserEmailAsync(
+                userId,
+                newEmail);
 
-            if (user == null)
+            if (result.UserNotFound)
             {
-                _logger.LogWarning("User edit failed - user not found. UserId: {UserId}", userId);
+                _logger.LogWarning(
+                    "User edit password failed - user not found. UserId: {UserId}",
+                    userId);
+
                 return NotFound("User not found");
             }
 
-            var emailExists = await _userManager.FindByEmailAsync(newEmail);
-
-            if (emailExists != null)
-                return Conflict("Email already exists");
-
-            user.Email = newEmail;
-            user.UserName = newEmail; 
-
-            var result = await _userManager.UpdateAsync(user);
-
-            if (!result.Succeeded)
-                return BadRequest(result.Errors);
-
-            _logger.LogInformation("User successfully edited email {email}", newEmail);
-
-            var token = _jwtService.GenerateToken(user);
-
-            return Ok(new AuthResponseDto
+            if (result.IncorrectEmail)
             {
-                jwt = token
-            });
+                return BadRequest("Incorrect email");
+            }
+
+            if (result.Errors?.Any() == true)
+            {
+                //_logger.LogWarning(result.Errors);
+                return BadRequest("error");
+            }
+
+            _logger.LogInformation(
+                "User successfully changed password. UserId: {UserId}",
+                userId);
+
+            return Ok(result.Response);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error while editing user. UserId: {UserId}", userId);
-            Console.WriteLine(ex);
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
