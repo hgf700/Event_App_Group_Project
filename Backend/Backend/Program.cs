@@ -4,6 +4,7 @@ using EventApp.Services.Interfaces;
 using EventApp.Services.Model;
 using EventApp.Services.Services;
 using EventApp.Services.Services.Interface;
+using EventApp.Services.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -70,6 +71,7 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog();
 
+//app services
 //builder.Services.AddTransient<IEmailSender, NullEmailSender>();
 builder.Services.AddScoped<IQrCodeService, QrCodeService>();
 builder.Services.AddScoped<ISmsService, SmsService>();
@@ -79,7 +81,11 @@ builder.Services.AddSingleton<IRefreshTokenEncryptionService, RefreshTokenEncryp
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<ISeedDbService, SeedDbService>();
 builder.Services.AddScoped<ISendOrDownloadFromApiService, SendOrDownloadFromApiService>();
+
+//controller services
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddAuthorization();
 

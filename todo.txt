@@ -151,3 +151,6 @@ where T : struct
 public void Process<T>(T value) where T : struct { }
 Process(10);
 Process(DateTime.Now);
+
+service dla PaymentCallbackController, PaymentsController 
+UserController EditUserPassword, email

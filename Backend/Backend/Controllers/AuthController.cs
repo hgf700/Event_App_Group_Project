@@ -25,7 +25,7 @@ public class AuthController : ControllerBase
     private readonly ILogger<AuthController> _logger;
     private readonly ApplicationDbContext _dbContext;
     private readonly IAuthService _authService;
-    private readonly string Host = "http://localhost:4200";
+    private readonly string YOUR_DOMAIN = "http://localhost:4200";
 
     public AuthController(UserManager<ApplicationUser> userManager, 
         IJwtService jwtService,
@@ -156,7 +156,7 @@ public class AuthController : ControllerBase
             }
 
             return Redirect(
-                $"{Host}/login-callback" +
+                $"{YOUR_DOMAIN}/login-callback" +
                 $"?token={Uri.EscapeDataString(result.Response!.jwt)}" +
                 $"&email={Uri.EscapeDataString(result.Email!)}");
         }
