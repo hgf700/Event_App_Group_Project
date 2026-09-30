@@ -18,22 +18,16 @@ export class EventService {
   getEvents(page: number, pageSize: number): Observable<paginatedResponse<getEventDto>> {
     
     return this.http.get<paginatedResponse<getEventDto>>
-      (`${this.apiUrl}/get-events?page=${page}&pageSize=${pageSize}`, {
-       headers: getAuthHeaders(),
-      });
+      (`${this.apiUrl}/get-events?page=${page}&pageSize=${pageSize}`);
   }
 
   eventDetails(eventId: number) {
-    return this.http.get<getEventDto>(`${this.apiUrl}/event-details/${eventId}`, {
-      headers: getAuthHeaders(),
-    });
+    return this.http.get<getEventDto>(`${this.apiUrl}/event-details/${eventId}`);
   }
 
   getTicketsWithQr(eventId: number): Observable<getEventTicketWithQrDto> {
     return this.http.get<getEventTicketWithQrDto>(
-      `${this.apiUserTicketUrl}/ticket-detail-with-qr/${eventId}`,
-      { headers: getAuthHeaders() },
-    );
+      `${this.apiUserTicketUrl}/ticket-detail-with-qr/${eventId}`);
   }
 
 }

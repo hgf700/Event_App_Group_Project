@@ -12,7 +12,6 @@ export class UserTicketService {
   currentUserTickets() {
     return this.http.get<getUserBoughtTicketDto[]>(
       `${this.apiUrl}/user-tickets`,
-      { headers: getAuthHeaders() },
     );
   }
 

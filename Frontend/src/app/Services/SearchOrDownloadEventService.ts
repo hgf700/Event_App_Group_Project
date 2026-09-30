@@ -19,9 +19,6 @@ export class SearchOrDownloadEventService {
     return this.http.post<getEventDto[]>(
       `${this.apiUrl}/search-event-and-download`,
       dto,
-      {
-        headers: getAuthHeaders()
-      }
     );
   }
 
@@ -33,16 +30,14 @@ export class SearchOrDownloadEventService {
       `${this.apiUrl}/search-event-and-download`,
       null,
       {
-        headers: getAuthHeaders(),
         params
-      }
+      },
     );
   }
 
   seedDataBase() {
     return this.http.post(`${this.apiUrl}/seed-database`, 
       {},
-      { headers: getAuthHeaders() }
     );
   }
 }

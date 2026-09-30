@@ -13,7 +13,6 @@ export class PaymentService {
     return this.http.post<{ url: string }>(
       `${this.apiUrl}/buy-ticket/${eventId}`,
       {},
-      { headers: getAuthHeaders() },
     );
   }
 
@@ -21,7 +20,6 @@ export class PaymentService {
     return this.http.post<{ eventId: number }>(
       `${this.apiUrlCallback}/payment-success/${eventId}`,
       {},
-      { headers: getAuthHeaders() },
     );
   }
 
@@ -29,7 +27,6 @@ export class PaymentService {
     return this.http.post(
       `${this.apiUrlCallback}/payment-failed`,
       {},
-      { headers: getAuthHeaders() },
     );
   }
 }

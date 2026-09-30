@@ -16,7 +16,6 @@ export class UserService {
   getCurrentUserEmail() {
     return this.http.get<getCurrentUserDto>(
       `${this.apiUrl}/current-user`,
-      { headers: getAuthHeaders() },
     );
   }
 
@@ -24,7 +23,6 @@ export class UserService {
     return this.http.post<{jwt: string}>(
       `${this.apiUrl}/edit-user-email`,
       {newEmail},
-      { headers: getAuthHeaders() },
     );
   }
 
@@ -32,7 +30,6 @@ export class UserService {
     return this.http.post<postEditUserPassword>(
       `${this.apiUrl}/edit-user-password`,
       { oldPassword, newPassword },
-      { headers: getAuthHeaders() },
     );
   }
 
