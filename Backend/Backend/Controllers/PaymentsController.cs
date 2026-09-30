@@ -99,7 +99,6 @@ public class PaymentsController : ControllerBase
                 );
         }
         catch (Exception ex) {
-            Console.WriteLine(ex);
             _logger.LogError(ex, "Error while buying ticket for UserId: {UserId}", userId);
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }

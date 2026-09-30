@@ -1,2 +1,7 @@
-﻿dotnet ef migrations add InitialCreate
+﻿//stare
+dotnet ef migrations add InitialCreate
 dotnet ef database update
+
+//nowe dziala z ps w backend
+dotnet ef migrations add InitialCreate --project ..\EventApp.Infrastructure --startup-project .
+dotnet ef database update --project ..\EventApp.Infrastructure --startup-project .

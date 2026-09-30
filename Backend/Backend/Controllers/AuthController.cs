@@ -20,10 +20,7 @@ namespace Backend.Controllers;
 [Route("api/v1/[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly IJwtService _jwtService;
     private readonly ILogger<AuthController> _logger;
-    private readonly ApplicationDbContext _dbContext;
     private readonly IAuthService _authService;
     private readonly string YOUR_DOMAIN = "http://localhost:4200";
 
@@ -34,10 +31,7 @@ public class AuthController : ControllerBase
         IAuthService authService
         )
     {
-        _userManager = userManager;
-        _jwtService = jwtService;
         _logger= logger;
-        _dbContext= dbContext;
         _authService = authService;
     }
 

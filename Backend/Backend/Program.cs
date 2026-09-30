@@ -84,7 +84,7 @@ builder.Services.AddScoped<ISendOrDownloadFromApiService, SendOrDownloadFromApiS
 
 //controller services
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IPaymentService, PaymentService>();
+//builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddAuthorization();

@@ -10,11 +10,12 @@
     <PackageReference Include="AngleSharp" Version="1.8.2" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="10.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.12" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.10" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.10" />
-    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="10.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.12" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.12" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="10.0.12" />
     <PackageReference Include="QRCoder" Version="1.8.0" />
     <PackageReference Include="QuestPDF" Version="2026.9.0" />
+    <PackageReference Include="Stripe.net" Version="52.4.2" />
     <PackageReference Include="Superpower" Version="3.0.0" />
     <PackageReference Include="Twilio" Version="7.14.9" />
   </ItemGroup>

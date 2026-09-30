@@ -4,11 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace EventApp.Services.Services.model;
+namespace EventApp.Services.Services.Models;
 
-public class NormalRegisterResult
+public class PaymentResult
 {
-    public AuthResponseDto? Response { get; init; }
-    public bool UserAlreadyExists { get; init; }
+    public bool? EventExists { get; set; }
+    public bool? EventAlreadyExists { get; set; }
+    public bool? Success { get; set; }
     public IEnumerable<IdentityError>? Errors { get; set; }
 }
