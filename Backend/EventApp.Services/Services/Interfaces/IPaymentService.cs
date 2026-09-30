@@ -9,6 +9,6 @@ namespace EventApp.Services.Services.Interfaces;
 
 public interface IPaymentService
 {
-    Task<BuyTicketResult> BuyTicketAsync(int userId, int id);
+    Task<BuyTicketResult> BuyTicketAsync(string userId, int id);
     Task<PaymentResult> PaymentSuccess(string userId, int id);
 }

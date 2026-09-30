@@ -21,8 +21,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace EventApp.Services.Services;
 
-//public class PaymentService : IPaymentService
-public class PaymentService
+public class PaymentService : IPaymentService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IJwtService _jwtService;
@@ -128,7 +127,7 @@ public class PaymentService
 
         return new BuyTicketResult
         {
-            CheckoutUrl = session.Url
+            Response = session.Url
         };
     }
 
@@ -139,7 +138,7 @@ public class PaymentService
         {
             return new PaymentResult
             {
-                EventExists = true
+                EventNotExists = true
             };
         }
 

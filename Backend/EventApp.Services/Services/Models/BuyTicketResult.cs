@@ -8,8 +8,8 @@ namespace EventApp.Services.Services.Models;
 
 public class BuyTicketResult
 {
-    public bool? EventNotFound { get; set; }
-    public bool? AlreadyBoughtTicket { get; set; }
-    public string? CheckoutUrl { get; set; }
+    public bool EventNotFound { get; set; }
+    public bool AlreadyBoughtTicket { get; set; }
+    public string? Response { get; set; }
     public IEnumerable<IdentityError>? Errors { get; set; }
 }

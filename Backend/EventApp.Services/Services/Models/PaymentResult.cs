@@ -8,8 +8,8 @@ namespace EventApp.Services.Services.Models;
 
 public class PaymentResult
 {
-    public bool? EventExists { get; set; }
-    public bool? EventAlreadyExists { get; set; }
+    public bool EventNotExists { get; set; }
+    public bool EventAlreadyExists { get; set; }
     public bool? Success { get; set; }
     public IEnumerable<IdentityError>? Errors { get; set; }
 }

@@ -5,6 +5,7 @@ using EventApp.Services.Dto.RelEvent;
 using EventApp.Services.Interfaces;
 using EventApp.Services.Model;
 using EventApp.Services.Services;
+using EventApp.Services.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,8 @@ public class PaymentCallbackController : ControllerBase
     private readonly ISmsService _smsservice;
     private readonly IEmailService _emailService;
     private readonly ILogger<PaymentCallbackController> _logger;
+    private readonly IPaymentService _paymentService;
+
 
     public PaymentCallbackController(UserManager<ApplicationUser> userManager,
         ApplicationDbContext context,
@@ -32,7 +35,8 @@ public class PaymentCallbackController : ControllerBase
         ISmsService smsservice,
         IEmailService emailService,
         IOauthRefreshService oauthRefreshService,
-        ILogger<PaymentCallbackController> logger
+        ILogger<PaymentCallbackController> logger,
+        IPaymentService paymentService
         )
     {
         _context = context;
@@ -41,6 +45,7 @@ public class PaymentCallbackController : ControllerBase
         _smsservice = smsservice;
         _emailService = emailService;
         _logger = logger;
+        _paymentService = paymentService;
     }
 
     [HttpPost("payment-success/{id:int:min(0)}")]
@@ -56,60 +61,20 @@ public class PaymentCallbackController : ControllerBase
         if (userId == null)
             return Unauthorized();
 
-        var ev = await _context.Events.FindAsync(id);
-        if (ev == null)
-            return NotFound();
-
         try
         {
-            var alreadyExists = await _context.UserEvents
-                .AnyAsync(x => x.UserId == userId && x.EventId == id);
+            var result = await _paymentService.PaymentSuccess(userId, id);
 
-            if (alreadyExists)
+            if (result.EventNotExists)
+                return NotFound();
+
+            if (result.EventAlreadyExists)
                 return Conflict("Ticket already assigned");
 
-            var userEvent = new UserEvent
-            {
-                EventId = ev.Id,
-                UserId = userId
-            };
-
-            _context.UserEvents.Add(userEvent);
-            await _context.SaveChangesAsync();
-
-            bool.TryParse(Environment.GetEnvironmentVariable("TWILIO_SMS_SEND_STATE"), out bool twilio_sms_state);
-            if (twilio_sms_state)
-            {
-                _smsservice.SendSMS(ev.UrlOfEvent);
-            }
-
-            var qrBytes = _qrCodeService.GenerateQrCodeBytes(ev.UrlOfEvent);
-
-            var doc = new InvoiceDocument(
-                eventName: ev.NameOfEvent,
-                eventDate: ev.StartOfEvent.ToString(),
-                eventAddress: ev.Address,
-                eventType: ev.TypeOfEvent,
-                eventUrl: ev.UrlOfEvent,
-                qrCode: qrBytes
-            );
-
-            string resourcesPath = Path.Combine(Directory.GetCurrentDirectory(), "Resources");
-            //Directory.CreateDirectory(resourcesPath); // na wszelki wypadek
-
-            string pdfPath = Path.Combine(resourcesPath, "bilet.pdf");
-            doc.GeneratePdf(pdfPath);
-
-            string targetEmail = Environment.GetEnvironmentVariable("TARGET_EMAIL");
-            _emailService.SendEmail(targetEmail, ev.UrlOfEvent);
-
-            _logger.LogInformation("User successfully bought ticket {userId}", userId);
-
-            return Created();
+            return Ok(new { success = true });
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
             _logger.LogError(ex, "Error while buying ticket for user: {UserId}", userId);
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
@@ -118,7 +83,6 @@ public class PaymentCallbackController : ControllerBase
     [HttpPost("payment-failed")]
     //[Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> PaymentFailed()
     {

@@ -1,16 +1,18 @@
-﻿using EventApp.Infrastructure.Db;
+﻿using EventApp.Domain.Model;
+using EventApp.Infrastructure.Db;
 using EventApp.Services.Dto.RelAuth;
 using EventApp.Services.Dto.RelEvent;
 using EventApp.Services.Interfaces;
 using EventApp.Services.Model;
 using EventApp.Services.Services;
+using EventApp.Services.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Stripe;
 using Stripe.Checkout;
+using Superpower.Model;
 using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
-using EventApp.Domain.Model;
 
 namespace Backend.Controllers;
 
@@ -23,15 +25,18 @@ public class PaymentsController : ControllerBase
     private readonly ApplicationDbContext _context;
     private readonly string YOUR_DOMAIN = "http://localhost:4200";
     private readonly ILogger<PaymentsController> _logger;
+    private readonly IPaymentService _paymentService;
 
     public PaymentsController(UserManager<ApplicationUser> userManager,
         ApplicationDbContext context,
-        ILogger<PaymentsController> logger
+        ILogger<PaymentsController> logger,
+        IPaymentService paymentService
         )
     {
         _context = context;
         _userManager = userManager;
         _logger = logger;
+        _paymentService = paymentService;
     }
 
     [HttpPost("buy-ticket/{id:int:min(0)}")]
@@ -47,58 +52,28 @@ public class PaymentsController : ControllerBase
         if (userId == null)
             return Unauthorized();
 
-        var ev = await _context.Events.FindAsync(id);
-        if (ev == null)
-            return NotFound();
-
-        var alreadyBought = await _context.UserEvents
-            .AnyAsync(x => x.UserId == userId && x.EventId == id);
-
-        if (alreadyBought)
-            return Conflict("User already owns this ticket");
-
         try
         {
-            StripeConfiguration.ApiKey = Environment.GetEnvironmentVariable("STRIP_SEC_KEY");
+            var result = await _paymentService.BuyTicketAsync(userId, id);
 
-            if (string.IsNullOrWhiteSpace(StripeConfiguration.ApiKey))
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "STRIPE_SECRET_KEY is missing");
-            }
+            if(result.EventNotFound)
+                return NotFound();
 
-            var options = new SessionCreateOptions
-            {
-                LineItems = new List<SessionLineItemOptions>
-                {
-                    new SessionLineItemOptions
-                    {
-                        PriceData = new SessionLineItemPriceDataOptions
-                        {
-                            Currency = "pln",
-                            UnitAmount = 1000,
-                            ProductData = new SessionLineItemPriceDataProductDataOptions
-                            {
-                                Name = "Bilet na wydarzenie",
-                            },
-                        },
-                        Quantity = 1,
-                    },
-                },
+            if(result.AlreadyBoughtTicket)
+                return Conflict("User already owns this ticket");
 
-                Mode = "payment",
-                SuccessUrl = $"{YOUR_DOMAIN}/payment-success?id={id}",
-                CancelUrl = $"{YOUR_DOMAIN}/payment-failed",
-            };
-            var service = new SessionService();
-            Session session = service.Create(options);
+            if (result.Errors != null)
+                return BadRequest(result.Errors);
 
             _logger.LogInformation("User successfully bought ticket UserId: {UserId}", userId);
 
-            return StatusCode(StatusCodes.Status201Created, 
-                new { url = session.Url }
-                );
+            return Ok(new
+            {
+                checkoutUrl = result.Response
+            });
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
             _logger.LogError(ex, "Error while buying ticket for UserId: {UserId}", userId);
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
