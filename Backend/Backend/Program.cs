@@ -1,5 +1,6 @@
 using EventApp.Domain.Model;
 using EventApp.Infrastructure.Db;
+using EventApp.Infrastructure.ExtraTools;
 using EventApp.Services.Interfaces;
 using EventApp.Services.Model;
 using EventApp.Services.Services;
@@ -211,6 +212,16 @@ builder.Services.AddRateLimiter(options =>
 builder.Services.AddHttpClient();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    await IdentitySeeder.SeedAsync(scope.ServiceProvider);
+
+    var seedDbService = scope.ServiceProvider
+       .GetRequiredService<ISeedDbService>();
+
+    await seedDbService.SeedDatabase();
+}
 
 // Middleware bezpieczeństwa
 //app.Use(async (context, next) =>
