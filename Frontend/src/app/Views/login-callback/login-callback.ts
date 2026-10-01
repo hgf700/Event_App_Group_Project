@@ -18,6 +18,7 @@ import { UserNavigationService } from '../../RootingServices/UserNavigationServi
 export class LoginCallback implements OnInit {
   loading = false;
   currentUser!: getCurrentUserDto;
+  userEmailData = signal(localStorage.getItem('email') ?? '');
 
   constructor(
     private route: ActivatedRoute,

@@ -95,7 +95,7 @@ button {
   display: none;
   position: absolute;
   right: 0;
-  top: calc(100% + 8px);
+  top: 100%;
   min-width: 200px;
   background-color: var(--color-surface);
   border-radius: var(--radius);

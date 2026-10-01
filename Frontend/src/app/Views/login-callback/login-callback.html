@@ -2,7 +2,7 @@
   <div class="user-info">
     <div class="avatar">👤</div>
     <div>
-      <p class="hello-text">Witaj z powrotem!</p>
+      <p class="hello-text">Witaj z powrotem! <br>{{ userEmailData() }}</p>
     </div>
   </div>
 </div>
@@ -33,6 +33,11 @@
     <h3>Wyszukaj i importuj</h3>
     <p>Znajdź nowe wydarzenia z Ticketmaster</p>
   </button>
+
+  <button class="action-card" (click)="adminView()">
+    <div class="action-icon">🛡️</div>
+    <h3>adminView</h3>
+    <p>Midok admina</p>
+  </button>
 </div>
 
-<button class="action-card" (click)="adminView()">adminView</button>
