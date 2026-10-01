@@ -10,7 +10,7 @@ describe('LoginCallback', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [LoginCallback],
-      providers: [provideRouter([])]
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoginCallback);

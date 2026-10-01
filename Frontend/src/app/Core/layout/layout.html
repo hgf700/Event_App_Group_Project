@@ -1,10 +1,7 @@
 <header>
   <nav class="navbar">
-
     <div class="left">
-      <a routerLink="/" class="brand">
-        🎫 EventApp
-      </a>
+      <a routerLink="/" class="brand"> 🎫 EventApp </a>
       <a routerLink="/get-events">Wydarzenia</a>
       <a routerLink="/login-callback">Mój panel</a>
       <a routerLink="/search-and-import-events">Wyszukaj event</a>
@@ -13,9 +10,7 @@
     <div class="right">
       @if (isLoggedIn()) {
         <div class="dropdown">
-          <button type="button">
-            Witaj {{ userEmail }}
-          </button>
+          <button type="button">Witaj {{ userEmail }}</button>
 
           <div class="dropdown-content">
             <a routerLink="/edit-user">edytuj Konto</a>
@@ -26,27 +21,14 @@
           </div>
         </div>
 
-        <button
-          type="button"
-          class="btn-primary"
-          (click)="logout()"
-        >
-          Wyloguj
-        </button>
-
+        <button type="button" class="btn-primary" (click)="logout()">Wyloguj</button>
       } @else {
-
-        <ng-template #loadingEmail>
-          Ładowanie...
-        </ng-template>
+        <ng-template #loadingEmail> Ładowanie... </ng-template>
 
         <a routerLink="/login-user" class="btn-register">Logowanie</a>
         <a routerLink="/register-user" class="btn-register">Rejestracja</a>
-
       }
-
     </div>
-
   </nav>
 </header>
 
@@ -54,6 +36,4 @@
   <router-outlet></router-outlet>
 </main>
 
-<footer class="footer">
-  © 2026
-</footer>
+<footer class="footer">© 2026</footer>

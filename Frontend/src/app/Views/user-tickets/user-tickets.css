@@ -20,10 +20,10 @@
   transition: var(--transition);
 }
 
-  .btn-back:hover {
-    color: var(--color-primary);
-    transform: translateX(-3px);
-  }
+.btn-back:hover {
+  color: var(--color-primary);
+  transform: translateX(-3px);
+}
 
 .page-title {
   font-size: 2.5rem;
@@ -41,9 +41,9 @@
   font-size: 1.05rem;
 }
 
-  .page-subtitle strong {
-    color: var(--color-primary-dark);
-  }
+.page-subtitle strong {
+  color: var(--color-primary-dark);
+}
 
 /* === TICKETS GRID === */
 .tickets-grid {
@@ -63,10 +63,10 @@
   position: relative;
 }
 
-  .ticket-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-md);
-  }
+.ticket-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
 
 /* lewa "odrywająca się" część biletu */
 .ticket-stub {
@@ -79,21 +79,21 @@
   flex-shrink: 0;
 }
 
-  .ticket-stub::after {
-    content: "";
-    position: absolute;
-    right: -8px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 16px;
-    height: 16px;
-    background-color: var(--color-bg);
-    border-radius: 50%;
-  }
+.ticket-stub::after {
+  content: '';
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  background-color: var(--color-bg);
+  border-radius: 50%;
+}
 
 .ticket-emoji {
   font-size: 2.5rem;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 /* prawa część z info */
@@ -134,9 +134,9 @@
   gap: 0.5rem;
 }
 
-  .ticket-info strong {
-    color: var(--color-text);
-  }
+.ticket-info strong {
+  color: var(--color-text);
+}
 
 .icon {
   font-size: 0.9rem;
@@ -163,15 +163,15 @@
   box-shadow: var(--shadow-sm);
 }
 
-  .state-box h2 {
-    margin: 1rem 0 0.5rem;
-    color: var(--color-text);
-  }
+.state-box h2 {
+  margin: 1rem 0 0.5rem;
+  color: var(--color-text);
+}
 
-  .state-box p {
-    margin: 0 0 1.5rem;
-    color: var(--color-text-muted);
-  }
+.state-box p {
+  margin: 0 0 1.5rem;
+  color: var(--color-text-muted);
+}
 
 .empty-icon {
   font-size: 4rem;
@@ -207,7 +207,7 @@
   text-decoration: none;
 }
 
-  .btn-cta-empty:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-  }
+.btn-cta-empty:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}

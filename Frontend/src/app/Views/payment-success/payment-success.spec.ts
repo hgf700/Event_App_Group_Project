@@ -9,7 +9,7 @@ describe('PaymentSuccess', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [PaymentSuccess],
-      providers: [provideRouter([])]
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PaymentSuccess);

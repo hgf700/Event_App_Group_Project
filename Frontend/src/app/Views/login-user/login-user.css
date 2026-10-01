@@ -56,32 +56,32 @@
   gap: 0.4rem;
 }
 
-  .form-group label {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--color-text);
-  }
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
 
-  .form-group input {
-    font-family: inherit;
-    font-size: 1rem;
-    padding: 0.75rem 1rem;
-    border-radius: var(--radius);
-    border: 2px solid var(--color-border);
-    background-color: var(--color-surface);
-    color: var(--color-text);
-    transition: var(--transition);
-    outline: none;
-  }
+.form-group input {
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  border: 2px solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  transition: var(--transition);
+  outline: none;
+}
 
-    .form-group input:hover {
-      border-color: var(--color-primary-light);
-    }
+.form-group input:hover {
+  border-color: var(--color-primary-light);
+}
 
-    .form-group input:focus {
-      border-color: var(--color-primary);
-      box-shadow: 0 0 0 3px rgba(255, 111, 0, 0.15);
-    }
+.form-group input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(255, 111, 0, 0.15);
+}
 
 .form-error {
   color: #d32f2f;
@@ -105,14 +105,14 @@
   box-shadow: var(--shadow-sm);
 }
 
-  .btn-submit:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-  }
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
 
-  .btn-submit:active {
-    transform: translateY(0);
-  }
+.btn-submit:active {
+  transform: translateY(0);
+}
 
 /* === DIVIDER === */
 .auth-divider {
@@ -124,16 +124,16 @@
   font-size: 0.85rem;
 }
 
-  .auth-divider::before,
-  .auth-divider::after {
-    content: "";
-    flex: 1;
-    border-bottom: 1px solid var(--color-border);
-  }
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--color-border);
+}
 
-  .auth-divider span {
-    padding: 0 1rem;
-  }
+.auth-divider span {
+  padding: 0 1rem;
+}
 
 /* === FOOTER === */
 .auth-footer {
@@ -143,15 +143,15 @@
   margin: 0;
 }
 
-  .auth-footer a {
-    color: var(--color-primary-dark);
-    font-weight: 600;
-    text-decoration: none;
-  }
+.auth-footer a {
+  color: var(--color-primary-dark);
+  font-weight: 600;
+  text-decoration: none;
+}
 
-    .auth-footer a:hover {
-      text-decoration: underline;
-    }
+.auth-footer a:hover {
+  text-decoration: underline;
+}
 
 /* === FORM-LEVEL ERROR === */
 .form-alert {

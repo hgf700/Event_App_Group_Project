@@ -16,7 +16,7 @@ import { getUserBoughtTicketDto } from '../../Dto/getUserBoughtTicketDto';
   templateUrl: './user-tickets.html',
   styleUrl: './user-tickets.css',
 })
-export class UserTickets implements OnInit{
+export class UserTickets implements OnInit {
   events: getUserBoughtTicketDto[] = [];
   loading = false;
 
@@ -62,7 +62,7 @@ export class UserTickets implements OnInit{
   }
 
   isTicketActive(startOfEvent?: Date): boolean {
-     if (!startOfEvent) {
+    if (!startOfEvent) {
       return false;
     }
 

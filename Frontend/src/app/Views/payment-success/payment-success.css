@@ -16,9 +16,9 @@
   text-align: center;
 }
 
-  .payment-card.success {
-    border-top: 6px solid #2e7d32;
-  }
+.payment-card.success {
+  border-top: 6px solid #2e7d32;
+}
 
 .payment-icon-circle {
   width: 100px;
@@ -93,7 +93,8 @@
   justify-content: center;
 }
 
-.btn-primary-payment, .btn-secondary-payment {
+.btn-primary-payment,
+.btn-secondary-payment {
   font-family: inherit;
   font-size: 0.95rem;
   font-weight: 600;
@@ -110,10 +111,10 @@
   box-shadow: var(--shadow-sm);
 }
 
-  .btn-primary-payment:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-  }
+.btn-primary-payment:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
 
 .btn-secondary-payment {
   background-color: transparent;
@@ -121,7 +122,7 @@
   border: 2px solid var(--color-border);
 }
 
-  .btn-secondary-payment:hover {
-    background-color: var(--color-bg);
-    border-color: var(--color-primary);
-  }
+.btn-secondary-payment:hover {
+  background-color: var(--color-bg);
+  border-color: var(--color-primary);
+}

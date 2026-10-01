@@ -17,17 +17,16 @@ export class EditUserEmail {
   submitted = false;
 
   constructor(
-      private fb: FormBuilder,
-      private router: Router,
-      private userService: UserService,
-    ) {
-      this.editUserEmailForm = this.fb.group({
-        newEmail: ['', ],
-      });
-    }
+    private fb: FormBuilder,
+    private router: Router,
+    private userService: UserService,
+  ) {
+    this.editUserEmailForm = this.fb.group({
+      newEmail: [''],
+    });
+  }
 
-
-  generateJWT(){
+  generateJWT() {
     const tokenFromStorage = localStorage.getItem('jwt');
 
     console.log({

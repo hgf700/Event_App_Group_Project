@@ -16,7 +16,6 @@ import { EditUserEmail } from '../Views/edit-user-email/edit-user-email';
 import { EditUserPassword } from '../Views/edit-user-password/edit-user-password';
 import { AdminPanel } from '../Views/admin-panel/admin-panel';
 
-
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'login-user', component: LoginUser },
@@ -33,7 +32,6 @@ export const routes: Routes = [
   { path: 'edit-user-email', component: EditUserEmail },
   { path: 'edit-user-password', component: EditUserPassword },
   { path: 'admin-panel', component: AdminPanel },
-
 ];
 
 @NgModule({

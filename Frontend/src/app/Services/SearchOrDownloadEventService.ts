@@ -13,31 +13,21 @@ export class SearchOrDownloadEventService {
 
   searchOrDownloadEventForm(city: string) {
     const dto: postSearchEventDto = {
-      city: city
+      city: city,
     };
 
-    return this.http.post<getEventDto[]>(
-      `${this.apiUrl}/search-event-and-download`,
-      dto,
-    );
+    return this.http.post<getEventDto[]>(`${this.apiUrl}/search-event-and-download`, dto);
   }
 
   searchOrDownloadEventQuery(city: string) {
-    const params = new HttpParams()
-      .set('city', city);
+    const params = new HttpParams().set('city', city);
 
-    return this.http.post<getEventDto[]>(
-      `${this.apiUrl}/search-event-and-download`,
-      null,
-      {
-        params
-      },
-    );
+    return this.http.post<getEventDto[]>(`${this.apiUrl}/search-event-and-download`, null, {
+      params,
+    });
   }
 
   seedDataBase() {
-    return this.http.post(`${this.apiUrl}/seed-database`, 
-      {},
-    );
+    return this.http.post(`${this.apiUrl}/seed-database`, {});
   }
 }

@@ -11,16 +11,16 @@
     <form [formGroup]="editUserEmailForm" (ngSubmit)="onSubmit()" class="auth-form">
       <div class="form-group">
         <label for="newEmail">Nowy email</label>
-        <input id="newEmail"
-               type="email"
-               formControlName="newEmail"
-               placeholder="nowy@email.com"
-               autocomplete="email" />
+        <input
+          id="newEmail"
+          type="email"
+          formControlName="newEmail"
+          placeholder="nowy@email.com"
+          autocomplete="email"
+        />
       </div>
 
-      <button type="submit" class="btn-submit">
-        Zapisz zmianę
-      </button>
+      <button type="submit" class="btn-submit">Zapisz zmianę</button>
     </form>
   </div>
 </div>

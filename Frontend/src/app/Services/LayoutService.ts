@@ -2,11 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { signal } from '@angular/core';
 
-@Injectable({ providedIn: 'root', })
+@Injectable({ providedIn: 'root' })
 export class LayoutService {
-  userEmailData = signal(
-    localStorage.getItem('email') ?? ''
-  );
+  userEmailData = signal(localStorage.getItem('email') ?? '');
 
   constructor(private http: HttpClient) {}
 

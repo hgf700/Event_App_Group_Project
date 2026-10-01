@@ -9,7 +9,6 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   registerUserNorm(email: string, password: string) {
-
     return this.http.post<{ jwt: string }>(`${this.apiUrl}/register-norm`, {
       email,
       password,
@@ -17,7 +16,7 @@ export class AuthService {
   }
 
   loginUserNorm(email: string, password: string) {
-    return this.http.post<{ jwt: string  }>(`${this.apiUrl}/login-norm`, {
+    return this.http.post<{ jwt: string }>(`${this.apiUrl}/login-norm`, {
       email,
       password,
     });

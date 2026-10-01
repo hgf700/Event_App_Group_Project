@@ -58,10 +58,10 @@
   box-shadow: var(--shadow-sm);
 }
 
-  .btn-cta:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-  }
+.btn-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
 
 .btn-secondary {
   background-color: var(--color-surface);
@@ -69,10 +69,10 @@
   border: 2px solid var(--color-primary);
 }
 
-  .btn-secondary:hover {
-    background-color: var(--color-bg);
-    transform: translateY(-2px);
-  }
+.btn-secondary:hover {
+  background-color: var(--color-bg);
+  transform: translateY(-2px);
+}
 
 .hero-login {
   margin-top: 0.5rem;
@@ -80,12 +80,12 @@
   font-size: 0.95rem;
 }
 
-  .hero-login a {
-    color: var(--color-primary-dark);
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: underline;
-  }
+.hero-login a {
+  color: var(--color-primary-dark);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+}
 
 /* === HERO DECORATION (animowane karty) === */
 .hero-decoration {
@@ -132,7 +132,8 @@
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
 
@@ -158,10 +159,10 @@
   transition: var(--transition);
 }
 
-  .feature:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-md);
-  }
+.feature:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
 
 .feature-icon {
   font-size: 3rem;

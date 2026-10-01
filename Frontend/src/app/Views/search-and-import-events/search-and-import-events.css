@@ -45,11 +45,11 @@
   min-width: 250px;
 }
 
-  .form-group label {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--color-text);
-  }
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
 
 .search-input-wrap {
   position: relative;
@@ -75,10 +75,10 @@
   outline: none;
 }
 
-  .search-input-wrap input:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(255, 111, 0, 0.15);
-  }
+.search-input-wrap input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(255, 111, 0, 0.15);
+}
 
 .btn-search {
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
@@ -95,10 +95,10 @@
   box-shadow: var(--shadow-sm);
 }
 
-  .btn-search:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-  }
+.btn-search:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
 
 .form-error {
   color: #d32f2f;
@@ -113,11 +113,11 @@
   margin: 2rem 0 1rem;
 }
 
-  .results-header h2 {
-    font-size: 1.5rem;
-    margin: 0;
-    color: var(--color-text);
-  }
+.results-header h2 {
+  font-size: 1.5rem;
+  margin: 0;
+  color: var(--color-text);
+}
 
 .results-count {
   background-color: var(--color-primary);
@@ -143,10 +143,10 @@
   transition: var(--transition);
 }
 
-  .event-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-md);
-  }
+.event-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
 
 .event-image {
   position: relative;
@@ -156,11 +156,11 @@
   overflow: hidden;
 }
 
-  .event-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+.event-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
 .event-placeholder {
   width: 100%;
@@ -176,7 +176,7 @@
   position: absolute;
   top: 12px;
   left: 12px;
-  background-color: rgba(255,255,255,0.95);
+  background-color: rgba(255, 255, 255, 0.95);
   color: var(--color-primary-dark);
   padding: 0.25rem 0.75rem;
   border-radius: 20px;
@@ -208,9 +208,9 @@
   gap: 0.5rem;
 }
 
-  .event-info strong {
-    color: var(--color-text);
-  }
+.event-info strong {
+  color: var(--color-text);
+}
 
 .icon {
   font-size: 1rem;
@@ -229,15 +229,15 @@
   box-shadow: var(--shadow-sm);
 }
 
-  .state-box h2 {
-    margin: 1rem 0 0.5rem;
-    color: var(--color-text);
-  }
+.state-box h2 {
+  margin: 1rem 0 0.5rem;
+  color: var(--color-text);
+}
 
-  .state-box p {
-    margin: 0;
-    color: var(--color-text-muted);
-  }
+.state-box p {
+  margin: 0;
+  color: var(--color-text-muted);
+}
 
 .empty-icon {
   font-size: 4rem;

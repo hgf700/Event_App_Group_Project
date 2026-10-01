@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../Services/AuthService';
-import {registerPasswordMatchValidator} from '../../Validators/registerPasswordMatchValidator';
+import { registerPasswordMatchValidator } from '../../Validators/registerPasswordMatchValidator';
 
 @Component({
   selector: 'app-register-user',
@@ -22,12 +22,13 @@ export class RegisterUser {
     private router: Router,
     private authService: AuthService,
   ) {
-    this.registerUserForm = this.fb.group({
-      email: ['', [Validators.required]],
-      password: ['', [Validators.required]],
-      confirmPassword: ['', [Validators.required]],
-    },
-      { validators: registerPasswordMatchValidator }
+    this.registerUserForm = this.fb.group(
+      {
+        email: ['', [Validators.required]],
+        password: ['', [Validators.required]],
+        confirmPassword: ['', [Validators.required]],
+      },
+      { validators: registerPasswordMatchValidator },
     );
   }
   // , Validators.email

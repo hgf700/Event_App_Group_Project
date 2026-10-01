@@ -14,17 +14,17 @@ import { getEventTicketWithQrDto } from '../../Dto/getEventQrCodeInfoDto';
   templateUrl: './sub-bought-event-info.html',
   styleUrl: './sub-bought-event-info.css',
 })
-export class SubBoughtEventInfo implements OnInit{
+export class SubBoughtEventInfo implements OnInit {
   loading = false;
   event?: getEventTicketWithQrDto;
   eventId!: number;
-  
+
   constructor(
     private cdr: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: { eventId: number },
     private dialogRef: MatDialogRef<SubBoughtEventInfo>,
     private eventService: EventService,
-  ){}
+  ) {}
 
   ngOnInit(): void {
     this.eventId = this.data.eventId;

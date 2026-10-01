@@ -13,11 +13,11 @@ describe('RegisterUser', () => {
 
   beforeEach(async () => {
     authServiceMock = {
-      registerUserNorm: () => of({ jwt: 'fake-jwt-token' })
+      registerUserNorm: () => of({ jwt: 'fake-jwt-token' }),
     };
 
     routerMock = {
-      navigate: (path: any[]) => {}
+      navigate: (path: any[]) => {},
     };
 
     await TestBed.configureTestingModule({
@@ -25,8 +25,8 @@ describe('RegisterUser', () => {
       providers: [
         { provide: AuthService, useValue: authServiceMock },
         { provide: Router, useValue: routerMock },
-        { provide: ActivatedRoute, useValue: { snapshot: { params: {} } } }
-      ]
+        { provide: ActivatedRoute, useValue: { snapshot: { params: {} } } },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RegisterUser);
@@ -38,7 +38,7 @@ describe('RegisterUser', () => {
     component.registerUserForm.setValue({
       email: '',
       password: '',
-      confirmPassword: ''
+      confirmPassword: '',
     });
 
     component.onSubmit();
@@ -67,7 +67,7 @@ describe('RegisterUser', () => {
     component.registerUserForm.setValue({
       email: 'test@test.pl',
       password: 'Password123!',
-      confirmPassword: 'Password123!'
+      confirmPassword: 'Password123!',
     });
 
     fixture.detectChanges();

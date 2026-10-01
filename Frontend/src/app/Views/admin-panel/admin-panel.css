@@ -25,17 +25,17 @@
   gap: 0.5rem;
 }
 
-  .action-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--color-primary);
-    box-shadow: var(--shadow-md);
-  }
+.action-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-md);
+}
 
-  .action-card.admin {
-    background: linear-gradient(135deg, #fff8f0 0%, #ffe8d0 100%);
-    border: 2px dashed var(--color-primary-light);
-  }
+.action-card.admin {
+  background: linear-gradient(135deg, #fff8f0 0%, #ffe8d0 100%);
+  border: 2px dashed var(--color-primary-light);
+}
 
-    .action-card.admin:hover {
-      border-style: solid;
-    }
+.action-card.admin:hover {
+  border-style: solid;
+}

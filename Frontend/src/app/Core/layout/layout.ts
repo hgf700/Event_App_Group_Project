@@ -6,15 +6,12 @@ import { LayoutService } from '../../Services/LayoutService';
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink,],
+  imports: [RouterOutlet, RouterLink],
   templateUrl: './layout.html',
   styleUrl: './layout.css',
 })
 export class Layout {
-
-  constructor(
-    public layoutService: LayoutService
-  ) {}
+  constructor(public layoutService: LayoutService) {}
 
   // isAdmin(): boolean {
   //   return this.layoutService.isAdmin();
@@ -24,7 +21,7 @@ export class Layout {
     return this.layoutService.isAuthenticated();
   }
 
-  get userEmail(){
+  get userEmail() {
     return this.layoutService.userEmail();
   }
 

@@ -10,7 +10,6 @@ import { EventService } from '../../Services/EventService';
 import { SubEventDetails } from '../sub-event-details/sub-event-details';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
-
 @Component({
   selector: 'app-search-and-import-events',
   standalone: true,
@@ -18,7 +17,6 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
   templateUrl: './search-and-import-events.html',
   styleUrl: './search-and-import-events.css',
 })
-
 export class SearchAndImportEvents implements OnInit {
   searchAndImportEventsForm!: FormGroup;
   events: getEventDto[] = [];
@@ -39,12 +37,12 @@ export class SearchAndImportEvents implements OnInit {
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       const city = params['city'];
 
       if (city) {
         this.searchAndImportEventsForm.patchValue({
-          city: city
+          city: city,
         });
 
         this.search(city);
@@ -65,19 +63,18 @@ export class SearchAndImportEvents implements OnInit {
       console.log('Dialog closed:', result);
     });
   }
-  
+
   search(city: string) {
-    this.searchOrDownloadEventService.searchOrDownloadEventQuery(city)
-      .subscribe({
-        next: (res) => {
-          this.events = res ?? [];
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error(err);
-        }
-      });
-    }
+    this.searchOrDownloadEventService.searchOrDownloadEventQuery(city).subscribe({
+      next: (res) => {
+        this.events = res ?? [];
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
+  }
 
   onSubmit() {
     this.submitted = true;

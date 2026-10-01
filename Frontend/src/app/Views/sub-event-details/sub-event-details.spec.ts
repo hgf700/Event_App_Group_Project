@@ -14,8 +14,8 @@ describe('SubEventDetails', () => {
       providers: [
         provideRouter([]),
         { provide: MAT_DIALOG_DATA, useValue: { eventId: 1 } },
-        { provide: MatDialogRef, useValue: { close: () => { } } }
-      ]
+        { provide: MatDialogRef, useValue: { close: () => {} } },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SubEventDetails);

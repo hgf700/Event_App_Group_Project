@@ -14,23 +14,17 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   getCurrentUserEmail() {
-    return this.http.get<getCurrentUserDto>(
-      `${this.apiUrl}/current-user`,
-    );
+    return this.http.get<getCurrentUserDto>(`${this.apiUrl}/current-user`);
   }
 
   editCurrentUserEmail(newEmail: string) {
-    return this.http.post<{jwt: string}>(
-      `${this.apiUrl}/edit-user-email`,
-      {newEmail},
-    );
+    return this.http.post<{ jwt: string }>(`${this.apiUrl}/edit-user-email`, { newEmail });
   }
 
   editCurrentUserPassword(oldPassword: string, newPassword: string) {
-    return this.http.post<postEditUserPassword>(
-      `${this.apiUrl}/edit-user-password`,
-      { oldPassword, newPassword },
-    );
+    return this.http.post<postEditUserPassword>(`${this.apiUrl}/edit-user-password`, {
+      oldPassword,
+      newPassword,
+    });
   }
-
 }

@@ -29,28 +29,28 @@ header {
   padding: 1rem 2rem;
 }
 
-  .navbar .left,
-  .navbar .right {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
+.navbar .left,
+.navbar .right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
 
-  /* === NAVBAR LINKS === */
-  .navbar a {
-    color: #fff;
-    font-size: 0.95rem;
-    font-weight: 500;
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius);
-    text-decoration: none;
-    transition: var(--transition);
-  }
+/* === NAVBAR LINKS === */
+.navbar a {
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: var(--transition);
+}
 
-    .navbar a:hover {
-      background-color: rgba(255, 255, 255, 0.15);
-      color: #fff;
-    }
+.navbar a:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
 
 /* === BUTTONS === */
 button {
@@ -70,26 +70,26 @@ button {
   font-weight: 600;
 }
 
-  .btn-primary:hover {
-    background-color: var(--color-bg);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-sm);
-  }
+.btn-primary:hover {
+  background-color: var(--color-bg);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
 
 /* === DROPDOWN === */
 .dropdown {
   position: relative;
 }
 
-  .dropdown > button {
-    background-color: rgba(255, 255, 255, 0.15);
-    color: #fff;
-    font-weight: 500;
-  }
+.dropdown > button {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-weight: 500;
+}
 
-    .dropdown > button:hover {
-      background-color: rgba(255, 255, 255, 0.25);
-    }
+.dropdown > button:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
 
 .dropdown-content {
   display: none;
@@ -104,18 +104,18 @@ button {
   z-index: 1000;
 }
 
-  .dropdown-content a {
-    display: block;
-    padding: 0.875rem 1.25rem;
-    color: var(--color-text);
-    font-weight: 400;
-    border-radius: 0;
-  }
+.dropdown-content a {
+  display: block;
+  padding: 0.875rem 1.25rem;
+  color: var(--color-text);
+  font-weight: 400;
+  border-radius: 0;
+}
 
-    .dropdown-content a:hover {
-      background-color: var(--color-bg);
-      color: var(--color-primary-dark);
-    }
+.dropdown-content a:hover {
+  background-color: var(--color-bg);
+  color: var(--color-primary-dark);
+}
 
 .dropdown:hover .dropdown-content {
   display: block;
@@ -151,9 +151,9 @@ button {
   margin-right: 1rem;
 }
 
-  .navbar .brand:hover {
-    background-color: rgba(255, 255, 255, 0.25);
-  }
+.navbar .brand:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
 
 /* === AUTH BUTTONS (Logowanie / Rejestracja) === */
 .navbar .btn-login {
@@ -165,11 +165,11 @@ button {
   transition: var(--transition);
 }
 
-  .navbar .btn-login:hover {
-    background-color: rgba(255, 255, 255, 0.25);
-    border-color: #fff;
-    color: #fff;
-  }
+.navbar .btn-login:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  border-color: #fff;
+  color: #fff;
+}
 
 .navbar .btn-register {
   background-color: #fff;
@@ -181,9 +181,9 @@ button {
   box-shadow: var(--shadow-sm);
 }
 
-  .navbar .btn-register:hover {
-    background-color: var(--color-bg);
-    color: var(--color-primary-dark);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
-  }
+.navbar .btn-register:hover {
+  background-color: var(--color-bg);
+  color: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}

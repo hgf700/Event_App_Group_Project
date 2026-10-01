@@ -1,4 +1,4 @@
 export interface postEditUserPassword {
-    oldPassword: string;
-    newPassword: string;
+  oldPassword: string;
+  newPassword: string;
 }

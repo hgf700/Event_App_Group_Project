@@ -12,11 +12,8 @@ import { UserService } from '../../Services/UserService';
   styleUrl: './edit-user.css',
 })
 export class EditUser {
+  constructor(private router: Router) {}
 
-  constructor(
-      private router: Router,
-    ) {}
-  
   changeUserEmail() {
     this.router.navigate(['/edit-user-email']);
   }
@@ -24,8 +21,4 @@ export class EditUser {
   changeUserPassword() {
     this.router.navigate(['/edit-user-password']);
   }
-
-
-
-
 }

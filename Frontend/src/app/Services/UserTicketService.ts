@@ -10,10 +10,6 @@ export class UserTicketService {
   constructor(private http: HttpClient) {}
 
   currentUserTickets() {
-    return this.http.get<getUserBoughtTicketDto[]>(
-      `${this.apiUrl}/user-tickets`,
-    );
+    return this.http.get<getUserBoughtTicketDto[]>(`${this.apiUrl}/user-tickets`);
   }
-
-
 }

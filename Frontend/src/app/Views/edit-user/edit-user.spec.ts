@@ -10,7 +10,7 @@ describe('EditUser', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [EditUser],
-      providers: [provideRouter([])]
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(EditUser);

@@ -1,4 +1,4 @@
-.main-body{
+.main-body {
   background-color: #f0e0d0;
 }
 
@@ -32,7 +32,7 @@
   position: absolute;
   top: 16px;
   left: 16px;
-  background-color: rgba(255,255,255,0.95);
+  background-color: rgba(255, 255, 255, 0.95);
   color: #e65100;
   padding: 0.3rem 0.8rem;
   border-radius: 20px;

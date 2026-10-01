@@ -2,11 +2,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
-export class UserNavigationService  {
-
-    constructor(
-    private router: Router,
-  ) {}
+export class UserNavigationService {
+  constructor(private router: Router) {}
 
   editCurrentUser(): Promise<boolean> {
     return this.router.navigate(['/edit-user']);
@@ -15,6 +12,4 @@ export class UserNavigationService  {
   userBoughtTickets(): Promise<boolean> {
     return this.router.navigate(['/user-tickets']);
   }
-
-  
 }

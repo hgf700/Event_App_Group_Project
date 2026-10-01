@@ -1,4 +1,4 @@
-import { retry, timeout ,catchError, throwError, Observable, timer } from 'rxjs';
+import { retry, timeout, catchError, throwError, Observable, timer } from 'rxjs';
 
 export function RetryHelper<T>() {
   return (source: any) => source.pipe(retry(3));
@@ -19,13 +19,13 @@ export function resiliencePipe<T>() {
 
       retry({
         count: 3,
-        delay: (error, retryCount) => timer(retryCount * 1000)
+        delay: (error, retryCount) => timer(retryCount * 1000),
       }),
 
-      catchError(err => {
+      catchError((err) => {
         console.error('Request failed:', err);
         return throwError(() => err);
-      })
+      }),
     );
 }
 
@@ -36,7 +36,7 @@ class CircuitBreaker {
 
   constructor(
     private threshold = 5,
-    private cooldown = 10000
+    private cooldown = 10000,
   ) {}
 
   execute<T>(source: Observable<T>) {
@@ -49,13 +49,13 @@ class CircuitBreaker {
       }
     }
 
-    return new Observable<T>(observer => {
+    return new Observable<T>((observer) => {
       source.subscribe({
-        next: v => {
+        next: (v) => {
           this.failures = 0;
           observer.next(v);
         },
-        error: err => {
+        error: (err) => {
           this.failures++;
           this.lastFailTime = Date.now();
 
@@ -65,9 +65,8 @@ class CircuitBreaker {
 
           observer.error(err);
         },
-        complete: () => observer.complete()
+        complete: () => observer.complete(),
       });
     });
   }
 }
-

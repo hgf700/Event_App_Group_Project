@@ -10,7 +10,7 @@ describe('EditUserEmail', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [EditUserEmail],
-      providers: [provideRouter([])]
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(EditUserEmail);

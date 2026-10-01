@@ -10,10 +10,7 @@ export class PaymentService {
   constructor(private http: HttpClient) {}
 
   buyTicketPaymentProcess(eventId: number) {
-    return this.http.post<{ url: string }>(
-      `${this.apiUrl}/buy-ticket/${eventId}`,
-      {},
-    );
+    return this.http.post<{ url: string }>(`${this.apiUrl}/buy-ticket/${eventId}`, {});
   }
 
   paymentProcessSuccess(eventId: number) {
@@ -24,9 +21,6 @@ export class PaymentService {
   }
 
   paymentProcessFailed() {
-    return this.http.post(
-      `${this.apiUrlCallback}/payment-failed`,
-      {},
-    );
+    return this.http.post(`${this.apiUrlCallback}/payment-failed`, {});
   }
 }

@@ -1,12 +1,12 @@
-import { Component, OnInit, ChangeDetectorRef , signal} from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { UserService } from '../../Services/UserService';
 import { LayoutService } from '../../Services/LayoutService';
 import { getCurrentUserDto } from '../../Dto/getCurrentUserDto';
-import { EventsNavigationService }from '../../RootingServices/EventsNavigationService'
-import { UserNavigationService }from '../../RootingServices/UserNavigationService'
+import { EventsNavigationService } from '../../RootingServices/EventsNavigationService';
+import { UserNavigationService } from '../../RootingServices/UserNavigationService';
 
 @Component({
   selector: 'app-login-callback',
@@ -34,9 +34,9 @@ export class LoginCallback implements OnInit {
     this.getCurrentUser();
   }
 
-  generateJWT(){
+  generateJWT() {
     const tokenFromUrl = this.route.snapshot.queryParamMap.get('jwt');
-    
+
     const tokenFromStorage = localStorage.getItem('jwt');
 
     console.log({
@@ -67,15 +67,15 @@ export class LoginCallback implements OnInit {
   }
 
   adminView() {
-    this.eventsNavigtionService.adminPanel()
+    this.eventsNavigtionService.adminPanel();
   }
 
   eventsView() {
-    this.eventsNavigtionService.goToEvents()
+    this.eventsNavigtionService.goToEvents();
   }
 
   searchAndImportView() {
-    this.eventsNavigtionService.searchAndDownloadEvents()
+    this.eventsNavigtionService.searchAndDownloadEvents();
   }
 
   userBoughtTickets() {

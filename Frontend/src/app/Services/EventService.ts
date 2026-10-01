@@ -16,9 +16,9 @@ export class EventService {
   constructor(private http: HttpClient) {}
 
   getEvents(page: number, pageSize: number): Observable<paginatedResponse<getEventDto>> {
-    
-    return this.http.get<paginatedResponse<getEventDto>>
-      (`${this.apiUrl}/get-events?page=${page}&pageSize=${pageSize}`);
+    return this.http.get<paginatedResponse<getEventDto>>(
+      `${this.apiUrl}/get-events?page=${page}&pageSize=${pageSize}`,
+    );
   }
 
   eventDetails(eventId: number) {
@@ -27,7 +27,7 @@ export class EventService {
 
   getTicketsWithQr(eventId: number): Observable<getEventTicketWithQrDto> {
     return this.http.get<getEventTicketWithQrDto>(
-      `${this.apiUserTicketUrl}/ticket-detail-with-qr/${eventId}`);
+      `${this.apiUserTicketUrl}/ticket-detail-with-qr/${eventId}`,
+    );
   }
-
 }

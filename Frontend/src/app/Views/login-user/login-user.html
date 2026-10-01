@@ -9,31 +9,33 @@
     <form [formGroup]="loginUserForm" (ngSubmit)="onSubmit()" class="auth-form">
       <div class="form-group">
         <label for="email">Email</label>
-        <input id="email"
-               type="email"
-               formControlName="email"
-               placeholder="twoj@email.com"
-               autocomplete="email" />
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="twoj@email.com"
+          autocomplete="email"
+        />
         @if (submitted && loginUserForm.controls['email'].errors?.['required']) {
-        <span class="form-error">Email jest wymagany</span>
+          <span class="form-error">Email jest wymagany</span>
         }
       </div>
 
       <div class="form-group">
         <label for="password">Hasło</label>
-        <input id="password"
-               type="password"
-               formControlName="password"
-               placeholder="••••••••"
-               autocomplete="current-password" />
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          placeholder="••••••••"
+          autocomplete="current-password"
+        />
         @if (submitted && loginUserForm.controls['password'].errors?.['required']) {
-        <span class="form-error">Hasło jest wymagane</span>
+          <span class="form-error">Hasło jest wymagane</span>
         }
       </div>
 
-      <button type="submit" class="btn-submit">
-        Zaloguj się
-      </button>
+      <button type="submit" class="btn-submit">Zaloguj się</button>
     </form>
 
     <div class="auth-divider"><span>lub</span></div>

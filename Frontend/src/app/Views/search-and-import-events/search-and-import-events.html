@@ -9,69 +9,77 @@
       <label for="city">Miasto</label>
       <div class="search-input-wrap">
         <span class="search-icon">📍</span>
-        <input id="city"
-               type="text"
-               formControlName="city"
-               placeholder="np. London, Warsaw, Berlin..."
-               autocomplete="off" />
+        <input
+          id="city"
+          type="text"
+          formControlName="city"
+          placeholder="np. London, Warsaw, Berlin..."
+          autocomplete="off"
+        />
       </div>
       @if (submitted && searchAndImportEventsForm.controls['city'].errors?.['required']) {
-      <span class="form-error">Podaj nazwę miasta</span>
+        <span class="form-error">Podaj nazwę miasta</span>
       }
     </div>
 
-    <button type="submit" class="btn-search">
-      🔍 Szukaj
-    </button>
+    <button type="submit" class="btn-search">🔍 Szukaj</button>
   </form>
 </div>
 
 @if (events.length > 0) {
-<div class="results-header">
-  <h2>Wyniki wyszukiwania</h2>
-  <span class="results-count">{{ events.length }} {{ events.length === 1 ? 'wydarzenie' : 'wydarzeń' }}</span>
-</div>
+  <div class="results-header">
+    <h2>Wyniki wyszukiwania</h2>
+    <span class="results-count"
+      >{{ events.length }} {{ events.length === 1 ? 'wydarzenie' : 'wydarzeń' }}</span
+    >
+  </div>
 
-<div class="events-grid">
-  @for (e of events; track e.eventId) {
-  <article class="event-card">
-    <div class="event-image">
-      @if (e.photoUrl) {
-      <img [src]="e.photoUrl" [alt]="e.nameOfEvent" />
-      } @else {
-      <div class="event-placeholder">🎫</div>
-      }
-      @if (e.typeOfEvent) {
-      <span class="event-badge">{{ e.typeOfEvent }}</span>
-      }
-    </div>
+  <div class="events-grid">
+    @for (e of events; track e.eventId) {
+      <article class="event-card">
+        <div class="event-image">
+          @if (e.photoUrl) {
+            <img [src]="e.photoUrl" [alt]="e.nameOfEvent" />
+          } @else {
+            <div class="event-placeholder">🎫</div>
+          }
+          @if (e.typeOfEvent) {
+            <span class="event-badge">{{ e.typeOfEvent }}</span>
+          }
+        </div>
 
-    <div class="event-body">
-      <h3 class="event-title">{{ e.nameOfEvent }}</h3>
-      @if (e.startOfEvent) {
-      <p class="event-info"><span class="icon">📅</span> {{ e.startOfEvent | date:'dd MMM yyyy, HH:mm' }}</p>
-      }
-      @if (e.nameOfClub || e.city) {
-      <p class="event-info">
-        <span class="icon">📍</span>
-        <span>
-          @if (e.nameOfClub) { <strong>{{ e.nameOfClub }}</strong> }
-          @if (e.city) { , {{ e.city }} }
-          @if (e.country) { , {{ e.country }} }
-        </span>
-      </p>
-      }
-      <button class="btn-details" (click)="eventDetails(e.eventId!)">
-        Zobacz szczegóły →
-      </button>
-    </div>
-  </article>
-  }
-</div>
+        <div class="event-body">
+          <h3 class="event-title">{{ e.nameOfEvent }}</h3>
+          @if (e.startOfEvent) {
+            <p class="event-info">
+              <span class="icon">📅</span> {{ e.startOfEvent | date: 'dd MMM yyyy, HH:mm' }}
+            </p>
+          }
+          @if (e.nameOfClub || e.city) {
+            <p class="event-info">
+              <span class="icon">📍</span>
+              <span>
+                @if (e.nameOfClub) {
+                  <strong>{{ e.nameOfClub }}</strong>
+                }
+                @if (e.city) {
+                  , {{ e.city }}
+                }
+                @if (e.country) {
+                  , {{ e.country }}
+                }
+              </span>
+            </p>
+          }
+          <button class="btn-details" (click)="eventDetails(e.eventId!)">Zobacz szczegóły →</button>
+        </div>
+      </article>
+    }
+  </div>
 } @else if (submitted) {
-<div class="state-box">
-  <div class="empty-icon">🔍</div>
-  <h2>Brak wyników</h2>
-  <p>Nie znaleziono wydarzeń dla podanego miasta. Spróbuj innej lokalizacji.</p>
-</div>
+  <div class="state-box">
+    <div class="empty-icon">🔍</div>
+    <h2>Brak wyników</h2>
+    <p>Nie znaleziono wydarzeń dla podanego miasta. Spróbuj innej lokalizacji.</p>
+  </div>
 }

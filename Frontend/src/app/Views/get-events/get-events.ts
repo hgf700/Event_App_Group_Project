@@ -6,7 +6,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { getEventDto } from '../../Dto/getEventDto';
 import { EventService } from '../../Services/EventService';
 import { SubEventDetails } from '../sub-event-details/sub-event-details';
-import {MatPaginatorModule} from '@angular/material/paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { PageEvent } from '@angular/material/paginator';
 
 @Component({
@@ -57,15 +57,13 @@ export class GetEvents implements OnInit {
     this.loadEvents();
   }
 
-  loadEvents() : void{
-    this.eventService
-      .getEvents(this.pageIndex + 1, this.pageSize)
-      .subscribe(response => {
-        // console.log('RESPONSE', response);
-        this.events = response.data;
-        this.totalItems = response.totalCount;
-        this.cdr.detectChanges();
-      });
+  loadEvents(): void {
+    this.eventService.getEvents(this.pageIndex + 1, this.pageSize).subscribe((response) => {
+      // console.log('RESPONSE', response);
+      this.events = response.data;
+      this.totalItems = response.totalCount;
+      this.cdr.detectChanges();
+    });
   }
 
   returnToLoginCallback() {
