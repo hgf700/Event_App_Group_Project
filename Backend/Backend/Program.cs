@@ -216,11 +216,6 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     await IdentitySeeder.SeedAsync(scope.ServiceProvider);
-
-    var seedDbService = scope.ServiceProvider
-       .GetRequiredService<ISeedDbService>();
-
-    await seedDbService.SeedDatabase();
 }
 
 // Middleware bezpieczeństwa

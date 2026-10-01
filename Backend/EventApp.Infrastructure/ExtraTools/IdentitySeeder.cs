@@ -14,8 +14,15 @@ public static class IdentitySeeder
         const string adminEmail = "admin";
         const string adminPassword = "admin";
 
-        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+        var roleManager =
+            services.GetRequiredService<RoleManager<IdentityRole>>();
+
+        var userManager =
+            services.GetRequiredService<UserManager<ApplicationUser>>();
+
+        // =========================
+        // ROLES
+        // =========================
 
         string[] roles =
         [
@@ -27,9 +34,24 @@ public static class IdentitySeeder
         {
             if (!await roleManager.RoleExistsAsync(role))
             {
-                await roleManager.CreateAsync(new IdentityRole(role));
+                var result = await roleManager.CreateAsync(
+                    new IdentityRole(role));
+
+                if (!result.Succeeded)
+                {
+                    throw new Exception(
+                        $"Nie udało się utworzyć roli {role}: " +
+                        string.Join(", ",
+                            result.Errors.Select(e => e.Description)));
+                }
+
+                Console.WriteLine($"Utworzono rolę: {role}");
             }
         }
+
+        // =========================
+        // ADMIN USER
+        // =========================
 
         var admin = await userManager.FindByEmailAsync(adminEmail);
 
@@ -49,15 +71,34 @@ public static class IdentitySeeder
             if (!result.Succeeded)
             {
                 throw new Exception(
-                    string.Join(
-                        ", ",
-                        result.Errors.Select(x => x.Description)));
+                    "Nie udało się utworzyć administratora: " +
+                    string.Join(", ",
+                        result.Errors.Select(e => e.Description)));
             }
+
+            Console.WriteLine($"Utworzono administratora: {adminEmail}");
         }
+
+        // =========================
+        // ADMIN ROLE
+        // =========================
 
         if (!await userManager.IsInRoleAsync(admin, "Admin"))
         {
-            await userManager.AddToRoleAsync(admin, "Admin");
+            var result = await userManager.AddToRoleAsync(
+                admin,
+                "Admin");
+
+            if (!result.Succeeded)
+            {
+                throw new Exception(
+                    "Nie udało się przypisać roli Admin: " +
+                    string.Join(", ",
+                        result.Errors.Select(e => e.Description)));
+            }
+
+            Console.WriteLine(
+                $"Przypisano rolę Admin użytkownikowi {adminEmail}");
         }
     }
 }
