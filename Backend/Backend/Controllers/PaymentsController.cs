@@ -69,7 +69,7 @@ public class PaymentsController : ControllerBase
 
             return Ok(new
             {
-                checkoutUrl = result.Response
+                url = result.Response
             });
         }
         catch (Exception ex)
