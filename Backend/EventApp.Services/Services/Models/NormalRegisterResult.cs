@@ -10,5 +10,6 @@ public class NormalRegisterResult
 {
     public AuthResponseDto? Response { get; init; }
     public bool UserAlreadyExists { get; init; }
+    public string UserRole { get; set; } = "";
     public IEnumerable<IdentityError>? Errors { get; set; }
 }

@@ -60,10 +60,7 @@ public class SearchOrDownloadController : ControllerBase
         {
             await _seedDbService.SeedDatabase();
 
-            return StatusCode(StatusCodes.Status201Created, new
-            {
-                message = "Database seeded successfully"
-            });
+            return Ok();
         }
         catch (Exception ex)
         {

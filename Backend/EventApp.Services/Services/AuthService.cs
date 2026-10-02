@@ -51,7 +51,7 @@ public class AuthService : IAuthService
         {
             UserName = dto.email,
             Email = dto.email,
-            IsOAuth = false
+            IsOAuth = false,
         };
 
         var result = await _userManager.CreateAsync(user, dto.password);
@@ -63,6 +63,10 @@ public class AuthService : IAuthService
                 Errors = result.Errors
             };
         }
+
+        var role = await _userManager.AddToRoleAsync(user, "User");
+
+        var roles = await _userManager.GetRolesAsync(user);
 
         var token = _jwtService.GenerateToken(user);
 
@@ -86,7 +90,8 @@ public class AuthService : IAuthService
             Response = new AuthResponseDto
             {
                 jwt = token
-            }
+            },
+            UserRole = roles.FirstOrDefault() ?? ""
         };
     }
 
@@ -111,6 +116,16 @@ public class AuthService : IAuthService
                 IncorrectUserCredentials = true
             };
         }
+
+        var isUser = await _userManager.IsInRoleAsync(existingUser, "User");
+        var isAdmin = await _userManager.IsInRoleAsync(existingUser, "Admin");
+
+        if (!isUser && !isAdmin)
+        {
+            await _userManager.AddToRoleAsync(existingUser, "User");
+        }
+
+        var roles = await _userManager.GetRolesAsync(existingUser);
 
         var token = _jwtService.GenerateToken(existingUser);
 
@@ -139,7 +154,8 @@ public class AuthService : IAuthService
             Response = new AuthResponseDto
             {
                 jwt = token
-            }
+            },
+            UserRole = roles.FirstOrDefault() ?? ""
         };
     }
 
@@ -209,6 +225,14 @@ public class AuthService : IAuthService
                     };
                 }
 
+                var isUser = await _userManager.IsInRoleAsync(user, "User");
+                var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+
+                if (!isUser && !isAdmin)
+                {
+                    await _userManager.AddToRoleAsync(user, "User");
+                }
+
                 _logger.LogInformation(
                     "OAuth user created successfully. UserId: {UserId}",
                     user.Id);
@@ -232,6 +256,8 @@ public class AuthService : IAuthService
                 };
             }
         }
+        
+        var roles = await _userManager.GetRolesAsync(user);
 
         // 5. Generujemy JWT
         var token = _jwtService.GenerateToken(user);
@@ -269,7 +295,8 @@ public class AuthService : IAuthService
             {
                 jwt = token
             },
-            Email = email
+            Email = email,
+            UserRole = roles.FirstOrDefault() ?? ""
         };
     }
 }

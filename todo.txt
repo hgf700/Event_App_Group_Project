@@ -11,7 +11,7 @@ zamiast local storage to lepiej http cookies i same site strict ale to potem
 refresh tokeny z jwt zrobic moje
 zrobic revoked dla refersh token jesli jest expired
 
-dla github actions testy jednostkowe back i front dorobic
+dla github actions testy jednostkowe i iplementacyjne back i front dorobic
 
 uzycie rate limit i innych zabezpieczen w controller rate limity dorobic moze na ip lub jwt lepiej ale mozna 
 chyba tez na ip?
@@ -152,5 +152,4 @@ public void Process<T>(T value) where T : struct { }
 Process(10);
 Process(DateTime.Now);
 
-service dla PaymentCallbackController, PaymentsController 
-co z refresh token jak zminie
+auth wysylanie i przyjmowanie roli
