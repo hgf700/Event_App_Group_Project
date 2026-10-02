@@ -20,30 +20,15 @@ namespace Backend.Controllers;
 [Route("api/v1/[controller]")]
 public class PaymentCallbackController : ControllerBase
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly ApplicationDbContext _context;
-    private readonly IQrCodeService _qrCodeService;
-    private readonly ISmsService _smsservice;
-    private readonly IEmailService _emailService;
     private readonly ILogger<PaymentCallbackController> _logger;
     private readonly IPaymentService _paymentService;
 
 
-    public PaymentCallbackController(UserManager<ApplicationUser> userManager,
-        ApplicationDbContext context,
-        IQrCodeService qrCodeService,
-        ISmsService smsservice,
-        IEmailService emailService,
-        IOauthRefreshService oauthRefreshService,
+    public PaymentCallbackController(
         ILogger<PaymentCallbackController> logger,
         IPaymentService paymentService
         )
     {
-        _context = context;
-        _userManager = userManager;
-        _qrCodeService = qrCodeService;
-        _smsservice = smsservice;
-        _emailService = emailService;
         _logger = logger;
         _paymentService = paymentService;
     }

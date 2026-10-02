@@ -33,7 +33,6 @@ public class SearchOrDownloadController : ControllerBase
 
     public SearchOrDownloadController(
             ApplicationDbContext context,
-            UserManager<ApplicationUser> userManager,
             ISeedDbService seedDbService,
             ISendOrDownloadFromApiService downloadAndSendEventsApi,
             ILogger<EventController> logger

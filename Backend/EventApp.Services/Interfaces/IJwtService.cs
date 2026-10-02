@@ -5,8 +5,8 @@ namespace EventApp.Services.Interfaces;
 
 public interface IJwtService
 {
-    string GenerateToken(ApplicationUser user);
+    Task<string> GenerateToken(ApplicationUser user);
     string GenerateRefreshToken();
-    string GenerateTokenFromRefreshToken(ApplicationUser user);
+    Task<string> GenerateTokenFromRefreshToken(ApplicationUser user);
 
 }

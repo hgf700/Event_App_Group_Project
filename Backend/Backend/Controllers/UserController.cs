@@ -147,7 +147,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<AuthResponseDto>> EditUserEmail([FromBody] string newEmail)
+    public async Task<ActionResult<authResponseDto>> EditUserEmail([FromBody] string newEmail)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null)

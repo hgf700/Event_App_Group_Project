@@ -25,7 +25,6 @@ public class UserTicketController : ControllerBase
     public UserTicketController(UserManager<ApplicationUser> userManager,
         ApplicationDbContext context,
         ILogger<UserController> logger,
-        IJwtService jwtService,
         IQrCodeService qrCodeService
         )
     {
@@ -97,9 +96,6 @@ public class UserTicketController : ControllerBase
 
         if (userId == null)
             return Unauthorized();
-
-        if (eventId == null)
-            return BadRequest();
 
         var ticket = await _context.UserEvents
             .AsNoTracking()

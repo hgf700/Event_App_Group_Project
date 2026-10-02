@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { UserService } from '../../Services/UserService';
 import { LayoutService } from '../../Services/LayoutService';
-import { getCurrentUserDto } from '../../Dto/getCurrentUserDto';
 import { EventsNavigationService } from '../../RootingServices/EventsNavigationService';
 import { UserNavigationService } from '../../RootingServices/UserNavigationService';
 
@@ -16,9 +15,6 @@ import { UserNavigationService } from '../../RootingServices/UserNavigationServi
   styleUrl: './login-callback.css',
 })
 export class LoginCallback implements OnInit {
-  loading = false;
-  currentUser!: getCurrentUserDto;
-  userEmailData = signal(localStorage.getItem('email') ?? '');
 
   constructor(
     private route: ActivatedRoute,
@@ -32,7 +28,6 @@ export class LoginCallback implements OnInit {
 
   ngOnInit(): void {
     this.generateJWT();
-    this.getCurrentUser();
   }
 
   generateJWT() {
@@ -60,22 +55,8 @@ export class LoginCallback implements OnInit {
       console.error('Brak tokena – użytkownik niezalogowany');
       return;
     }
-  }
 
-  getCurrentUser() {
-    this.loading = true;
-    this.userService.getCurrentUserEmail().subscribe({
-      next: (data) => {
-        this.currentUser = data;
-        this.loading = false;
-        this.layoutService.setUserEmail(data.email);
-      },
-      error: (err) => {
-        this.loading = false;
-        console.error(err);
-        alert('Nie udało się getCurrentUserEmail');
-      },
-    });
+    this.layoutService.setUserEmail(localStorage.getItem('email') ?? '');
   }
 
   adminView() {

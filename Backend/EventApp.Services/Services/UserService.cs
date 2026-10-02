@@ -107,13 +107,14 @@ public class UserService : IUserService
             };
         }
 
-        var token = _jwtService.GenerateToken(user);
+        var token = await _jwtService.GenerateToken(user);
 
         return new EditUserEmailResult
         {
-            Response = new AuthResponseDto
+            Response = new authResponseDto
             {
-                jwt = token
+                jwt = token,
+                email = newEmail,
             }
         };
     }

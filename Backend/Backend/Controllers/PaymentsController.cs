@@ -21,20 +21,14 @@ namespace Backend.Controllers;
 [Route("api/v1/[controller]")]
 public class PaymentsController : ControllerBase
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly ApplicationDbContext _context;
-    private readonly string YOUR_DOMAIN = "http://localhost:4200";
     private readonly ILogger<PaymentsController> _logger;
     private readonly IPaymentService _paymentService;
 
-    public PaymentsController(UserManager<ApplicationUser> userManager,
-        ApplicationDbContext context,
+    public PaymentsController(
         ILogger<PaymentsController> logger,
         IPaymentService paymentService
         )
     {
-        _context = context;
-        _userManager = userManager;
         _logger = logger;
         _paymentService = paymentService;
     }

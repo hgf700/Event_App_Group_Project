@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { getAuthHeaders } from '../helpers/GetAuthHeaders';
-import { getCurrentUserDto } from '../Dto/getCurrentUserDto';
+// import { getCurrentUserDto } from '../Dto/getCurrentUserDto';
 import { postEditUserDto } from '../Dto/postEditUserDto';
 import { getEventDto } from '../Dto/getEventDto';
 import { postEditUserPassword } from '../Dto/postEditUserPassword';
@@ -12,10 +12,6 @@ export class UserService {
   private apiUrl = 'https://localhost:7051/api/v1/User';
 
   constructor(private http: HttpClient) {}
-
-  getCurrentUserEmail() {
-    return this.http.get<getCurrentUserDto>(`${this.apiUrl}/current-user`);
-  }
 
   editCurrentUserEmail(newEmail: string) {
     return this.http.post<{ jwt: string }>(`${this.apiUrl}/edit-user-email`, { newEmail });

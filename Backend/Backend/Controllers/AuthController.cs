@@ -24,10 +24,8 @@ public class AuthController : ControllerBase
     private readonly IAuthService _authService;
     private readonly string YOUR_DOMAIN = "http://localhost:4200";
 
-    public AuthController(UserManager<ApplicationUser> userManager, 
-        IJwtService jwtService,
+    public AuthController(
         ILogger<AuthController> logger,
-        ApplicationDbContext dbContext,
         IAuthService authService
         )
     {

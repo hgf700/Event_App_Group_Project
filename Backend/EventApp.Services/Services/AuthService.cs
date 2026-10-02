@@ -68,7 +68,7 @@ public class AuthService : IAuthService
 
         var roles = await _userManager.GetRolesAsync(user);
 
-        var token = _jwtService.GenerateToken(user);
+        var token = await _jwtService.GenerateToken(user);
 
         var refreshToken = new RefreshToken
         {
@@ -129,7 +129,7 @@ public class AuthService : IAuthService
 
         var roles = await _userManager.GetRolesAsync(existingUser);
 
-        var token = _jwtService.GenerateToken(existingUser);
+        var token = await _jwtService.GenerateToken(existingUser);
 
         var existsRefresh = await _context.RefreshTokens
              .AnyAsync(b =>
@@ -263,7 +263,7 @@ public class AuthService : IAuthService
         var roles = await _userManager.GetRolesAsync(user);
 
         // 5. Generujemy JWT
-        var token = _jwtService.GenerateToken(user);
+        var token = await _jwtService.GenerateToken(user);
 
         // 6. Sprawdzamy refresh token
         var existsRefresh = await _context.RefreshTokens
