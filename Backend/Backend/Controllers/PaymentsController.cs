@@ -6,6 +6,7 @@ using EventApp.Services.Interfaces;
 using EventApp.Services.Model;
 using EventApp.Services.Services;
 using EventApp.Services.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,8 +17,8 @@ using System.Security.Claims;
 
 namespace Backend.Controllers;
 
-//[Authorize]
 [ApiController]
+[Authorize(Roles = "admin,user")]
 [Route("api/v1/[controller]")]
 public class PaymentsController : ControllerBase
 {
@@ -34,7 +35,7 @@ public class PaymentsController : ControllerBase
     }
 
     [HttpPost("buy-ticket/{id:int:min(0)}")]
-    //[Authorize]
+    //[EnableRateLimiting("RateLimitGet")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

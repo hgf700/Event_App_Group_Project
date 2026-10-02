@@ -6,6 +6,7 @@ using EventApp.Services.Interfaces;
 using EventApp.Services.Model;
 using EventApp.Services.Services;
 using EventApp.Services.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,8 +16,8 @@ using System.Security.Claims;
 
 namespace Backend.Controllers;
 
-//[Authorize]
 [ApiController]
+[Authorize(Roles = "admin,user")]
 [Route("api/v1/[controller]")]
 public class PaymentCallbackController : ControllerBase
 {
@@ -34,7 +35,7 @@ public class PaymentCallbackController : ControllerBase
     }
 
     [HttpPost("payment-success/{id:int:min(0)}")]
-    //[Authorize]
+    //[EnableRateLimiting("RateLimitGet")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -66,7 +67,6 @@ public class PaymentCallbackController : ControllerBase
     }
 
     [HttpPost("payment-failed")]
-    //[Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> PaymentFailed()

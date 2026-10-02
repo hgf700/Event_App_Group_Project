@@ -13,8 +13,8 @@ using System.Security.Claims;
 
 namespace Backend.Controllers;
 
-//[Authorize]
 [ApiController]
+[Authorize(Roles = "admin,user")]
 [Route("api/v1/[controller]")]
 public class RefreshTokenController : ControllerBase
 {
@@ -33,7 +33,7 @@ public class RefreshTokenController : ControllerBase
     }
 
     [HttpPost("refresh")]
-    //[Authorize]
+    //[EnableRateLimiting("RateLimitGet")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]

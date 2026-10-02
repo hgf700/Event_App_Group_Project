@@ -3,12 +3,14 @@ using EventApp.Infrastructure.Db;
 using EventApp.Services.Dto.RelAuth;
 using EventApp.Services.Interfaces;
 using EventApp.Services.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers;
 
 [ApiController]
+[Authorize(Roles = "admin,user")]
 [Route("api/v1/[controller]")]
 public class BookmarkController : ControllerBase
 {
@@ -23,6 +25,7 @@ public class BookmarkController : ControllerBase
         _userManager = userManager;
     }
 
+    //[EnableRateLimiting("RateLimitGet")]
     //do innej tabeli i dodac opcje na usuniecie 
     //[HttpPost("bookmark-event/{id}")]
     //[ProducesResponseType(StatusCodes.Status200OK)]

@@ -6,6 +6,7 @@ using EventApp.Services.Model;
 using EventApp.Services.Services.Interface;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,7 @@ using Twilio.TwiML.Messaging;
 namespace Backend.Controllers;
 
 [ApiController]
+[AllowAnonymous]
 [Route("api/v1/[controller]")]
 public class AuthController : ControllerBase
 {

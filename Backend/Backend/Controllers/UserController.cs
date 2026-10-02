@@ -22,8 +22,8 @@ using Twilio.TwiML.Messaging;
 
 namespace Backend.Controllers;
 
-//[Authorize]
 [ApiController]
+[Authorize(Roles = "admin,user")]
 [Route("api/v1/[controller]")]
 public class UserController : ControllerBase
 {
@@ -41,42 +41,8 @@ public class UserController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet("current-user")]
-    //[Authorize]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<getCurrentUserDto>> MyAccount()
-    {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId == null)
-            return Unauthorized();
-
-        try
-        {
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-                return NotFound();
-
-            var dto = new getCurrentUserDto
-            {
-                email = user.Email,
-            };
-
-            return Ok(dto);
-
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex);
-            _logger.LogError(ex, "Error while getting current user. email UserId: {UserId}", userId);
-            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
-        }
-    }
-
     [HttpPost("edit-user-password")]
-    //[Authorize]
+    //[EnableRateLimiting("RateLimitGet")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -140,7 +106,6 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("edit-user-email")]
-    //[Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

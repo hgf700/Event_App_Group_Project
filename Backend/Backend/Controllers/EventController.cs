@@ -20,6 +20,7 @@ using Twilio.Http;
 namespace Backend.Controllers;
 
 [ApiController]
+[Authorize(Roles = "admin,user")]
 [Route("api/v1/[controller]")]
 public class EventController : ControllerBase
 {
@@ -36,7 +37,7 @@ public class EventController : ControllerBase
     }
 
     [HttpGet("get-events")]
-    //[Authorize]
+    //[EnableRateLimiting("RateLimitGet")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -91,7 +92,6 @@ public class EventController : ControllerBase
     }
 
     [HttpGet("event-details/{id:int:min(0)}")]
-    //[Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

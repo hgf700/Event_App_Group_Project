@@ -15,6 +15,7 @@ import { UserNavigationService } from '../../RootingServices/UserNavigationServi
   styleUrl: './login-callback.css',
 })
 export class LoginCallback implements OnInit {
+  userEmailData = signal(localStorage.getItem('email') ?? '');
 
   constructor(
     private route: ActivatedRoute,

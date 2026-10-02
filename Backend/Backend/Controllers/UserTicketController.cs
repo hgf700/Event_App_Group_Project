@@ -5,6 +5,7 @@ using EventApp.Services.Dto.RelEvent;
 using EventApp.Services.Interfaces;
 using EventApp.Services.Model;
 using EventApp.Services.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ using System.Security.Claims;
 namespace Backend.Controllers;
 
 [ApiController]
+[Authorize(Roles = "admin,user")]
 [Route("api/v1/[controller]")]
 public class UserTicketController : ControllerBase
 {
@@ -35,7 +37,7 @@ public class UserTicketController : ControllerBase
     }
 
     [HttpGet("user-tickets")]
-    //[Authorize]
+    //[EnableRateLimiting("RateLimitGet")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -84,7 +86,6 @@ public class UserTicketController : ControllerBase
     }
 
     [HttpGet("ticket-detail-with-qr/{eventId:int:min(0)}")]
-    //[Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
