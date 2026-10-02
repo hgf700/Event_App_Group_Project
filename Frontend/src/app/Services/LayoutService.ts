@@ -4,14 +4,12 @@ import { signal } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class LayoutService {
-  userEmailData = signal(localStorage.getItem('email') ?? '');
-
   constructor(private http: HttpClient) {}
 
-  setUserEmail(email: string) {
-    this.userEmailData.set(email);
-    localStorage.setItem('email', email);
-  }
+  // setUserEmail(email: string) {
+  //   this.userEmailData.set(email);
+  //   localStorage.setItem('email', email);
+  // }
 
   isAuthenticated(): boolean {
     return !!localStorage.getItem('jwt');
@@ -26,9 +24,9 @@ export class LayoutService {
   //   return payload.role === 'Admin';
   // }
 
-  userEmail(): string {
-    return this.userEmailData();
-  }
+  // userEmail(): string {
+  //   return this.userEmailData();
+  // }
 
   logout(): void {
     localStorage.removeItem('jwt');

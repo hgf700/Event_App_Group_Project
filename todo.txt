@@ -151,7 +151,3 @@ where T : struct
 public void Process<T>(T value) where T : struct { }
 Process(10);
 Process(DateTime.Now);
-
-auth wysylanie i przyjmowanie roli
-przerobic get current user w login callback
-moze byc problem z tym ze ja korzystam z response w frontendzie result.Response!.userRole

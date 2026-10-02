@@ -56,8 +56,6 @@ export class LoginCallback implements OnInit {
       console.error('Brak tokena – użytkownik niezalogowany');
       return;
     }
-
-    this.layoutService.setUserEmail(localStorage.getItem('email') ?? '');
   }
 
   adminView() {
