@@ -26,8 +26,8 @@ public static class IdentitySeeder
 
         string[] roles =
         [
-            "Admin",
-            "User"
+            "admin",
+            "user"
         ];
 
         foreach (var role in roles)
@@ -83,11 +83,11 @@ public static class IdentitySeeder
         // ADMIN ROLE
         // =========================
 
-        if (!await userManager.IsInRoleAsync(admin, "Admin"))
+        if (!await userManager.IsInRoleAsync(admin, "admin"))
         {
             var result = await userManager.AddToRoleAsync(
                 admin,
-                "Admin");
+                "admin");
 
             if (!result.Succeeded)
             {

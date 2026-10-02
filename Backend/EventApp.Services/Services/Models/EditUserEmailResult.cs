@@ -8,7 +8,7 @@ namespace EventApp.Services.Services.Models;
 
 public class EditUserEmailResult
 {
-    public AuthResponseDto? Response { get; init; }
+    public authResponseDto? Response { get; init; }
 
     public bool UserNotFound { get; set; }
 

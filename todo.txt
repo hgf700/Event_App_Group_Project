@@ -153,3 +153,10 @@ Process(10);
 Process(DateTime.Now);
 
 auth wysylanie i przyjmowanie roli
+usuniecie tego
+export interface getCurrentUserDto {
+  email: string;
+}
+bo wysylam dto ze wszystkimi danymi
+przerobic get current user w login callback
+moze byc problem z tym ze ja korzystam z response w frontendzie result.Response!.userRole

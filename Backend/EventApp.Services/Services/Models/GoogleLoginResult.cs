@@ -8,7 +8,7 @@ namespace EventApp.Services.Services.Models;
 
 public class GoogleLoginResult
 {
-    public AuthResponseDto? Response { get; set; }
+    public authResponseDto? Response { get; set; }
     public string? Email { get; set; }
     public string UserRole { get; set; } = "";
     public IEnumerable<IdentityError>? Errors { get; set; }

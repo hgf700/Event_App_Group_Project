@@ -79,6 +79,7 @@ public class AuthService : IAuthService
         };
 
         _context.RefreshTokens.Add(refreshToken);
+            
         await _context.SaveChangesAsync();
 
         _logger.LogInformation(
@@ -87,11 +88,12 @@ public class AuthService : IAuthService
 
         return new NormalRegisterResult
         {
-            Response = new AuthResponseDto
+            Response = new authResponseDto
             {
-                jwt = token
+                jwt = token,
+                email = dto.email,
+                userRole = roles.FirstOrDefault() ?? ""
             },
-            UserRole = roles.FirstOrDefault() ?? ""
         };
     }
 
@@ -151,11 +153,12 @@ public class AuthService : IAuthService
 
         return new NormalLoginResult
         {
-            Response = new AuthResponseDto
+            Response = new authResponseDto
             {
-                jwt = token
+                jwt = token,
+                email = dto.email,
+                userRole = roles.FirstOrDefault() ?? ""
             },
-            UserRole = roles.FirstOrDefault() ?? ""
         };
     }
 
@@ -291,12 +294,12 @@ public class AuthService : IAuthService
 
         return new GoogleLoginResult
         {
-            Response = new AuthResponseDto
+            Response = new authResponseDto
             {
-                jwt = token
+                jwt = token,
+                email = email,
+                userRole = roles.FirstOrDefault() ?? ""
             },
-            Email = email,
-            UserRole = roles.FirstOrDefault() ?? ""
         };
     }
 }

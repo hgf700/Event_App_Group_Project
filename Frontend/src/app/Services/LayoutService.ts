@@ -33,6 +33,7 @@ export class LayoutService {
   logout(): void {
     localStorage.removeItem('jwt');
     localStorage.removeItem('email');
+    localStorage.removeItem('userRole');
 
     window.location.href = '/';
   }

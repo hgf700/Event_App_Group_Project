@@ -8,7 +8,7 @@ namespace EventApp.Services.Services.Models;
 
 public class NormalLoginResult
 {
-    public AuthResponseDto? Response { get; init; }
+    public authResponseDto? Response { get; init; }
     public bool IncorrectUserCredentials { get; init; }
     public string UserRole { get; set; } = "";
 }

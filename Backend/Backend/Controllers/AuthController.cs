@@ -41,7 +41,7 @@ public class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<AuthResponseDto>> RegisterUserNormal([FromBody] postCreateUserNormDto dto)
+    public async Task<ActionResult<authResponseDto>> RegisterUserNormal([FromBody] postCreateUserNormDto dto)
     {
         try
         {
@@ -152,7 +152,9 @@ public class AuthController : ControllerBase
             return Redirect(
                 $"{YOUR_DOMAIN}/login-callback" +
                 $"?token={Uri.EscapeDataString(result.Response!.jwt)}" +
-                $"&email={Uri.EscapeDataString(result.Email!)}");
+                $"&email={Uri.EscapeDataString(result.Response!.email)}" +
+                $"&role={Uri.EscapeDataString(result.Response!.userRole)}"
+                );
         }
         catch (Exception ex)
         {

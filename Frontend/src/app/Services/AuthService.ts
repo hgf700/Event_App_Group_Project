@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { getAuthHeaders } from '../helpers/GetAuthHeaders';
+import { authResponseDto } from '../Dto/authResponseDto';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -9,14 +10,14 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   registerUserNorm(email: string, password: string) {
-    return this.http.post<{ jwt: string }>(`${this.apiUrl}/register-norm`, {
+    return this.http.post<authResponseDto>(`${this.apiUrl}/register-norm`, {
       email,
       password,
     });
   }
 
   loginUserNorm(email: string, password: string) {
-    return this.http.post<{ jwt: string }>(`${this.apiUrl}/login-norm`, {
+    return this.http.post<authResponseDto>(`${this.apiUrl}/login-norm`, {
       email,
       password,
     });
