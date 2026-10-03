@@ -25,12 +25,14 @@ http://13.217.97.150/
 
 - Authentication and authorization using **JWT (JSON Web Tokens)**.
 - Secure session management using **JWT access tokens and refresh tokens**.
+- **Role-based** authentication and authorization.
 - User registration and login with **ASP.NET Identity** and **OAuth external providers**.
 - Integration with the **Ticketmaster API** to fetch event data.
 - **Pagination** and **event search functionality** via form or query parameters.
 - Integration with **Stripe Payments** for ticket purchasing.
 - Generation and display of **QR codes for purchased tickets** directly in the application.
 - Interactive **event details view** displayed in a modal subwindow.
+- **Admin Panel** for managing users, events, and tickets. Manage and edit events. Manage users and their accounts. Manage user tickets and ticket assignments. Seed application data. 
 
 ### 💳 After successful payment:
 - A **QR code** containing the event URL is generated using **QRCoder**.
@@ -44,6 +46,7 @@ http://13.217.97.150/
 - Database access and ORM handled using **Entity Framework Core**.
 - API security with **rate limiting**.
 - Structured logging using **Serilog**.
+- **Role-based** authentication and authorization.
 
 ## 📊 Observability
 
@@ -63,6 +66,7 @@ http://13.217.97.150/
 - ASP.NET Identity
 - JWT Authentication
 - Unit Tests
+- Integration Tests
 - Serilog Logging
 
 ### DevOps / Infrastructure
