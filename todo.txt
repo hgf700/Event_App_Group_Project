@@ -154,9 +154,6 @@ Process(DateTime.Now);
 po odswiezeniu pokazuje sie nick z nazwa uzytkownika w pasku rozwijanym
 admin controller, i bookmark
 
-usuniecie eventu
-usunięcie konta
-ewentualnie ręczne zablokowanie konta
 wyszukiwanie
 podgląd użytkownika
 

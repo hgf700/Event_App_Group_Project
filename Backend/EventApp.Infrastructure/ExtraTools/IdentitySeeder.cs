@@ -14,6 +14,9 @@ public static class IdentitySeeder
         const string adminEmail = "admin";
         const string adminPassword = "admin";
 
+        const string adminName = "admin";
+        const string userName = "user";
+
         var roleManager =
             services.GetRequiredService<RoleManager<IdentityRole>>();
 
@@ -26,8 +29,8 @@ public static class IdentitySeeder
 
         string[] roles =
         [
-            "admin",
-            "user"
+            adminName,
+            userName
         ];
 
         foreach (var role in roles)
@@ -83,11 +86,11 @@ public static class IdentitySeeder
         // ADMIN ROLE
         // =========================
 
-        if (!await userManager.IsInRoleAsync(admin, "admin"))
+        if (!await userManager.IsInRoleAsync(admin, adminName))
         {
             var result = await userManager.AddToRoleAsync(
                 admin,
-                "admin");
+                adminName);
 
             if (!result.Succeeded)
             {
