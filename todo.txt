@@ -140,7 +140,6 @@ private void OnSomethingHappened( object? sender, EventArgs e) { }
 public void Dispose() { _service.SomethingHappened -= OnSomethingHappened; } }
 Użycie: using (var window = new TemporaryWindow(service)) { // Praca z obiektem }
 
-
 where T : class
 Domyślnie T może być niemal dowolnym typem. Czasami chcemy narzucić ograniczenia. 
 Służy do tego where.
@@ -154,3 +153,18 @@ Process(DateTime.Now);
 
 po odswiezeniu pokazuje sie nick z nazwa uzytkownika w pasku rozwijanym
 admin controller, i bookmark
+
+usuniecie eventu
+usunięcie konta
+ewentualnie ręczne zablokowanie konta
+wyszukiwanie
+podgląd użytkownika
+
+kto kupił
+jaki event
+kiedy
+status płatności
+identyfikator zamówienia
+ewentualnie status biletu
+
+listę eventów ze szczegolami

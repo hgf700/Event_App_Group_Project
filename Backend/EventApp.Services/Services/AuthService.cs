@@ -22,6 +22,8 @@ public class AuthService : IAuthService
     private readonly IJwtService _jwtService;
     private readonly ILogger<AuthService> _logger;
     private readonly ApplicationDbContext _context;
+    private readonly string UserRole = "user";
+    private readonly string AdminRole = "admin";
 
     public AuthService(UserManager<ApplicationUser> userManager,
         IJwtService jwtService,
@@ -64,7 +66,7 @@ public class AuthService : IAuthService
             };
         }
 
-        var role = await _userManager.AddToRoleAsync(user, "User");
+        var role = await _userManager.AddToRoleAsync(user, UserRole);
 
         var roles = await _userManager.GetRolesAsync(user);
 
@@ -119,12 +121,12 @@ public class AuthService : IAuthService
             };
         }
 
-        var isUser = await _userManager.IsInRoleAsync(existingUser, "User");
-        var isAdmin = await _userManager.IsInRoleAsync(existingUser, "Admin");
+        var isUser = await _userManager.IsInRoleAsync(existingUser, UserRole);
+        var isAdmin = await _userManager.IsInRoleAsync(existingUser, AdminRole);
 
         if (!isUser && !isAdmin)
         {
-            await _userManager.AddToRoleAsync(existingUser, "User");
+            await _userManager.AddToRoleAsync(existingUser, UserRole);
         }
 
         var roles = await _userManager.GetRolesAsync(existingUser);
@@ -228,12 +230,12 @@ public class AuthService : IAuthService
                     };
                 }
 
-                var isUser = await _userManager.IsInRoleAsync(user, "User");
-                var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+                var isUser = await _userManager.IsInRoleAsync(user, UserRole);
+                var isAdmin = await _userManager.IsInRoleAsync(user, AdminRole);
 
                 if (!isUser && !isAdmin)
                 {
-                    await _userManager.AddToRoleAsync(user, "User");
+                    await _userManager.AddToRoleAsync(user, UserRole);
                 }
 
                 _logger.LogInformation(

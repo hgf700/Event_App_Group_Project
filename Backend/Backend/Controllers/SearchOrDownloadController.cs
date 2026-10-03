@@ -68,7 +68,7 @@ public class SearchOrDownloadController : ControllerBase
         }
     }
 
-    private string NormalizeEvent(string? value)
+    private string NormalizeEvent(string value)
     {
         //bez to lower bo najpierw z bazy biore a potem api i tak samo robi pewnie to lower
         return new Pipe()

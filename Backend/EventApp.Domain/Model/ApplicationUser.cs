@@ -8,6 +8,7 @@ public class ApplicationUser : IdentityUser
 {
     public bool IsOAuth { get; set; }
     public string? GoogleId { get; set; }
+    public bool IsActive { get; set; } = true;
     public ICollection<UserEvent> UserEvents { get; set; } = new List<UserEvent>();
     public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 }

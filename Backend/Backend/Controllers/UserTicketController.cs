@@ -94,7 +94,6 @@ public class UserTicketController : ControllerBase
     public async Task<ActionResult<getEventTicketWithQrDto>> TicketDetailsWithQr(int eventId)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
         if (userId == null)
             return Unauthorized();
 
