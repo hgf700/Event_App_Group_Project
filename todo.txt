@@ -151,3 +151,5 @@ where T : struct
 public void Process<T>(T value) where T : struct { }
 Process(10);
 Process(DateTime.Now);
+
+po odswiezeniu pokazuje sie nick z nazwa uzytkownika w pasku rozwijanym

@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { UserService } from '../../Services/UserService';
-import { LayoutService } from '../../Services/LayoutService';
+import { AuthService } from '../../Services/AuthService';
 import { EventsNavigationService } from '../../RootingServices/EventsNavigationService';
 import { UserNavigationService } from '../../RootingServices/UserNavigationService';
 
@@ -16,14 +16,15 @@ import { UserNavigationService } from '../../RootingServices/UserNavigationServi
 })
 export class LoginCallback implements OnInit {
   userEmailData = signal(localStorage.getItem('email') ?? '');
+  userRoleData = signal(localStorage.getItem('userRole') ?? '');
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private userService: UserService,
-    private layoutService: LayoutService,
     private eventsNavigtionService: EventsNavigationService,
     private userNavigationService: UserNavigationService,
+    private authService: AuthService,
     private cdr: ChangeDetectorRef,
   ) {}
 
@@ -59,7 +60,15 @@ export class LoginCallback implements OnInit {
   }
 
   adminView() {
-    this.eventsNavigtionService.adminPanel();
+    return this.eventsNavigtionService.adminPanel();
+  }
+
+  isLogged(){
+    return this.authService.isLogged();
+  }
+
+  isAdmin(){
+    return this.authService.isAdmin();
   }
 
   eventsView() {

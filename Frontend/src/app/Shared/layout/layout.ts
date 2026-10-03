@@ -1,7 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 
-import { LayoutService } from '../../Services/LayoutService';
 import { AuthService } from '../../Services/AuthService';
 
 @Component({
@@ -16,7 +15,6 @@ export class Layout {
   userRole = signal(localStorage.getItem('userRole'));
 
   constructor(
-    public layoutService: LayoutService,
     public authService: AuthService
 
   ) {}
@@ -30,10 +28,10 @@ export class Layout {
   }
 
   isLoggedIn(): boolean {
-    return this.layoutService.isAuthenticated();
+    return this.authService.isAuthenticated();
   }
 
   logout(): void {
-    this.layoutService.logout();
+    this.authService.logout();
   }
 }

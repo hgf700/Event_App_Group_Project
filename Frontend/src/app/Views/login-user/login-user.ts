@@ -44,6 +44,8 @@ export class LoginUser {
         localStorage.setItem('email', res.email!);
         localStorage.setItem('userRole', res.userRole!);
 
+        this.authService.userRole.set(res.userRole!);
+
         this.router.navigate(['/login-callback']);
       },
       error: (err) => alert(err.error),

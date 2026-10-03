@@ -7,8 +7,6 @@ import { authResponseDto } from '../Dto/authResponseDto';
 export class AuthService {
   private apiUrl = 'https://localhost:7051/api/v1/auth';
 
-  userRole = signal(localStorage.getItem('userRole'));
-
   constructor(private http: HttpClient) {}
 
   registerUserNorm(email: string, password: string) {
@@ -25,6 +23,8 @@ export class AuthService {
     });
   }
 
+  userRole = signal(localStorage.getItem('userRole'));
+
   isLogged = computed(() => {
     const role = this.userRole();
     return role === 'user' || role === 'admin';
@@ -32,7 +32,19 @@ export class AuthService {
 
   isAdmin = computed(() => this.userRole() === 'admin');
 
+  logout(): void {
+    localStorage.removeItem('jwt');
+    localStorage.removeItem('email');
+    localStorage.removeItem('userRole');
+
+    window.location.href = '/';
+  }
+
   loginWithGoogleOauth() {
     window.location.href = `${this.apiUrl}/sign-in-google`;
+  }
+
+  isAuthenticated(): boolean {
+    return !!localStorage.getItem('jwt');
   }
 }

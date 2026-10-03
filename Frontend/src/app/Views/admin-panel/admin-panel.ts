@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { UserService } from '../../Services/UserService';
-import { LayoutService } from '../../Services/LayoutService';
+import { AdminService } from '../../Services/AdminService';
 import { EventsNavigationService } from '../../RootingServices/EventsNavigationService';
 import { UserNavigationService } from '../../RootingServices/UserNavigationService';
 

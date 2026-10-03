@@ -26,8 +26,4 @@ export class SearchOrDownloadEventService {
       params,
     });
   }
-
-  seedDataBase() {
-    return this.http.post(`${this.apiUrl}/seed-database`, {});
-  }
 }
