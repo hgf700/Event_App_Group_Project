@@ -12,19 +12,12 @@ using Microsoft.Extensions.Logging;
 using QuestPDF.Fluent;
 using Stripe;
 using Stripe.Checkout;
-using Superpower.Model;
-using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace EventApp.Services.Services;
 
 public class PaymentService : IPaymentService
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly IJwtService _jwtService;
     private readonly ILogger<AuthService> _logger;
     private readonly ApplicationDbContext _context;
     private readonly IQrCodeService _qrCodeService;
@@ -32,9 +25,10 @@ public class PaymentService : IPaymentService
     private readonly IEmailService _emailService;
     private readonly string YOUR_DOMAIN = "http://localhost:4200";
     private readonly int AmountToPay = 1000;
+    private readonly int TicketAmount = 1;
 
-    public PaymentService(UserManager<ApplicationUser> userManager,
-        IJwtService jwtService,
+
+    public PaymentService(
         ILogger<AuthService> logger,
         ApplicationDbContext dbContext,
         IQrCodeService qrCodeService,
@@ -42,8 +36,6 @@ public class PaymentService : IPaymentService
         IEmailService emailService
         )
     {
-        _userManager = userManager;
-        _jwtService = jwtService;
         _logger = logger;
         _context = dbContext;
         _qrCodeService = qrCodeService;
@@ -54,6 +46,7 @@ public class PaymentService : IPaymentService
     public async Task<BuyTicketResult> BuyTicketAsync(string userId, int id)
     {
         var ev = await _context.Events.FindAsync(id);
+
         if (ev == null)
         {
             return new BuyTicketResult
@@ -62,14 +55,34 @@ public class PaymentService : IPaymentService
             };
         }
 
+        // Sprawdzamy tylko faktycznie opłacony zakup.
         var alreadyBought = await _context.UserEvents
-            .AnyAsync(x => x.UserId == userId && x.EventId == id);
+            .AnyAsync(x =>
+                x.UserId == userId &&
+                x.EventId == id &&
+                x.State == StatesOfTicket.Paid);
 
         if (alreadyBought)
         {
             return new BuyTicketResult
             {
                 AlreadyBoughtTicket = true
+            };
+        }
+
+        // Sprawdź, czy użytkownik ma już aktywną płatność.
+        var pendingPurchase = await _context.UserEvents
+            .FirstOrDefaultAsync(x =>
+                x.UserId == userId &&
+                x.EventId == id &&
+                x.State == StatesOfTicket.Pending);
+
+        if (pendingPurchase != null)
+        {
+            return new BuyTicketResult
+            {
+                Response = null,
+                PaymentAlreadyPending = true
             };
         }
 
@@ -92,8 +105,39 @@ public class PaymentService : IPaymentService
             };
         }
 
+        // ---------------------------------------------------------
+        // 1. Tworzymy zakup w bazie jako Pending
+        // ---------------------------------------------------------
+
+        var userEvent = new UserEvent
+        {
+            UserId = userId,
+            EventId = ev.Id,
+            CreatedAt = DateTime.UtcNow,
+            State = StatesOfTicket.Pending
+        };
+
+        _context.UserEvents.Add(userEvent);
+
+        await _context.SaveChangesAsync();
+
+        // ---------------------------------------------------------
+        // 2. Tworzymy Stripe Checkout Session
+        // ---------------------------------------------------------
+
         var options = new SessionCreateOptions
         {
+            Mode = "payment",
+
+            ClientReferenceId = userEvent.Id.ToString(),
+
+            Metadata = new Dictionary<string, string>
+            {
+                ["UserEventId"] = userEvent.Id.ToString(),
+                ["UserId"] = userId,
+                ["EventId"] = ev.Id.ToString()
+            },
+
             LineItems = new List<SessionLineItemOptions>
             {
                 new SessionLineItemOptions
@@ -101,29 +145,78 @@ public class PaymentService : IPaymentService
                     PriceData = new SessionLineItemPriceDataOptions
                     {
                         Currency = "pln",
+
                         UnitAmount = AmountToPay,
-                        ProductData = new SessionLineItemPriceDataProductDataOptions
-                        {
-                            Name = "Bilet na wydarzenie",
-                        },
+
+                        ProductData =
+                            new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = ev.NameOfEvent
+                            }
                     },
-                    Quantity = 1,
-                },
+
+                    Quantity = TicketAmount
+                }
             },
 
-            Mode = "payment",
-            SuccessUrl = $"{YOUR_DOMAIN}/payment-success?id={id}",
-            CancelUrl = $"{YOUR_DOMAIN}/payment-failed",
+            SuccessUrl = $"{YOUR_DOMAIN}/payment-success",
+            CancelUrl = $"{YOUR_DOMAIN}/payment-failed"
         };
 
         var service = new SessionService();
-        Session session = service.Create(options);
+
+        Session session;
+
+        try
+        {
+            session = await service.CreateAsync(options);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                ex,
+                "Failed to create Stripe Checkout Session. UserId: {UserId}, EventId: {EventId}",
+                userId,
+                id);
+
+            // Stripe nie utworzył płatności,
+            // więc Pending nie powinien zostać w bazie.
+            userEvent.State = StatesOfTicket.Cancelled;
+            userEvent.CancelledAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            return new BuyTicketResult
+            {
+                Errors = new[]
+                {
+                    new IdentityError
+                    {
+                        Code = "StripeSessionCreationFailed",
+                        Description = "Could not create payment session."
+                    }
+                }
+            };
+        }
+
+        // ---------------------------------------------------------
+        // 3. Zapisujemy Stripe Session ID
+        // ---------------------------------------------------------
+
+        userEvent.PaymentId = session.Id;
+
+        await _context.SaveChangesAsync();
 
         _logger.LogInformation(
-            "Stripe checkout session created. UserId: {UserId}, EventId: {EventId}, SessionId: {SessionId}",
+            "Stripe checkout session created. UserId: {UserId}, EventId: {EventId}, UserEventId: {UserEventId}, SessionId: {SessionId}",
             userId,
             id,
+            userEvent.Id,
             session.Id);
+
+        // ---------------------------------------------------------
+        // 4. Zwracamy URL do Stripe
+        // ---------------------------------------------------------
 
         return new BuyTicketResult
         {
@@ -131,39 +224,52 @@ public class PaymentService : IPaymentService
         };
     }
 
-    public async Task<PaymentResult> PaymentSuccess(string userId, int id)
+    public async Task HandleSuccessfulPaymentAsync(Session session)
     {
-        var ev = await _context.Events.FindAsync(id);
-        if (ev == null)
+        if (string.IsNullOrWhiteSpace(session.Id))
         {
-            return new PaymentResult
-            {
-                EventNotExists = true
-            };
+            _logger.LogWarning("Stripe session ID is empty");
+            return;
         }
 
-        var alreadyExists = await _context.UserEvents
-                .AnyAsync(x => x.UserId == userId && x.EventId == id);
+        var userEvent = await _context.UserEvents
+            .Include(x => x.Event)
+            .FirstOrDefaultAsync(x => x.PaymentId == session.Id);
 
-        if (alreadyExists)
+        if (userEvent == null)
         {
-            return new PaymentResult
-            {
-                EventAlreadyExists = true
-            };
+            _logger.LogError(
+                "UserEvent not found for Stripe Session {SessionId}",
+                session.Id);
+
+            return;
         }
 
-        var userEvent = new UserEvent
+        // Webhook może zostać wysłany więcej niż raz.
+        // Dlatego nie wykonujemy drugi raz operacji.
+        if (userEvent.State == StatesOfTicket.Paid)
         {
-            EventId = ev.Id,
-            UserId = userId
-        };
+            _logger.LogInformation(
+                "Payment already processed. SessionId: {SessionId}",
+                session.Id);
 
-        _context.UserEvents.Add(userEvent);
+            return;
+        }
+
+        userEvent.State = StatesOfTicket.Paid;
+        userEvent.PaidAt = DateTime.UtcNow;
+
         await _context.SaveChangesAsync();
 
-        bool.TryParse(Environment.GetEnvironmentVariable("TWILIO_SMS_SEND_STATE"), out bool twilio_sms_state);
-        if (twilio_sms_state)
+        var ev = userEvent.Event;
+
+        // ---------------------------------------------------------
+        // Dopiero teraz użytkownik faktycznie kupił bilet
+        // ---------------------------------------------------------
+
+        bool.TryParse(Environment.GetEnvironmentVariable("TWILIO_SMS_SEND_STATE"), out bool twilioSmsState);
+
+        if (twilioSmsState)
         {
             _smsservice.SendSMS(ev.UrlOfEvent);
         }
@@ -180,19 +286,60 @@ public class PaymentService : IPaymentService
         );
 
         string resourcesPath = Path.Combine(Directory.GetCurrentDirectory(), "Resources");
-        //Directory.CreateDirectory(resourcesPath); // na wszelki wypadek
 
-        string pdfPath = Path.Combine(resourcesPath, "bilet.pdf");
+        Directory.CreateDirectory(resourcesPath);
+
+        string pdfPath = Path.Combine(resourcesPath, $"ticket-{userEvent.Id}.pdf");
+
         doc.GeneratePdf(pdfPath);
 
-        string targetEmail = Environment.GetEnvironmentVariable("TARGET_EMAIL");
-        _emailService.SendEmail(targetEmail, ev.UrlOfEvent);
+        string? targetEmail = Environment.GetEnvironmentVariable("TARGET_EMAIL");
 
-        _logger.LogInformation("User successfully bought ticket {userId}", userId);
-
-        return new PaymentResult
+        if (!string.IsNullOrWhiteSpace(targetEmail))
         {
-            Success = true
-        };
+            _emailService.SendEmail(targetEmail, ev.UrlOfEvent);
+        }
+
+        _logger.LogInformation(
+            "Payment successfully completed. UserEventId: {UserEventId}, UserId: {UserId}, EventId: {EventId}",
+            userEvent.Id,
+            userEvent.UserId,
+            userEvent.EventId);
     }
+
+    public async Task HandleExpiredPaymentAsync(Session session)
+    {
+        if (string.IsNullOrWhiteSpace(session.Id))
+        {
+            return;
+        }
+
+        var userEvent = await _context.UserEvents
+            .FirstOrDefaultAsync(x => x.PaymentId == session.Id);
+
+        if (userEvent == null)
+        {
+            _logger.LogWarning(
+                "UserEvent not found for expired Stripe Session {SessionId}",
+                session.Id);
+
+            return;
+        }
+
+        if (userEvent.State != StatesOfTicket.Pending)
+        {
+            return;
+        }
+
+        userEvent.State = StatesOfTicket.Expired;
+        userEvent.CancelledAt = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync();
+
+        _logger.LogInformation(
+            "Payment expired. UserEventId: {UserEventId}, SessionId: {SessionId}",
+            userEvent.Id,
+            session.Id);
+    }
+
 }

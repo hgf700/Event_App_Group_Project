@@ -23,15 +23,18 @@ public class PaymentCallbackController : ControllerBase
 {
     private readonly ILogger<PaymentCallbackController> _logger;
     private readonly IPaymentService _paymentService;
+    private readonly ApplicationDbContext _context;
 
 
     public PaymentCallbackController(
         ILogger<PaymentCallbackController> logger,
-        IPaymentService paymentService
+        IPaymentService paymentService,
+        ApplicationDbContext context
         )
     {
         _logger = logger;
         _paymentService = paymentService;
+        _context = context;
     }
 
     [HttpPost("payment-success/{id:int:min(0)}")]
@@ -49,13 +52,9 @@ public class PaymentCallbackController : ControllerBase
 
         try
         {
-            var result = await _paymentService.PaymentSuccess(userId, id);
-
-            if (result.EventNotExists)
+            var ev = await _context.Events.FindAsync(id);
+            if (ev == null)
                 return NotFound();
-
-            if (result.EventAlreadyExists)
-                return Conflict("Ticket already assigned");
 
             return Ok(new { success = true });
         }

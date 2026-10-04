@@ -160,5 +160,3 @@ kiedy
 status płatności
 identyfikator zamówienia
 ewentualnie status biletu
-
-przeniesienie statusu zakupu do buy billet  a nie success
