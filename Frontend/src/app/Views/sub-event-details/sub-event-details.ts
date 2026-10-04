@@ -52,7 +52,7 @@ export class SubEventDetails implements OnInit {
     this.loading = true;
     this.paymentService.buyTicketPaymentProcess(eventId).subscribe({
       next: (res) => {
-        this.loading = true;
+        this.loading = false;
         window.location.href = res.url;
       },
       error: (err) => {

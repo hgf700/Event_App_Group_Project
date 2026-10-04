@@ -76,8 +76,7 @@ public class SearchOrDownloadController : ControllerBase
         try
         {
             var events = await _context.Events
-                .Where(e => e.City == finalCity &&
-                            e.StartOfEvent >= DateTime.UtcNow)
+                .Where(e => e.City == finalCity && e.StartOfEvent >= DateTime.UtcNow)
                 .ToListAsync();
 
             if (events.Any())

@@ -40,7 +40,7 @@ public class AdminController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> SeedDatabase()
+    public async Task<ActionResult<bool>> SeedDatabase()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null)
@@ -50,7 +50,9 @@ public class AdminController : ControllerBase
         {
             await _seedDbService.SeedDatabase();
 
-            return Ok();
+            var response = await _context.Events.AnyAsync();
+
+            return StatusCode(StatusCodes.Status201Created, response);
         }
         catch (Exception ex)
         {
@@ -160,13 +162,15 @@ public class AdminController : ControllerBase
         try
         {
             var ev = await _context.Events
-                .AsNoTracking()
                 .FirstOrDefaultAsync(e => e.Id == id);
 
             if (ev == null)
                 return NotFound();
 
-            return Ok(ev);
+            _context.Events.Remove(ev);
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
         catch (Exception ex)
         {
@@ -464,7 +468,6 @@ public class AdminController : ControllerBase
                 "Internal server error");
         }
     }
-
 
     [HttpGet("admin-bought-tickets")]
     [ProducesResponseType(StatusCodes.Status200OK)]

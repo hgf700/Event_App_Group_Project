@@ -9,6 +9,6 @@ export class AdminService {
   constructor(private http: HttpClient) {}
 
   seedDataBase() {
-    return this.http.post(`${this.apiUrl}/admin-seed-database`, {});
+    return this.http.post<boolean>(`${this.apiUrl}/admin-seed-database`, {});
   }
 }

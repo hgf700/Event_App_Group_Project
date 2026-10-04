@@ -148,17 +148,14 @@ public class PaymentService : IPaymentService
 
                         UnitAmount = AmountToPay,
 
-                        ProductData =
-                            new SessionLineItemPriceDataProductDataOptions
-                            {
-                                Name = ev.NameOfEvent
-                            }
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name = ev.NameOfEvent
+                        }
                     },
-
                     Quantity = TicketAmount
                 }
             },
-
             SuccessUrl = $"{YOUR_DOMAIN}/payment-success",
             CancelUrl = $"{YOUR_DOMAIN}/payment-failed"
         };

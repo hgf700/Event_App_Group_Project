@@ -151,7 +151,7 @@ public void Process<T>(T value) where T : struct { }
 Process(10);
 Process(DateTime.Now);
 
-po odswiezeniu pokazuje sie nick z nazwa uzytkownika w pasku rozwijanym
+dopiero po odswiezeniu pokazuje sie nick z nazwa uzytkownika w pasku rozwijanym prawy gorny
 admin controller, i bookmark
 
 kto kupił
@@ -160,3 +160,11 @@ kiedy
 status płatności
 identyfikator zamówienia
 ewentualnie status biletu
+
+cos dziwnego w sub event details i payment success i failed czemu jakis url
+i chyba w widoku jesli sie powiodlo od razu w sub window powinno byc sukces lub blad i redirect niz jakies
+dziwny url wyslany? 
+
+edit user email zdobywanie nowego jwt powinienem po sukcesie zwrocic dto z emailem i nowym jwt
+
+validatory do formularzy
