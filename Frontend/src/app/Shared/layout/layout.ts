@@ -27,9 +27,9 @@ export class Layout {
     return this.authService.isAdmin();
   }
 
-  isLoggedIn(): boolean {
-    return this.authService.isAuthenticated();
-  }
+  // isLoggedIn(): boolean {
+  //   return this.authService.isAuthenticated();
+  // }
 
   logout(): void {
     this.authService.logout();

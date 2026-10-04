@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { getAuthHeaders } from '../helpers/GetAuthHeaders';
 import { RetryHelper } from '../helpers/ResilianceHelpers';
 import { getEventDto } from '../Dto/getEventDto';
 import { paginatedResponse } from '../model/paginatedResponse';

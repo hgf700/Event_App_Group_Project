@@ -1,7 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { getAuthHeaders } from '../helpers/GetAuthHeaders';
-// import { getCurrentUserDto } from '../Dto/getCurrentUserDto';
 import { postEditUserDto } from '../Dto/postEditUserDto';
 import { getEventDto } from '../Dto/getEventDto';
 import { postEditUserPassword } from '../Dto/postEditUserPassword';

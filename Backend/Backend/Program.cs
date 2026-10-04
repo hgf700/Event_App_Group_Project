@@ -122,70 +122,60 @@ string googleClientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");
 string googleClientSecret = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET");
 string JWT_SECRET = Environment.GetEnvironmentVariable("JWT_SECRET");
 
-int zoauth = 0;
-
-if (zoauth == 1)
+//oauth
+builder.Services.AddAuthentication(options =>
 {
-    builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        //options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(options =>
-    {
-        options.RequireHttpsMetadata = false;
-        options.SaveToken = false;
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(JWT_SECRET)
-            ),
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            ClockSkew = TimeSpan.Zero
-        };
-    })
-    .AddGoogle(options =>
-    {
-        options.ClientId = googleClientId;
-        options.ClientSecret = googleClientSecret;
-        options.CallbackPath = "/signin-google";
-        options.SaveTokens = true;
-    });
-}
-else
-{
-    builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(JWT_SECRET)
-            ),
-            ClockSkew = TimeSpan.Zero
-        };
-    });
-}
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+//.AddJwtBearer(options =>
+//{
+//    options.RequireHttpsMetadata = false;
+//    options.SaveToken = false;
+//    options.TokenValidationParameters = new TokenValidationParameters
+//    {
+//        ValidateIssuerSigningKey = true,
+//        IssuerSigningKey = new SymmetricSecurityKey(
+//            Encoding.UTF8.GetBytes(JWT_SECRET)
+//        ),
+//        ValidateIssuer = false,
+//        ValidateAudience = false,
+//        ClockSkew = TimeSpan.Zero
+//    };
+//})
+//.AddGoogle(options =>
+//{
+//    options.ClientId = googleClientId;
+//    options.ClientSecret = googleClientSecret;
+//    options.CallbackPath = "/signin-google";
+//    options.SaveTokens = true;
+//});
 
+//bez oauth
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(JWT_SECRET)
+        ),
+        ClockSkew = TimeSpan.Zero
+    };
+});
+
+//credentials jesli korzystam z cookie
+            //.AllowCredentials()
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Prod",
         policy => policy
             .WithOrigins("http://localhost:4200")
             .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowCredentials());
+            .AllowAnyHeader());
 });
 
 builder.Services.AddRateLimiter(options =>
@@ -244,12 +234,12 @@ Console.WriteLine(app.Environment.EnvironmentName);
 app.UseHttpsRedirection();
 app.UseRouting();
 
-app.UseRateLimiter();
+app.UseCors("Prod");
+
+//app.UseRateLimiter();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.UseCors("Prod");
 
 //prometheus
 app.UseHttpMetrics();

@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { getAuthHeaders } from '../helpers/GetAuthHeaders';
 import { getEventDto } from '../Dto/getEventDto';
 import { postSearchEventDto } from '../Dto/postSearchEventDto';
 

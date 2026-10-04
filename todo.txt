@@ -154,14 +154,9 @@ Process(DateTime.Now);
 po odswiezeniu pokazuje sie nick z nazwa uzytkownika w pasku rozwijanym
 admin controller, i bookmark
 
-wyszukiwanie
-podgląd użytkownika
-
 kto kupił
 jaki event
 kiedy
 status płatności
 identyfikator zamówienia
 ewentualnie status biletu
-
-listę eventów ze szczegolami

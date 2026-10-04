@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, Injectable, signal } from '@angular/core';
-import { getAuthHeaders } from '../helpers/GetAuthHeaders';
 import { authResponseDto } from '../Dto/authResponseDto';
 
 @Injectable({ providedIn: 'root' })
@@ -44,7 +43,7 @@ export class AuthService {
     window.location.href = `${this.apiUrl}/sign-in-google`;
   }
 
-  isAuthenticated(): boolean {
-    return !!localStorage.getItem('jwt');
-  }
+  // isAuthenticated(): boolean {
+  //   return !!localStorage.getItem('jwt');
+  // }
 }

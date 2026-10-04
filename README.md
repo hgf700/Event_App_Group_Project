@@ -32,7 +32,7 @@ http://13.217.97.150/
 - Integration with **Stripe Payments** for ticket purchasing.
 - Generation and display of **QR codes for purchased tickets** directly in the application.
 - Interactive **event details view** displayed in a modal subwindow.
-- **Admin Panel** for managing users, events, and tickets. Manage and edit events. Manage users and their accounts. Manage user tickets and ticket assignments. Seed application data. 
+- **Admin Panel** for managing users, events, and tickets. 
 
 ### 💳 After successful payment:
 - A **QR code** containing the event URL is generated using **QRCoder**.

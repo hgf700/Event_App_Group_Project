@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, Injectable, signal } from '@angular/core';
-import { getAuthHeaders } from '../helpers/GetAuthHeaders';
 import { authResponseDto } from '../Dto/authResponseDto';
 
 @Injectable({ providedIn: 'root' })

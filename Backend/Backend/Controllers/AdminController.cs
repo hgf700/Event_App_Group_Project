@@ -22,7 +22,6 @@ public class AdminController : ControllerBase
     private readonly string UserRole = "user";
     private readonly string AdminRole = "admin";
 
-
     public AdminController(ApplicationDbContext context,
         UserManager<ApplicationUser> userManager,
         ILogger<UserController> logger
@@ -80,7 +79,6 @@ public class AdminController : ControllerBase
     }
 
     [HttpGet("admin-events")]
-    //[EnableRateLimiting("RateLimitGet")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -122,7 +120,6 @@ public class AdminController : ControllerBase
     }
 
     [HttpPost("admin-delete-event/{id:int:min(0)}")]
-    //[EnableRateLimiting("RateLimitGet")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -154,7 +151,6 @@ public class AdminController : ControllerBase
     }
 
     [HttpGet("admin-users")]
-    //[EnableRateLimiting("RateLimitGet")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -187,6 +183,50 @@ public class AdminController : ControllerBase
             }
 
             return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error while GetAppInfo");
+
+            return StatusCode(
+                StatusCodes.Status500InternalServerError,
+                "Internal server error");
+        }
+    }
+
+    [HttpGet("admin-search-user/{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<getAdminUserDto>> AdminSearchUser(string id)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+            return Unauthorized();
+
+        if (string.IsNullOrWhiteSpace(id))
+            return BadRequest();
+
+        try
+        {
+            var user = await _userManager.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.IsActive && u.Id == id);
+
+            if (user == null)
+                return NotFound();
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            var response = new getAdminUserDto
+            {
+                id = user.Id,
+                email = user.Email,
+                userName = user.UserName,
+                roles = roles
+            };
+
+            return Ok(response);
         }
         catch (Exception ex)
         {
@@ -248,8 +288,7 @@ public class AdminController : ControllerBase
         }
     }
 
-    [HttpPost("admin-block-user/{id:string}")]
-    //[EnableRateLimiting("RateLimitGet")]
+    [HttpPost("admin-block-user/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -303,8 +342,7 @@ public class AdminController : ControllerBase
         }
     }
 
-    [HttpPost("admin-unblock-user/{id:string}")]
-    //[EnableRateLimiting("RateLimitGet")]
+    [HttpPost("admin-unblock-user/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -354,5 +392,6 @@ public class AdminController : ControllerBase
                 "Internal server error");
         }
     }
+
 
 }
