@@ -15,7 +15,7 @@
     <div class="right">
       @if (isLogged()) {
         <div class="dropdown">
-          <button type="button">Witaj {{ userEmailData() }}</button>
+          <button type="button">Witaj {{ authService.userEmail() }}</button>
 
           <div class="dropdown-content">
             <a routerLink="/edit-user">edytuj Konto</a>

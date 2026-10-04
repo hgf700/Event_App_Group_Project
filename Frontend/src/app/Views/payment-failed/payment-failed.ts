@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { PaymentService } from '../../Services/PaymentService';
 
 @Component({
   selector: 'app-payment-failed',
@@ -11,28 +10,13 @@ import { PaymentService } from '../../Services/PaymentService';
   templateUrl: './payment-failed.html',
   styleUrl: './payment-failed.css',
 })
-export class PaymentFailed implements OnInit {
+export class PaymentFailed {
+
   constructor(
-    private paymentService: PaymentService,
     private router: Router,
   ) {}
 
-  ngOnInit(): void {
-    this.paymentSuccess();
-  }
-
-  paymentSuccess() {
-    this.paymentService.paymentProcessFailed().subscribe({
-      next: () => {
-        console.log('paymentProcessFailed');
-      },
-      error: (err) => {
-        console.error(err);
-      },
-    });
-  }
-
-  returnToEvents() {
+  returnToEvents(): void {
     this.router.navigate(['/get-events']);
   }
 }

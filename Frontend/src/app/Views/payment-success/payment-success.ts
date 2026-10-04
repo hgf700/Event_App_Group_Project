@@ -12,7 +12,12 @@ import { PaymentService } from '../../Services/PaymentService';
   styleUrl: './payment-success.css',
 })
 export class PaymentSuccess implements OnInit {
-  id!: number;
+
+  paymentId: number | null = null;
+
+  loading = true;
+  paymentState = '';
+  error = false;
 
   constructor(
     private paymentService: PaymentService,
@@ -21,23 +26,74 @@ export class PaymentSuccess implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.id = Number(this.route.snapshot.queryParamMap.get('id'));
-    console.log(this.id);
-    this.paymentSuccess();
+    const paymentIdParam =
+      this.route.snapshot.queryParamMap.get('paymentId');
+
+    if (!paymentIdParam) {
+      console.error('Brak paymentId');
+      this.loading = false;
+      this.error = true;
+      return;
+    }
+
+    const paymentId = Number(paymentIdParam);
+
+    if (!Number.isInteger(paymentId) || paymentId <= 0) {
+      console.error('Nieprawidłowe paymentId:', paymentIdParam);
+      this.loading = false;
+      this.error = true;
+      return;
+    }
+
+    this.paymentId = paymentId;
+
+    this.checkPaymentStatus();
   }
 
-  paymentSuccess() {
-    this.paymentService.paymentProcessSuccess(this.id).subscribe({
-      next: () => {
-        console.log('Payment success');
-      },
-      error: (err) => {
-        console.error(err);
-      },
-    });
+  checkPaymentStatus(): void {
+    if (this.paymentId === null) {
+      return;
+    }
+
+    this.paymentService
+      .getPaymentStatus(this.paymentId)
+      .subscribe({
+        next: (res) => {
+          console.log('Payment status:', res);
+
+          this.paymentState = res.state;
+
+          if (res.state === 'Paid') {
+            this.loading = false;
+            return;
+          }
+
+          if (
+            res.state === 'Expired' ||
+            res.state === 'Cancelled' ||
+            res.state === 'Refunded'
+          ) {
+            this.loading = false;
+            return;
+          }
+
+          // Nadal Pending.
+          // Stripe webhook może jeszcze nie zdążyć zmienić statusu.
+          setTimeout(() => {
+            this.checkPaymentStatus();
+          }, 1500);
+        },
+
+        error: (err) => {
+          console.error('Nie udało się pobrać statusu płatności:', err);
+
+          this.loading = false;
+          this.error = true;
+        },
+      });
   }
 
-  returnToEvents() {
+  returnToEvents(): void {
     this.router.navigate(['/get-events']);
   }
 }

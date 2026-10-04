@@ -151,7 +151,10 @@ public void Process<T>(T value) where T : struct { }
 Process(10);
 Process(DateTime.Now);
 
-dopiero po odswiezeniu pokazuje sie nick z nazwa uzytkownika w pasku rozwijanym prawy gorny
+potem moge poprawic redirecty jesli success lub failed po stripe
+Stripe webhook ↓ Pending → Paid ↓ /payment-success ↓ GET /status/{paymentId} ↓ "Paid"
+
+
 admin controller, i bookmark
 
 kto kupił

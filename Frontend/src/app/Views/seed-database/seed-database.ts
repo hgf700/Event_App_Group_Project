@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -19,6 +19,7 @@ export class SeedDatabase implements OnInit {
     private eventService: EventService,
     private searchOrDownloadEventService: SearchOrDownloadEventService,
     private adminService: AdminService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -32,6 +33,7 @@ export class SeedDatabase implements OnInit {
         console.log('seedDataBase');
         console.log(data);
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.loading = false;

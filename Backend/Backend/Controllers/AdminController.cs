@@ -48,9 +48,12 @@ public class AdminController : ControllerBase
 
         try
         {
-            await _seedDbService.SeedDatabase();
-
             var response = await _context.Events.AnyAsync();
+
+            if(response == null)
+            {
+                await _seedDbService.SeedDatabase();
+            }
 
             return StatusCode(StatusCodes.Status201Created, response);
         }

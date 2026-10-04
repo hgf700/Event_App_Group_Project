@@ -5,6 +5,8 @@ import { authResponseDto } from '../Dto/authResponseDto';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private apiUrl = 'https://localhost:7051/api/v1/auth';
+  userEmail = signal<string | null>(localStorage.getItem('email'));
+  userRole = signal<string | null>(localStorage.getItem('userRole'));
 
   constructor(private http: HttpClient) {}
 
@@ -22,7 +24,14 @@ export class AuthService {
     });
   }
 
-  userRole = signal(localStorage.getItem('userRole'));
+  setAuthData(jwt: string, email: string, role: string): void {
+    localStorage.setItem('jwt', jwt);
+    localStorage.setItem('email', email);
+    localStorage.setItem('userRole', role);
+
+    this.userEmail.set(email);
+    this.userRole.set(role);
+  }
 
   isLogged = computed(() => {
     const role = this.userRole();

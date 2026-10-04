@@ -11,8 +11,8 @@ import { AuthService } from '../../Services/AuthService';
   styleUrl: './layout.css',
 })
 export class Layout {
-  userEmailData = signal(localStorage.getItem('email') ?? '');
-  userRole = signal(localStorage.getItem('userRole'));
+  // userEmailData = signal(localStorage.getItem('email') ?? '');
+  // userRole = signal(localStorage.getItem('userRole'));
 
   constructor(
     public authService: AuthService

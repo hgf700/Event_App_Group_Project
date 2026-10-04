@@ -28,10 +28,6 @@ public class PaymentsController : ControllerBase
         _context = context;
     }
 
-    // =========================================================
-    // BUY TICKET
-    // =========================================================
-
     [HttpPost("buy-ticket/{id:int:min(0)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -68,7 +64,8 @@ public class PaymentsController : ControllerBase
 
             return Ok(new
             {
-                url = result.Response
+                url = result.Response,
+                paymentId = result.UserEventId,
             });
         }
         catch (Exception ex)
@@ -84,10 +81,6 @@ public class PaymentsController : ControllerBase
                 "Internal server error");
         }
     }
-
-    // =========================================================
-    // STRIPE WEBHOOK
-    // =========================================================
 
     [AllowAnonymous]
     [HttpPost("stripe-webhook")]
@@ -166,10 +159,6 @@ public class PaymentsController : ControllerBase
 
         return Ok();
     }
-
-    // =========================================================
-    // PAYMENT STATUS
-    // =========================================================
 
     [Authorize]
     [HttpGet("status/{id:int}")]

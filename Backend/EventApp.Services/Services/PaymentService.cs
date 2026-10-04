@@ -105,10 +105,7 @@ public class PaymentService : IPaymentService
             };
         }
 
-        // ---------------------------------------------------------
         // 1. Tworzymy zakup w bazie jako Pending
-        // ---------------------------------------------------------
-
         var userEvent = new UserEvent
         {
             UserId = userId,
@@ -121,10 +118,7 @@ public class PaymentService : IPaymentService
 
         await _context.SaveChangesAsync();
 
-        // ---------------------------------------------------------
         // 2. Tworzymy Stripe Checkout Session
-        // ---------------------------------------------------------
-
         var options = new SessionCreateOptions
         {
             Mode = "payment",
@@ -156,8 +150,8 @@ public class PaymentService : IPaymentService
                     Quantity = TicketAmount
                 }
             },
-            SuccessUrl = $"{YOUR_DOMAIN}/payment-success",
-            CancelUrl = $"{YOUR_DOMAIN}/payment-failed"
+            SuccessUrl = $"{YOUR_DOMAIN}/payment-success?paymentId={userEvent.Id}",
+            CancelUrl = $"{YOUR_DOMAIN}/payment-failed?paymentId={userEvent.Id}"
         };
 
         var service = new SessionService();
@@ -176,8 +170,7 @@ public class PaymentService : IPaymentService
                 userId,
                 id);
 
-            // Stripe nie utworzył płatności,
-            // więc Pending nie powinien zostać w bazie.
+            // Stripe nie utworzył płatności, więc Pending nie powinien zostać w bazie.
             userEvent.State = StatesOfTicket.Cancelled;
             userEvent.CancelledAt = DateTime.UtcNow;
 
@@ -196,10 +189,7 @@ public class PaymentService : IPaymentService
             };
         }
 
-        // ---------------------------------------------------------
         // 3. Zapisujemy Stripe Session ID
-        // ---------------------------------------------------------
-
         userEvent.PaymentId = session.Id;
 
         await _context.SaveChangesAsync();
@@ -211,13 +201,11 @@ public class PaymentService : IPaymentService
             userEvent.Id,
             session.Id);
 
-        // ---------------------------------------------------------
         // 4. Zwracamy URL do Stripe
-        // ---------------------------------------------------------
-
         return new BuyTicketResult
         {
-            Response = session.Url
+            Response = session.Url,
+            UserEventId = userEvent.Id,
         };
     }
 
@@ -242,8 +230,7 @@ public class PaymentService : IPaymentService
             return;
         }
 
-        // Webhook może zostać wysłany więcej niż raz.
-        // Dlatego nie wykonujemy drugi raz operacji.
+        // Webhook może zostać wysłany więcej niż raz. Dlatego nie wykonujemy drugi raz operacji.
         if (userEvent.State == StatesOfTicket.Paid)
         {
             _logger.LogInformation(
@@ -260,10 +247,7 @@ public class PaymentService : IPaymentService
 
         var ev = userEvent.Event;
 
-        // ---------------------------------------------------------
         // Dopiero teraz użytkownik faktycznie kupił bilet
-        // ---------------------------------------------------------
-
         bool.TryParse(Environment.GetEnvironmentVariable("TWILIO_SMS_SEND_STATE"), out bool twilioSmsState);
 
         if (twilioSmsState)

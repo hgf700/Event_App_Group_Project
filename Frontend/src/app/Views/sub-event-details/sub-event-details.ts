@@ -48,17 +48,25 @@ export class SubEventDetails implements OnInit {
     });
   }
 
-  buyTicket(eventId: number) {
+  buyTicket(eventId: number): void {
     this.loading = true;
+
     this.paymentService.buyTicketPaymentProcess(eventId).subscribe({
       next: (res) => {
         this.loading = false;
+        
         window.location.href = res.url;
       },
       error: (err) => {
         this.loading = false;
+
         console.error(err);
-        alert('Nie udało się buyTicket');
+
+        if (err.status === 409) {
+          alert(err.error);
+        } else {
+          alert('Nie udało się rozpocząć płatności');
+        }
       },
     });
   }

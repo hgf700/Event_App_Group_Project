@@ -12,5 +12,6 @@ public class BuyTicketResult
     public bool PaymentAlreadyPending { get; set; }
     public bool AlreadyBoughtTicket { get; set; }
     public string? Response { get; set; }
+    public int? UserEventId { get; set; }
     public IEnumerable<IdentityError>? Errors { get; set; }
 }

@@ -42,20 +42,17 @@ export class LoginCallback implements OnInit {
     const roleFromUrl = this.route.snapshot.queryParamMap.get('userRole');
     const roleFromStorage = localStorage.getItem('userRole');
 
-    console.log({
-      tokenFromUrl,
-      tokenFromStorage,
-      emailFromUrl,
-      emailFromStorage,
-      roleFromUrl,
-      roleFromStorage,
-    });
+    const token = tokenFromUrl ?? tokenFromStorage;
+    const email = emailFromUrl ?? emailFromStorage;
+    const role = roleFromUrl ?? roleFromStorage;
 
-    if (!tokenFromUrl && !tokenFromStorage && !emailFromUrl && !emailFromStorage 
-      && !roleFromUrl && !roleFromStorage
-    ) {
+    if (!token) {
       console.error('Brak tokena – użytkownik niezalogowany');
       return;
+    }
+
+    if (email && role) {
+      this.authService.setAuthData(token, email, role);
     }
   }
 

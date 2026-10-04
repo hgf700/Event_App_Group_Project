@@ -1,29 +1,181 @@
 <div class="payment-wrapper">
-  <div class="payment-card success">
+  <div class="payment-card" @if(loading == true)>
+
+    <div class="payment-icon-circle">
+      <div class="spinner"></div>
+    </div>
+
+    <h1 class="payment-title">Sprawdzamy płatność...</h1>
+
+    <p class="payment-subtitle">
+      Płatność została przekazana do przetworzenia.
+      Chwilę jeszcze poczekaj, sprawdzamy jej status.
+    </p>
+  </div>
+
+  <div
+    class="payment-card success"
+    @if(!loading && paymentState === 'Paid')
+  >
+
     <div class="payment-icon-circle">
       <div class="checkmark">✓</div>
     </div>
 
     <h1 class="payment-title">Płatność udana!</h1>
+
     <p class="payment-subtitle">
-      Dziękujemy za zakup. Twój bilet został dodany do konta i wkrótce otrzymasz go również na
-      maila.
+      Dziękujemy za zakup. Twój bilet został opłacony
+      i został dodany do Twojego konta.
     </p>
 
     <div class="payment-info-box">
       <div class="info-line">
         <span>📧</span>
-        <span>Potwierdzenie wysłano na Twój email</span>
+        <span>Potwierdzenie zostanie wysłane na Twój email</span>
       </div>
+
       <div class="info-line">
         <span>📱</span>
-        <span>QR kod dostępny w sekcji "Moje bilety"</span>
+        <span>QR kod znajdziesz w sekcji „Moje bilety”</span>
       </div>
     </div>
 
     <div class="payment-actions">
-      <button class="btn-primary-payment" routerLink="/user-tickets">🎟️ Zobacz moje bilety</button>
-      <button class="btn-secondary-payment" (click)="returnToEvents()">Wróć do wydarzeń</button>
+      <button
+        class="btn-primary-payment"
+        routerLink="/user-tickets"
+      >
+        🎟️ Zobacz moje bilety
+      </button>
+
+      <button
+        class="btn-secondary-payment"
+        (click)="returnToEvents()"
+      >
+        Wróć do wydarzeń
+      </button>
+    </div>
+  </div>
+
+<div
+    class="payment-card failed"
+    @if (!loading && paymentState === 'Expired')
+  >
+    <div class="payment-icon-circle">
+      <div class="cross">✕</div>
+    </div>
+
+    <h1 class="payment-title">Płatność wygasła</h1>
+
+    <p class="payment-subtitle">
+      Sesja płatności wygasła. Bilet nie został opłacony.
+      Możesz wrócić do wydarzeń i spróbować ponownie.
+    </p>
+
+    <div class="payment-info-box">
+      <div class="info-line">
+        <span>💳</span>
+        <span>Płatność nie została zakończona</span>
+      </div>
+
+      <div class="info-line">
+        <span>🔄</span>
+        <span>Możesz ponownie rozpocząć zakup biletu</span>
+      </div>
+    </div>
+
+    <div class="payment-actions">
+      <button
+        class="btn-primary-payment"
+        (click)="returnToEvents()"
+      >
+        🔄 Spróbuj ponownie
+      </button>
+
+      <button
+        class="btn-secondary-payment"
+        routerLink="/login-callback"
+      >
+        Wróć do panelu
+      </button>
+    </div>
+  </div>
+
+  <div
+    class="payment-card failed"
+    @if (!loading && paymentState === 'Cancelled')
+  >
+
+    <div class="payment-icon-circle">
+      <div class="cross">✕</div>
+    </div>
+
+    <h1 class="payment-title">Płatność anulowana</h1>
+
+    <p class="payment-subtitle">
+      Płatność została anulowana i bilet nie został opłacony.
+    </p>
+
+    <div class="payment-info-box">
+      <div class="info-line">
+        <span>💳</span>
+        <span>Nie pobrano opłaty za bilet</span>
+      </div>
+
+      <div class="info-line">
+        <span>🔄</span>
+        <span>Możesz spróbować ponownie</span>
+      </div>
+    </div>
+
+    <div class="payment-actions">
+      <button
+        class="btn-primary-payment"
+        (click)="returnToEvents()"
+      >
+        🔄 Spróbuj ponownie
+      </button>
+
+      <button
+        class="btn-secondary-payment"
+        routerLink="/login-callback"
+      >
+        Wróć do panelu
+      </button>
+    </div>
+  </div>
+
+  <!-- Błąd sprawdzania statusu -->
+  <div
+    class="payment-card failed"
+    @if(!loading && error)
+  >
+    <div class="payment-icon-circle">
+      <div class="cross">✕</div>
+    </div>
+
+    <h1 class="payment-title">Nie udało się sprawdzić płatności</h1>
+
+    <p class="payment-subtitle">
+      Nie mogliśmy pobrać aktualnego statusu płatności.
+      Spróbuj ponownie później.
+    </p>
+
+    <div class="payment-actions">
+      <button
+        class="btn-primary-payment"
+        (click)="returnToEvents()"
+      >
+        Wróć do wydarzeń
+      </button>
+
+      <button
+        class="btn-secondary-payment"
+        routerLink="/login-callback"
+      >
+        Wróć do panelu
+      </button>
     </div>
   </div>
 </div>
