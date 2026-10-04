@@ -2,6 +2,7 @@
 using EventApp.Infrastructure.Db;
 using EventApp.Services.Dto.RelAuth;
 using EventApp.Services.Dto.RelEvent;
+using EventApp.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -19,17 +20,44 @@ public class AdminController : ControllerBase
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ILogger<UserController> _logger;
+    private readonly ISeedDbService _seedDbService;
     private readonly string UserRole = "user";
     private readonly string AdminRole = "admin";
 
     public AdminController(ApplicationDbContext context,
         UserManager<ApplicationUser> userManager,
-        ILogger<UserController> logger
+        ILogger<UserController> logger,
+        ISeedDbService seedDbService
         )
     {
         _context = context;
         _userManager = userManager;
         _logger = logger;
+        _seedDbService = seedDbService;
+    }
+
+    [HttpPost("admin-seed-database")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult> SeedDatabase()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+            return Unauthorized();
+
+        try
+        {
+            await _seedDbService.SeedDatabase();
+
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            _logger.LogError(ex, "Error while seeding db");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+        }
     }
 
     [HttpGet("admin-app-info")]
@@ -342,6 +370,50 @@ public class AdminController : ControllerBase
         }
     }
 
+    [HttpGet("admin-blocked-users")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<getAdminUserDto>> AdminGetBlockedUsers()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+            return Unauthorized();
+
+        try
+        {
+            var users = await _userManager.Users
+                .AsNoTracking()
+                .Where(u => u.IsActive == false)
+                .ToListAsync();
+
+            var result = new List<object>();
+
+            foreach (var user in users)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+
+                result.Add(new getAdminUserDto
+                {
+                    id = user.Id,
+                    email = user.Email,
+                    userName = user.UserName,
+                    roles = roles
+                });
+            }
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error while GetAppInfo");
+
+            return StatusCode(
+                StatusCodes.Status500InternalServerError,
+                "Internal server error");
+        }
+    }
+
     [HttpPost("admin-unblock-user/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -394,4 +466,47 @@ public class AdminController : ControllerBase
     }
 
 
+    [HttpGet("admin-bought-tickets")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<getAdminUserDto>> AdminBoughtTickets()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+            return Unauthorized();
+
+        try
+        {
+            var users = await _userManager.Users
+                .AsNoTracking()
+                .Where(u => u.IsActive == false)
+                .ToListAsync();
+
+            var result = new List<object>();
+
+            foreach (var user in users)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+
+                result.Add(new getAdminUserDto
+                {
+                    id = user.Id,
+                    email = user.Email,
+                    userName = user.UserName,
+                    roles = roles
+                });
+            }
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error while GetAppInfo");
+
+            return StatusCode(
+                StatusCodes.Status500InternalServerError,
+                "Internal server error");
+        }
+    }
 }

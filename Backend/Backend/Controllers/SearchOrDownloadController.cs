@@ -27,47 +27,19 @@ namespace Backend.Controllers;
 public class SearchOrDownloadController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
-    private readonly ISeedDbService _seedDbService;
     private readonly ISendOrDownloadFromApiService _downloadAndSendEventsApi;
     private readonly ILogger<EventController> _logger;
 
     public SearchOrDownloadController(
             ApplicationDbContext context,
-            ISeedDbService seedDbService,
             ISendOrDownloadFromApiService downloadAndSendEventsApi,
             ILogger<EventController> logger
         )
     {
         _context = context;
-        _seedDbService = seedDbService;
         _downloadAndSendEventsApi = downloadAndSendEventsApi;
         _logger = logger;
     }
-
-    [HttpPost("seed-database")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> SeedDatabase()
-    {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId == null)
-            return Unauthorized();
-
-        try
-        {
-            await _seedDbService.SeedDatabase();
-
-            return Ok();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex);
-            _logger.LogError(ex, "Error while seeding db");
-            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
-        }
-    }
-
     private string NormalizeEvent(string value)
     {
         //bez to lower bo najpierw z bazy biore a potem api i tak samo robi pewnie to lower
