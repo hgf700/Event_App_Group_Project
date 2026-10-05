@@ -21,8 +21,9 @@ export class SearchOrDownloadEventService {
   searchOrDownloadEventQuery(city: string) {
     const params = new HttpParams().set('city', city);
 
-    return this.http.post<getEventDto[]>(`${this.apiUrl}/search-event-and-download`, null, {
-      params,
-    });
+    return this.http.post<getEventDto[]>(`${this.apiUrl}/search-event-and-download`, 
+      null, 
+      { params, }
+    );
   }
 }

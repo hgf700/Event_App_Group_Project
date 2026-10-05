@@ -1,3 +1,139 @@
+/* .payment-wrapper {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.payment-card {
+  max-width: 440px;
+  width: 100%;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.payment-card.success .payment-icon-circle {
+  background: #e6f7ee;
+  color: #12b76a;
+}
+
+.payment-card.failed .payment-icon-circle {
+  background: #fef3f2;
+  color: #f04438;
+}
+
+.payment-icon-circle {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 1.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f2f4f7;
+  font-size: 2rem;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e4e7ec;
+  border-top-color: #7f56d9;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.checkmark,
+.cross {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.payment-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #101828;
+  margin: 0 0 0.75rem;
+}
+
+.payment-subtitle {
+  font-size: 0.95rem;
+  color: #667085;
+  line-height: 1.5;
+  margin: 0 0 1.75rem;
+}
+
+.payment-info-box {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.75rem;
+  text-align: left;
+}
+
+.info-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  color: #344054;
+  margin-bottom: 0.65rem;
+}
+
+.info-line:last-child {
+  margin-bottom: 0;
+}
+
+.payment-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.btn-primary-payment,
+.btn-secondary-payment {
+  width: 100%;
+  padding: 0.85rem 1.25rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.btn-primary-payment {
+  background: #7f56d9;
+  color: #fff;
+}
+
+.btn-primary-payment:hover {
+  background: #6941c6;
+}
+
+.btn-secondary-payment {
+  background: #fff;
+  color: #344054;
+  border: 1px solid #d0d5dd;
+}
+
+.btn-secondary-payment:hover {
+  background: #f9fafb;
+} */
+
+
+
 .payment-wrapper {
   display: flex;
   align-items: center;

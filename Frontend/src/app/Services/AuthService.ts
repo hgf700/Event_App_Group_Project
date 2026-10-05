@@ -51,8 +51,4 @@ export class AuthService {
   loginWithGoogleOauth() {
     window.location.href = `${this.apiUrl}/sign-in-google`;
   }
-
-  // isAuthenticated(): boolean {
-  //   return !!localStorage.getItem('jwt');
-  // }
 }

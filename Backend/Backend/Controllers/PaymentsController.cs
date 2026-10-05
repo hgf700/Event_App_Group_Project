@@ -30,6 +30,7 @@ public class PaymentsController : ControllerBase
 
     [HttpPost("buy-ticket/{id:int:min(0)}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -52,7 +53,11 @@ public class PaymentsController : ControllerBase
                 return Conflict("User already owns this ticket");
 
             if (result.PaymentAlreadyPending)
-                return Conflict("Payment for this ticket is already pending");
+                return Conflict(new
+                {
+                    message = "Payment for this ticket is already pending",
+                    paymentId = result.UserEventId
+                });
 
             if (result.Errors != null)
                 return BadRequest(result.Errors);
@@ -65,7 +70,7 @@ public class PaymentsController : ControllerBase
             return Ok(new
             {
                 url = result.Response,
-                paymentId = result.UserEventId,
+                paymentId = result.UserEventId
             });
         }
         catch (Exception ex)
@@ -93,16 +98,14 @@ public class PaymentsController : ControllerBase
         if (string.IsNullOrWhiteSpace(webhookSecret))
         {
             _logger.LogError("Stripe webhook secret is missing");
-
             return BadRequest();
         }
 
-        var stripeSignature = Request.Headers["Stripe-Signature"];
+        var stripeSignature = Request.Headers["Stripe-Signature"].ToString();
 
         if (string.IsNullOrWhiteSpace(stripeSignature))
         {
             _logger.LogWarning("Stripe-Signature header is missing");
-
             return BadRequest();
         }
 
@@ -111,57 +114,54 @@ public class PaymentsController : ControllerBase
         try
         {
             stripeEvent = EventUtility.ConstructEvent(
-                    json,
-                    stripeSignature,
-                    webhookSecret);
+                json,
+                stripeSignature,
+                webhookSecret);
         }
         catch (Exception ex)
         {
-            _logger.LogError(
-                ex,
-                "Invalid Stripe webhook");
-
+            _logger.LogError(ex, "Invalid Stripe webhook");
             return BadRequest();
         }
 
         switch (stripeEvent.Type)
         {
             case "checkout.session.completed":
+                {
+                    var session = stripeEvent.Data.Object as Stripe.Checkout.Session;
 
-                var session = stripeEvent.Data.Object as Stripe.Checkout.Session;
+                    if (session == null)
+                        return BadRequest();
 
-                if (session == null)
-                    return BadRequest();
-
-                await _paymentService.HandleSuccessfulPaymentAsync(session);
-
-                break;
+                    await _paymentService.HandleSuccessfulPaymentAsync(session);
+                    break;
+                }
 
             case "checkout.session.expired":
+                {
+                    var expiredSession = stripeEvent.Data.Object as Stripe.Checkout.Session;
 
-                var expiredSession = stripeEvent.Data.Object as Stripe.Checkout.Session;
+                    if (expiredSession == null)
+                        return BadRequest();
 
-                if (expiredSession == null)
-                    return BadRequest();
-
-                await _paymentService.HandleExpiredPaymentAsync(expiredSession);
-
-                break;
+                    await _paymentService.HandleExpiredPaymentAsync(expiredSession);
+                    break;
+                }
 
             default:
-
                 _logger.LogInformation(
                     "Unhandled Stripe event type: {EventType}",
                     stripeEvent.Type);
-
                 break;
         }
 
         return Ok();
     }
 
-    [Authorize]
     [HttpGet("status/{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetPaymentStatus(int id)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -170,8 +170,8 @@ public class PaymentsController : ControllerBase
             return Unauthorized();
 
         var userEvent = await _context.UserEvents
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId);
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId);
 
         if (userEvent == null)
             return NotFound();
@@ -179,9 +179,9 @@ public class PaymentsController : ControllerBase
         return Ok(new
         {
             id = userEvent.Id,
-            state = userEvent.State.ToString(),
+            state = userEvent.PaymentState,
             createdAt = userEvent.CreatedAt,
-            paidAt = userEvent.PaidAt
+            paidAt = userEvent.PaymentStateAt
         });
     }
 }

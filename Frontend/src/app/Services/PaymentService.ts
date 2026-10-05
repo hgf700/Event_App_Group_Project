@@ -1,42 +1,56 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+
+export interface BuyTicketResponse {
+  url: string;
+  paymentId: number;
+}
+
+export interface PaymentStatusResponse {
+  id: number;
+  state: 'Pending' | 'Paid' | 'Cancelled' | 'Expired' | 'Refunded';
+  createdAt: string;
+  paidAt: string | null;
+}
 
 @Injectable({ providedIn: 'root' })
 export class PaymentService {
-  private apiUrl = 'https://localhost:7051/api/v1/Payments';
-  private apiUrlCallback = 'https://localhost:7051/api/v1/PaymentCallback';
+  // Dostosuj do swojego route (w backendzie masz [Route("api/[controller]")])
+  private readonly apiUrl = 'https://localhost:7051/api/Payment';
 
   constructor(private http: HttpClient) {}
 
-  buyTicketPaymentProcess(eventId: number) {
-  return this.http.post<{
-    url: string;
-    paymentId: number;
-    }>(
+  /**
+   * Tworzy sesję Stripe Checkout i zwraca URL do przekierowania.
+   * Backend: POST /api/Payment/buy-ticket/{eventId}
+   */
+  buyTicket(eventId: number): Observable<BuyTicketResponse> {
+    return this.http.post<BuyTicketResponse>(
       `${this.apiUrl}/buy-ticket/${eventId}`,
       {}
     );
   }
 
-  paymentProcessSuccess(eventId: number) {
-    return this.http.post<{ eventId: number }>(
-      `${this.apiUrlCallback}/payment-success/${eventId}`,
-      {},
+  /**
+   * Pobiera aktualny status płatności.
+   * Backend: GET /api/Payment/status/{paymentId}
+   */
+  getPaymentStatus(paymentId: number): Observable<PaymentStatusResponse> {
+    return this.http.get<PaymentStatusResponse>(
+      `${this.apiUrl}/status/${paymentId}`
     );
   }
 
-  paymentProcessFailed() {
-    return this.http.post(`${this.apiUrlCallback}/payment-failed`, {});
-  }
-
-  getPaymentStatus(paymentId: number) {
-    return this.http.get<{
-      id: number;
-      state: string;
-      createdAt: string;
-      paidAt: string | null;
-    }>(
-      `${this.apiUrl}/status/${paymentId}`
+  /**
+   * Anuluje oczekującą płatność (Pending).
+   * Wymaga endpointu CancelPendingPaymentAsync w backendzie.
+   * Backend: POST /api/Payment/cancel/{paymentId}
+   */
+  cancelPendingPayment(paymentId: number): Observable<void> {
+    return this.http.post<void>(
+      `${this.apiUrl}/cancel/${paymentId}`,
+      {}
     );
   }
 }

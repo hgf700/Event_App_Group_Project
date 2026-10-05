@@ -51,7 +51,7 @@ export class SubEventDetails implements OnInit {
   buyTicket(eventId: number): void {
     this.loading = true;
 
-    this.paymentService.buyTicketPaymentProcess(eventId).subscribe({
+    this.paymentService.buyTicket(eventId).subscribe({
       next: (res) => {
         this.loading = false;
         
