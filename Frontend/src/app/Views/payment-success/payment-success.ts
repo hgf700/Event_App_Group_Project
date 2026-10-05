@@ -12,9 +12,7 @@ import { PaymentService } from '../../Services/PaymentService';
   styleUrl: './payment-success.css',
 })
 export class PaymentSuccess implements OnInit {
-
   paymentId: number | null = null;
-
   loading = true;
   paymentState = '';
   error = false;
@@ -26,8 +24,7 @@ export class PaymentSuccess implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const paymentIdParam =
-      this.route.snapshot.queryParamMap.get('paymentId');
+    const paymentIdParam = this.route.snapshot.queryParamMap.get('paymentId');
 
     if (!paymentIdParam) {
       console.error('Brak paymentId');
@@ -55,9 +52,7 @@ export class PaymentSuccess implements OnInit {
       return;
     }
 
-    this.paymentService
-      .getPaymentStatus(this.paymentId)
-      .subscribe({
+    this.paymentService.getPaymentStatus(this.paymentId).subscribe({
         next: (res) => {
           console.log('Payment status:', res);
 
@@ -68,17 +63,12 @@ export class PaymentSuccess implements OnInit {
             return;
           }
 
-          if (
-            res.state === 'Expired' ||
-            res.state === 'Cancelled' ||
-            res.state === 'Refunded'
-          ) {
+          if (res.state === 'Expired' || res.state === 'Cancelled' || res.state === 'Refunded') {
             this.loading = false;
             return;
           }
 
-          // Nadal Pending.
-          // Stripe webhook może jeszcze nie zdążyć zmienić statusu.
+          // Nadal Pending.  Stripe webhook może jeszcze nie zdążyć zmienić statusu.
           setTimeout(() => {
             this.checkPaymentStatus();
           }, 1500);

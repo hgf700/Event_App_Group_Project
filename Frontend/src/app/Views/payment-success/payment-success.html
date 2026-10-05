@@ -15,8 +15,7 @@
 
   <div
     class="payment-card success"
-    @if(!loading && paymentState === 'Paid')
-  >
+    @if(!loading && paymentState === 'Paid')>
 
     <div class="payment-icon-circle">
       <div class="checkmark">✓</div>
@@ -44,15 +43,13 @@
     <div class="payment-actions">
       <button
         class="btn-primary-payment"
-        routerLink="/user-tickets"
-      >
+        routerLink="/user-tickets">
         🎟️ Zobacz moje bilety
       </button>
 
       <button
         class="btn-secondary-payment"
-        (click)="returnToEvents()"
-      >
+        (click)="returnToEvents()">
         Wróć do wydarzeń
       </button>
     </div>
@@ -60,8 +57,8 @@
 
 <div
     class="payment-card failed"
-    @if (!loading && paymentState === 'Expired')
-  >
+    @if (!loading && paymentState === 'Expired')>
+
     <div class="payment-icon-circle">
       <div class="cross">✕</div>
     </div>
@@ -88,15 +85,13 @@
     <div class="payment-actions">
       <button
         class="btn-primary-payment"
-        (click)="returnToEvents()"
-      >
+        (click)="returnToEvents()">
         🔄 Spróbuj ponownie
       </button>
 
       <button
         class="btn-secondary-payment"
-        routerLink="/login-callback"
-      >
+        routerLink="/login-callback">
         Wróć do panelu
       </button>
     </div>
@@ -104,8 +99,7 @@
 
   <div
     class="payment-card failed"
-    @if (!loading && paymentState === 'Cancelled')
-  >
+    @if (!loading && paymentState === 'Cancelled')>
 
     <div class="payment-icon-circle">
       <div class="cross">✕</div>
@@ -132,15 +126,13 @@
     <div class="payment-actions">
       <button
         class="btn-primary-payment"
-        (click)="returnToEvents()"
-      >
+        (click)="returnToEvents()">
         🔄 Spróbuj ponownie
       </button>
 
       <button
         class="btn-secondary-payment"
-        routerLink="/login-callback"
-      >
+        routerLink="/login-callback">
         Wróć do panelu
       </button>
     </div>
@@ -149,8 +141,8 @@
   <!-- Błąd sprawdzania statusu -->
   <div
     class="payment-card failed"
-    @if(!loading && error)
-  >
+    @if(!loading && error)>
+
     <div class="payment-icon-circle">
       <div class="cross">✕</div>
     </div>
@@ -165,15 +157,13 @@
     <div class="payment-actions">
       <button
         class="btn-primary-payment"
-        (click)="returnToEvents()"
-      >
+        (click)="returnToEvents()">
         Wróć do wydarzeń
       </button>
 
       <button
         class="btn-secondary-payment"
-        routerLink="/login-callback"
-      >
+        routerLink="/login-callback">
         Wróć do panelu
       </button>
     </div>

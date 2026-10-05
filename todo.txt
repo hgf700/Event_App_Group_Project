@@ -154,20 +154,15 @@ Process(DateTime.Now);
 potem moge poprawic redirecty jesli success lub failed po stripe
 Stripe webhook ↓ Pending → Paid ↓ /payment-success ↓ GET /status/{paymentId} ↓ "Paid"
 
-
 admin controller, i bookmark
-
-kto kupił
-jaki event
-kiedy
-status płatności
-identyfikator zamówienia
-ewentualnie status biletu
-
-cos dziwnego w sub event details i payment success i failed czemu jakis url
-i chyba w widoku jesli sie powiodlo od razu w sub window powinno byc sukces lub blad i redirect niz jakies
-dziwny url wyslany? 
 
 edit user email zdobywanie nowego jwt powinienem po sukcesie zwrocic dto z emailem i nowym jwt
 
 validatory do formularzy
+
+[HttpGet("admin-bought-tickets")]
+Jeżeli w Twoim systemie jedno UserEvent = jeden bilet, to OrderId jest bardzo przydatny.
+Nie powinieneś natomiast generować nowego OrderId dla każdego biletu w ramach jednego zakupu.
+Wtedy wszystkie bilety z tego zakupu mają wspólny OrderId.
+paginacje tez trzeba by bylo
+OrderId potem dodam

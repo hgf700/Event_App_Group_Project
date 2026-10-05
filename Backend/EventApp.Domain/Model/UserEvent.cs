@@ -18,11 +18,13 @@ public class UserEvent
 
     public DateTime CreatedAt { get; set; }
 
-    public DateTime? PaidAt { get; set; }
+    public DateTime? PaymentStateAt { get; set; }
 
-    public DateTime? CancelledAt { get; set; }
+    public StatesOfTicket PaymentState { get; set; }
 
-    public StatesOfTicket State { get; set; }
+    public DateTime? TicketStateAt { get; set; }
+
+    public TicketState TicketState { get; set; }
 
     public string? PaymentId { get; set; }
 }
@@ -34,4 +36,12 @@ public enum StatesOfTicket
     Cancelled = 2,
     Expired = 3,
     Refunded = 4
+}
+
+public enum TicketState
+{
+    NotIssued = 0,
+    Active = 1,
+    Used = 2,
+    Cancelled = 3
 }

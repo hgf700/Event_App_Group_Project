@@ -50,7 +50,7 @@ public class AdminController : ControllerBase
         {
             var response = await _context.Events.AnyAsync();
 
-            if(response == null)
+            if(!response)
             {
                 await _seedDbService.SeedDatabase();
             }
@@ -484,27 +484,27 @@ public class AdminController : ControllerBase
 
         try
         {
-            var users = await _userManager.Users
+            var tickets = await _context.UserEvents
                 .AsNoTracking()
-                .Where(u => u.IsActive == false)
+                .Include(ue => ue.Event)
+                .Include(ue => ue.User)
+                .Select(ue => new getBoughtTicketDto
+                {
+                    userId = ue.UserId,
+                    userEmail = ue.User.Email,
+                    eventId = ue.EventId,
+                    eventName = ue.Event.NameOfEvent,
+                    eventDate = ue.Event.StartOfEvent,
+                    createdAt = ue.CreatedAt,
+                    paymentStateAt = ue.PaymentStateAt,
+                    paymentState = ue.PaymentState,
+                    ticketStateAt = ue.TicketStateAt,
+                    ticketState = ue.TicketState,
+                    paymentId = ue.PaymentId,
+                })
                 .ToListAsync();
 
-            var result = new List<object>();
-
-            foreach (var user in users)
-            {
-                var roles = await _userManager.GetRolesAsync(user);
-
-                result.Add(new getAdminUserDto
-                {
-                    id = user.Id,
-                    email = user.Email,
-                    userName = user.UserName,
-                    roles = roles
-                });
-            }
-
-            return Ok(result);
+            return Ok(tickets);
         }
         catch (Exception ex)
         {
@@ -515,4 +515,8 @@ public class AdminController : ControllerBase
                 "Internal server error");
         }
     }
+
+    
+
+
 }
