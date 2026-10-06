@@ -4,6 +4,7 @@ import { authResponseDto } from '../Dto/authResponseDto';
 import { getAppUsageInfoDto } from '../Dto/getAppUsageInfoDto';
 import { getAdminUserDto } from '../Dto/getAdminUserDto';
 import { getBoughtTicketDto } from '../Dto/getBoughtTicketDto';
+import { getEventAdminDto } from '../Dto/getEventAdminDto';
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
@@ -17,67 +18,67 @@ export class AdminService {
     );
   }
 
-  appUsageInfo() {
+  getAppUsageInfo() {
     return this.http.get<getAppUsageInfoDto>(
-      `${this.apiUrl}/admin-app-usage-info`,
-    )
+      `${this.apiUrl}/admin-app-usage-info`
+    );
   }
 
-  adminAllEvents() {
-    return this.http.get<getAppUsageInfoDto>(
-      `${this.apiUrl}/admin-events`,
-    )
+  getEvents() {
+    return this.http.get<getEventAdminDto[]>(
+      `${this.apiUrl}/admin-events`
+    );
   }
 
-  adminDeleteEvent(id: number) {
-    return this.http.post<number>(
+  deleteEvent(id: number) {
+    return this.http.post<void>(
       `${this.apiUrl}/admin-delete-event/${id}`,
       {}
     );
   }
 
-  adminAllUsers() {
+  getUsers() {
+    return this.http.get<getAdminUserDto[]>(
+      `${this.apiUrl}/admin-users`
+    );
+  }
+
+  searchUser(id: string) {
     return this.http.get<getAdminUserDto>(
-      `${this.apiUrl}/admin-users`,
-    )
+      `${this.apiUrl}/admin-search-user/${id}`
+    );
   }
 
-  adminSearchUser(id: string) {
-    return this.http.get<string>(
-      `${this.apiUrl}/admin-search-user/${id}`,
-    )
-  }
-
-  adminDeleteUser(id: number) {
-    return this.http.post<number>(
+  deleteUser(id: string) {
+    return this.http.post<void>(
       `${this.apiUrl}/admin-delete-user/${id}`,
       {}
     );
   }
-  
-  adminBlockUser(id: string) {
-    return this.http.post<string>(
+
+  blockUser(id: string) {
+    return this.http.post<void>(
       `${this.apiUrl}/admin-block-user/${id}`,
       {}
     );
   }
 
-  adminBlockedUsers() {
-    return this.http.get(
-      `${this.apiUrl}/admin-blocked-users`,
-    )
+  getBlockedUsers() {
+    return this.http.get<getAdminUserDto[]>(
+      `${this.apiUrl}/admin-blocked-users`
+    );
   }
 
-  adminUnBlockUser(id: string) {
-    return this.http.post<string>(
+  unblockUser(id: string) {
+    return this.http.post<void>(
       `${this.apiUrl}/admin-unblock-user/${id}`,
       {}
     );
   }
 
-  adminBoughtTickets() {
-    return this.http.get<getBoughtTicketDto>(
-      `${this.apiUrl}/admin-blocked-users`,
-    )
+  getBoughtTickets() {
+    return this.http.get<getBoughtTicketDto[]>(
+      `${this.apiUrl}/admin-bought-tickets`
+    );
   }
 }

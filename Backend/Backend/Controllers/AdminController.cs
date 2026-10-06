@@ -123,8 +123,6 @@ public class AdminController : ControllerBase
 
         try
         {
-            var totalCount = await _context.Events.CountAsync();
-
             var events = await _context.Events
                 .AsNoTracking()
                 .Select(e => new getEventAdminDto
