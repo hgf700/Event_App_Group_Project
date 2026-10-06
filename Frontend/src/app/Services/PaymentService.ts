@@ -16,8 +16,7 @@ export interface PaymentStatusResponse {
 
 @Injectable({ providedIn: 'root' })
 export class PaymentService {
-  // Dostosuj do swojego route (w backendzie masz [Route("api/[controller]")])
-  private readonly apiUrl = 'https://localhost:7051/api/Payment';
+  private readonly apiUrl = 'https://localhost:7051/api/payment';
 
   constructor(private http: HttpClient) {}
 

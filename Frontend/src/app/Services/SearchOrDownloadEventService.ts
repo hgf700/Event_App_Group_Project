@@ -6,7 +6,7 @@ import { postSearchEventDto } from '../Dto/postSearchEventDto';
 
 @Injectable({ providedIn: 'root' })
 export class SearchOrDownloadEventService {
-  private apiUrl = 'https://localhost:7051/api/v1/SearchOrDownload';
+  private apiUrl = 'https://localhost:7051/api/v1/search-or-download';
 
   constructor(private http: HttpClient) {}
 

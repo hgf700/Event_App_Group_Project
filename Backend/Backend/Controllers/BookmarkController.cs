@@ -11,7 +11,7 @@ namespace Backend.Controllers;
 
 [ApiController]
 [Authorize(Roles = "admin,user")]
-[Route("api/v1/[controller]")]
+[Route("api/v1/bookmark")]
 public class BookmarkController : ControllerBase
 {
     private readonly ApplicationDbContext _context;

@@ -15,7 +15,7 @@ namespace Backend.Controllers;
 
 [ApiController]
 [Authorize(Roles = "admin,user")]
-[Route("api/v1/[controller]")]
+[Route("api/v1/refresh-token")]
 public class RefreshTokenController : ControllerBase
 {
     private readonly ApplicationDbContext _context;

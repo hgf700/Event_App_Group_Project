@@ -23,7 +23,7 @@ namespace Backend.Controllers;
 
 [ApiController]
 [Authorize(Roles = "admin,user")]
-[Route("api/v1/[controller]")]
+[Route("api/v1/search-or-download")]
 public class SearchOrDownloadController : ControllerBase
 {
     private readonly ApplicationDbContext _context;

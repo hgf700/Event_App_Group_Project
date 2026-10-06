@@ -21,7 +21,7 @@ namespace Backend.Controllers;
 
 [ApiController]
 [Authorize(Roles = "admin,user")]
-[Route("api/v1/[controller]")]
+[Route("api/v1/event")]
 public class EventController : ControllerBase
 {
     private readonly ApplicationDbContext _context;

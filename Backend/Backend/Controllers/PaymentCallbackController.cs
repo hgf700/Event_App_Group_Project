@@ -18,7 +18,7 @@ namespace Backend.Controllers;
 
 [ApiController]
 [Authorize(Roles = "admin,user")]
-[Route("api/v1/[controller]")]
+[Route("api/v1/payment-callback")]
 public class PaymentCallbackController : ControllerBase
 {
     private readonly ILogger<PaymentCallbackController> _logger;

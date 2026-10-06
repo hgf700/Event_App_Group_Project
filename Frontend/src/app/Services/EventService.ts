@@ -9,8 +9,8 @@ import { getEventTicketWithQrDto } from '../Dto/getEventQrCodeInfoDto';
 
 @Injectable({ providedIn: 'root' })
 export class EventService {
-  private apiUrl = 'https://localhost:7051/api/v1/Event';
-  private apiUserTicketUrl = 'https://localhost:7051/api/v1/UserTicket';
+  private apiUrl = 'https://localhost:7051/api/v1/event';
+  private apiUserTicketUrl = 'https://localhost:7051/api/v1/user-ticket';
 
   constructor(private http: HttpClient) {}
 

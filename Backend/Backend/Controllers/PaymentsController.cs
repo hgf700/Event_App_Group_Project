@@ -11,7 +11,7 @@ namespace Backend.Controllers;
 
 [ApiController]
 [Authorize(Roles = "admin,user")]
-[Route("api/v1/[controller]")]
+[Route("api/v1/payments")]
 public class PaymentsController : ControllerBase
 {
     private readonly ILogger<PaymentsController> _logger;

@@ -16,7 +16,7 @@ namespace Backend.Controllers;
 
 [ApiController]
 [Authorize(Roles = "admin,user")]
-[Route("api/v1/[controller]")]
+[Route("api/v1/user-ticket")]
 public class UserTicketController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;

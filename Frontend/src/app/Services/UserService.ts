@@ -7,7 +7,7 @@ import { getUserBoughtTicketDto } from '../Dto/getUserBoughtTicketDto';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private apiUrl = 'https://localhost:7051/api/v1/User';
+  private apiUrl = 'https://localhost:7051/api/v1/user';
 
   constructor(private http: HttpClient) {}
 

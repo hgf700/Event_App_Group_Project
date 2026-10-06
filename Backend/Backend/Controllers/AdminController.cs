@@ -14,7 +14,7 @@ namespace Backend.Controllers;
 
 [ApiController]
 [Authorize(Roles = "admin")]
-[Route("api/v1/[controller]")]
+[Route("api/v1/admin")]
 public class AdminController : ControllerBase
 {
     private readonly ApplicationDbContext _context;

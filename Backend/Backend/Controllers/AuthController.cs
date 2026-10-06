@@ -19,7 +19,7 @@ namespace Backend.Controllers;
 
 [ApiController]
 [AllowAnonymous]
-[Route("api/v1/[controller]")]
+[Route("api/v1/auth")]
 public class AuthController : ControllerBase
 {
     private readonly ILogger<AuthController> _logger;
