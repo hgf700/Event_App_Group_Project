@@ -1,0 +1,1 @@
+﻿stripe listen --all-snapshot --forward-to localhost:7051/api/v1/payments/stripe-webhook
