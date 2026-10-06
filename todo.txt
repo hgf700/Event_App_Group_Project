@@ -155,6 +155,7 @@ potem moge poprawic redirecty jesli success lub failed po stripe
 Stripe webhook ↓ Pending → Paid ↓ /payment-success ↓ GET /status/{paymentId} ↓ "Paid"
 
 admin controller, i bookmark
+front z paginacja pewnie
 
 edit user email zdobywanie nowego jwt powinienem po sukcesie zwrocic dto z emailem i nowym jwt
 

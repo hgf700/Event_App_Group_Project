@@ -65,12 +65,12 @@ public class AdminController : ControllerBase
         }
     }
 
-    [HttpGet("admin-app-info")]
+    [HttpGet("admin-app-usage-info")]
     //[EnableRateLimiting("RateLimitGet")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<getAppInfoDto>> GetAppInfo()
+    public async Task<ActionResult<getAppUsageInfoDto>> GetAppUsageInfo()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null)
@@ -92,7 +92,7 @@ public class AdminController : ControllerBase
                 .Where(e => e.StartOfEvent > DateTime.UtcNow)
                 .CountAsync();
 
-            var response = new getAppInfoDto
+            var response = new getAppUsageInfoDto
             {
                 activeUserCount = userCount,
                 boughtTickets= boughtTickets,
@@ -476,7 +476,7 @@ public class AdminController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<getAdminUserDto>> AdminBoughtTickets()
+    public async Task<ActionResult<getBoughtTicketDto>> AdminBoughtTickets()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null)

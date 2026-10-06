@@ -20,10 +20,8 @@ export class PaymentService {
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * Tworzy sesję Stripe Checkout i zwraca URL do przekierowania.
-   * Backend: POST /api/Payment/buy-ticket/{eventId}
-   */
+  //  * Tworzy sesję Stripe Checkout i zwraca URL do przekierowania. * Backend: POST /api/Payment/buy-ticket/{eventId}
+  
   buyTicket(eventId: number): Observable<BuyTicketResponse> {
     return this.http.post<BuyTicketResponse>(
       `${this.apiUrl}/buy-ticket/${eventId}`,
@@ -31,21 +29,17 @@ export class PaymentService {
     );
   }
 
-  /**
-   * Pobiera aktualny status płatności.
-   * Backend: GET /api/Payment/status/{paymentId}
-   */
+  //  * Pobiera aktualny status płatności. * Backend: GET /api/Payment/status/{paymentId}
+  
   getPaymentStatus(paymentId: number): Observable<PaymentStatusResponse> {
     return this.http.get<PaymentStatusResponse>(
       `${this.apiUrl}/status/${paymentId}`
     );
   }
 
-  /**
-   * Anuluje oczekującą płatność (Pending).
-   * Wymaga endpointu CancelPendingPaymentAsync w backendzie.
-   * Backend: POST /api/Payment/cancel/{paymentId}
-   */
+  //  * Anuluje oczekującą płatność (Pending). * Wymaga endpointu CancelPendingPaymentAsync w backendzie.
+  //  * Backend: POST /api/Payment/cancel/{paymentId}
+  
   cancelPendingPayment(paymentId: number): Observable<void> {
     return this.http.post<void>(
       `${this.apiUrl}/cancel/${paymentId}`,

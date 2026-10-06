@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EventApp.Services.Dto.RelEvent;
 
-public class getAppInfoDto
+public class getAppUsageInfoDto
 {
     public int activeUserCount { get; set; }
     public int boughtTickets { get; set; }

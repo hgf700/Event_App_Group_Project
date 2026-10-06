@@ -393,9 +393,7 @@ public class PaymentService : IPaymentService
         // --- SMS ---
         try
         {
-            bool.TryParse(
-                Environment.GetEnvironmentVariable("TWILIO_SMS_SEND_STATE"),
-                out var sendSms);
+            bool.TryParse(Environment.GetEnvironmentVariable("TWILIO_SMS_SEND_STATE"), out var sendSms);
 
             if (sendSms)
             {

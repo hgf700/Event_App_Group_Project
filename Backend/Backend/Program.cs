@@ -160,15 +160,13 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = false,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(JWT_SECRET)
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWT_SECRET)
         ),
         ClockSkew = TimeSpan.Zero
     };
 });
 
-//credentials jesli korzystam z cookie
-            //.AllowCredentials()
+//credentials jesli korzystam z cookie //.AllowCredentials()
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Prod",
