@@ -1,0 +1,154 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* =========================
+   HEADER
+   ========================= */
+
+thead {
+  background: #f8fafc;
+}
+
+th {
+  padding: 14px 16px;
+
+  text-align: left;
+  white-space: nowrap;
+
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* =========================
+   ROWS
+   ========================= */
+
+tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+tbody tr:hover {
+  background: #f8fafc;
+}
+
+td {
+  padding: 14px 16px;
+
+  font-size: 14px;
+  color: #334155;
+
+  border-bottom: 1px solid #e2e8f0;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* =========================
+   EVENT NAME
+   ========================= */
+
+.event-name {
+  font-weight: 600;
+  color: #1e293b;
+
+  min-width: 180px;
+}
+
+/* =========================
+   EVENT ID
+   ========================= */
+
+td:first-child {
+  color: #64748b;
+
+  font-family: monospace;
+  font-size: 13px;
+}
+
+/* =========================
+   DATE
+   ========================= */
+
+td:nth-child(3) {
+  white-space: nowrap;
+  color: #475569;
+}
+
+/* =========================
+   CITY / CLUB
+   ========================= */
+
+td:nth-child(4),
+td:nth-child(5) {
+  color: #64748b;
+}
+
+/* =========================
+   ACTIONS
+   ========================= */
+
+td:last-child {
+  white-space: nowrap;
+}
+
+td:last-child button {
+  color: #dc2626;
+  border-color: #dc2626;
+
+  font-size: 13px;
+  min-width: 75px;
+
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+td:last-child button:hover {
+  background: #fef2f2;
+}
+
+/* =========================
+   EMPTY
+   ========================= */
+
+.empty {
+  padding: 40px 20px;
+
+  text-align: center;
+
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media (max-width: 800px) {
+  table {
+    display: block;
+    overflow-x: auto;
+
+    white-space: nowrap;
+  }
+
+  th,
+  td {
+    padding: 12px 14px;
+  }
+
+  .event-name {
+    min-width: 160px;
+  }
+}

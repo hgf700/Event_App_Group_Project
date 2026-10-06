@@ -1,1 +1,57 @@
-<p>tickets works!</p>
+<table>
+    <thead>
+        <tr>
+        <th>Użytkownik</th>
+        <th>Wydarzenie</th>
+        <th>Data wydarzenia</th>
+        <th>Zakup</th>
+        <th>Płatność</th>
+        <th>Bilet</th>
+        <th>Payment ID</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (ticket of boughtTickets; track ticket.eventId) {
+            <tr>
+        <td>
+            {{ ticket.userEmail }}
+        </td>
+
+        <td class="event-name">
+            {{ ticket.eventName }}
+        </td>
+
+        <td>
+            {{ formatDate(ticket.eventDate) }}
+        </td>
+
+        <td>
+            {{ formatDate(ticket.createdAt) }}
+        </td>
+
+        <td>
+            <span class="status">
+            {{ getPaymentStateName(ticket.paymentState) }}
+            </span>
+        </td>
+
+        <td>
+            <span class="status">
+            {{ getTicketStateName(ticket.ticketState) }}
+            </span>
+        </td>
+
+        <td class="payment-id">
+            {{ ticket.paymentId || '-' }}
+        </td>
+        </tr>
+        @if (boughtTickets.length === 0) {
+        <tr>
+        <td colspan="7" class="empty">
+            Brak zakupionych biletów
+        </td>
+        </tr>
+    }
+    }
+    </tbody>
+</table>

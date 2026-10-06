@@ -9,5 +9,5 @@ import { Layout } from '../Shared/layout/layout';
   styleUrl: './app.css',
 })
 export class App {
-  protected readonly title = signal('Frontend');
+  protected readonly title = signal('EventApp');
 }

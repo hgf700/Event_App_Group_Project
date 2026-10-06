@@ -1,0 +1,48 @@
+<section class="stats-grid">
+<div class="stat-card">
+    <div class="stat-icon">
+    👤
+    </div>
+
+    <div>
+    <span>Aktywni użytkownicy</span>
+    <strong>
+        {{ usageInfo?.activeUserCount ?? 0 }}
+    </strong>
+    </div>
+</div>
+
+<div class="stat-card">
+    <div class="stat-icon">
+    🎟️
+    </div>
+
+    <div>
+    <span>Sprzedane bilety</span>
+    <strong>
+        {{ usageInfo?.boughtTickets ?? 0 }}
+    </strong>
+    </div>
+</div>
+
+<div class="stat-card">
+    <div class="stat-icon">
+    📅
+    </div>
+
+    <div>
+    <span>Aktywne wydarzenia</span>
+    <strong>
+        {{ usageInfo?.activeTickets ?? 0 }}
+    </strong>
+    </div>
+
+    <!-- <div class="section-header">
+      <div>
+        <h2>Wydarzenia</h2>
+        <span>{{ events.length }} wydarzeń</span>
+      </div>
+    </div> -->
+</div>
+
+</section>

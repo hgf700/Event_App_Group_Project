@@ -14,11 +14,12 @@ import { UserTickets } from '../Views/user-tickets/user-tickets';
 import { EditUser } from '../Views/edit-user/edit-user';
 import { EditUserEmail } from '../Views/edit-user-email/edit-user-email';
 import { EditUserPassword } from '../Views/edit-user-password/edit-user-password';
-import { AdminPanel } from '../Views/admin/admin-panel';
+import { AdminPanel } from '../Views/admin/admin-panel/admin-panel';
 import { Events } from '../Views/admin/events/events';
 import { BlockedUsers } from '../Views/admin/blocked-users/blocked-users';
 import { Tickets } from '../Views/admin/tickets/tickets';
 import { Users } from '../Views/admin/users/users';
+import { Dashbord } from '../Views/admin/dashbord/dashbord';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -36,7 +37,12 @@ export const routes: Routes = [
   { path: 'edit-user-email', component: EditUserEmail },
   { path: 'edit-user-password', component: EditUserPassword },
   { path: 'admin-panel', component: AdminPanel, children:
-    [{
+    [
+    {
+      path: '',
+      component: Dashbord
+    },
+    {
       path: 'events',
       component: Events
     },
@@ -53,8 +59,6 @@ export const routes: Routes = [
       component: Users
     },
     ]},
-
-
 ];
 
 @NgModule({

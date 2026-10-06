@@ -1,1 +1,56 @@
-<p>blocked-users works!</p>
+<table>
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Email</th>
+      <th>Role</th>
+      <th>Akcje</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    @for (user of blockedUsers; track user.id) {
+      <tr>
+        <td class="user-name">
+          {{ user.userName }}
+        </td>
+
+        <td>
+          {{ user.email }}
+        </td>
+
+        <td>
+          @for (role of user.roles; track role) {
+            <span class="role">
+              {{ role }}
+            </span>
+          }
+        </td>
+
+        <td>
+          <button
+            mat-stroked-button
+            color="primary"
+            (click)="unblockUser(user.id)">
+            Odblokuj
+          </button>
+
+          <button
+            mat-stroked-button
+            color="warn"
+            (click)="deleteUser(user.id)">
+            Usuń
+          </button>
+        </td>
+      </tr>
+    }
+
+    @if (blockedUsers.length === 0) {
+      <tr>
+        <td colspan="4" class="empty">
+          Brak zablokowanych użytkowników
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

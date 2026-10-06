@@ -1,1 +1,61 @@
-<p>users works!</p>
+<table>
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Email</th>
+      <th>Role</th>
+      <th>ID</th>
+      <th>Akcje</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    @for (user of users; track user.id) {
+      <tr>
+        <td class="user-name">
+          {{ user.userName }}
+        </td>
+
+        <td>
+          {{ user.email }}
+        </td>
+
+        <td>
+          @for (role of user.roles; track role) {
+            <span class="role">
+              {{ role }}
+            </span>
+          }
+        </td>
+
+        <td class="user-id">
+          {{ user.id }}
+        </td>
+
+        <td class="actions">
+          <button
+            mat-stroked-button
+            color="warn"
+            (click)="blockUser(user.id)">
+            Zablokuj
+          </button>
+
+          <button
+            mat-stroked-button
+            color="warn"
+            (click)="deleteUser(user.id)">
+            Usuń
+          </button>
+        </td>
+      </tr>
+    }
+
+    @if (users.length === 0) {
+      <tr>
+        <td colspan="5" class="empty">
+          Brak użytkowników
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

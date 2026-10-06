@@ -1,0 +1,153 @@
+.admin-layout {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 24px;
+
+  min-height: calc(100vh - 180px);
+  margin: 20px 0;
+}
+   /* SIDEBAR */
+.admin-sidebar {
+  background: #111827;
+  color: #fff;
+
+  border-radius: 12px;
+  padding: 24px;
+
+  height: fit-content;
+  position: sticky;
+  top: 20px;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.admin-sidebar h2 {
+  margin: 0 0 24px 0;
+
+  font-size: 20px;
+  font-weight: 600;
+
+  color: #fff;
+}
+
+   /* NAVIGATION */
+.admin-sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.admin-sidebar nav a {
+  display: flex;
+  align-items: center;
+
+  padding: 12px 14px;
+
+  border-radius: 8px;
+
+  color: #cbd5e1;
+  text-decoration: none;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.admin-sidebar nav a:hover {
+  background: #1f2937;
+  color: #fff;
+
+  transform: translateX(2px);
+}
+
+.admin-sidebar nav a.active {
+  background: #374151;
+  color: #fff;
+}
+
+   /* CONTENT */
+.admin-content {
+  min-width: 0;
+
+  background: #fff;
+
+  border-radius: 12px;
+  padding: 24px;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+   /* TABLET */
+@media (max-width: 900px) {
+  .admin-layout {
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .admin-sidebar {
+    padding: 18px;
+  }
+
+  .admin-sidebar h2 {
+    font-size: 18px;
+  }
+
+  .admin-content {
+    padding: 18px;
+  }
+}
+
+   /* MOBILE */
+@media (max-width: 700px) {
+  .admin-layout {
+    display: flex;
+    flex-direction: column;
+
+    gap: 16px;
+  }
+
+  .admin-sidebar {
+    position: static;
+
+    padding: 16px;
+  }
+
+  .admin-sidebar h2 {
+    margin-bottom: 14px;
+  }
+
+  .admin-sidebar nav {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .admin-sidebar nav a {
+    justify-content: center;
+    text-align: center;
+    padding: 11px 8px;
+  }
+
+  .admin-content {
+    padding: 16px;
+  }
+}
+
+   /* SMALL MOBILE */
+@media (max-width: 450px) {
+  .admin-sidebar nav {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-sidebar nav a {
+    justify-content: flex-start;
+  }
+
+  .admin-content {
+    padding: 12px;
+  }
+}

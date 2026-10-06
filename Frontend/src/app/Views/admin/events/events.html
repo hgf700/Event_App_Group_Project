@@ -1,1 +1,54 @@
-<p>events works!</p>
+<table>
+    <thead>
+        <tr>
+        <th>ID</th>
+        <th>Wydarzenie</th>
+        <th>Data</th>
+        <th>Miasto</th>
+        <th>Klub</th>
+        <th>Akcje</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @for (event of events; track event.id) {
+        <tr>
+        <td>
+            {{ event.id }}
+        </td>
+        
+        <td class="event-name">
+            {{ event.nameOfEvent }}
+        </td>
+
+        <td>
+            {{ event.startOfEvent | date:'dd.MM.yyyy HH:mm' }}
+        </td>
+
+        <td>
+            {{ event.city }}
+        </td>
+
+        <td>
+            {{ event.nameOfClub }}
+        </td>
+
+        <td>
+            <button
+            mat-stroked-button
+            color="warn"
+            (click)="deleteEvent(event.id)">
+            Usuń
+            </button>
+        </td>
+        </tr>
+        @if (events.length === 0) {
+            <tr>
+        <td colspan="6" class="empty">
+            Brak wydarzeń
+        </td>
+        </tr>
+        }
+    }
+    </tbody>
+</table>

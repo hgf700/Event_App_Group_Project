@@ -1,0 +1,42 @@
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <h2>Panel administracyjny</h2>
+
+    <nav>
+      <a
+        routerLink="/admin-panel"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">
+        Dashboard
+      </a>
+
+      <a
+        routerLink="/admin-panel/events"
+        routerLinkActive="active">
+        Wydarzenia
+      </a>
+
+      <a
+        routerLink="/admin-panel/users"
+        routerLinkActive="active">
+        Użytkownicy
+      </a>
+
+      <a
+        routerLink="/admin-panel/blocked-users"
+        routerLinkActive="active">
+        Zablokowani
+      </a>
+
+      <a
+        routerLink="/admin-panel/tickets"
+        routerLinkActive="active">
+        Bilety
+      </a>
+    </nav>
+  </aside>
+
+  <section class="admin-content">
+    <router-outlet></router-outlet>
+  </section>
+</div>
