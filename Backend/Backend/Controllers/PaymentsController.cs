@@ -1,4 +1,5 @@
 ﻿using EventApp.Infrastructure.Db;
+using EventApp.Services.Dto.RelEvent;
 using EventApp.Services.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,7 +36,7 @@ public class PaymentsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> BuyTicket(int id)
+    public async Task<ActionResult<postBuyTicketResponseDto>> BuyTicket(int id)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -67,11 +68,13 @@ public class PaymentsController : ControllerBase
                 userId,
                 id);
 
-            return Ok(new
+            var response = new postBuyTicketResponseDto
             {
                 url = result.Response,
                 paymentId = result.UserEventId
-            });
+            };
+
+            return Ok(response);
         }
         catch (Exception ex)
         {

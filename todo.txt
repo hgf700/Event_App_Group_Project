@@ -149,3 +149,6 @@ validatory do formularzy
 
 blad w platnosci
 i dodanie cdr albo czegos innego w admin panel
+
+zrob nowa migracje 
+i moze blad przez to ze nie dodalem do bazy enum

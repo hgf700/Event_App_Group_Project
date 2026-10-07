@@ -32,6 +32,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 DotNetEnv.Env.Load();
 
+//var envPath = Path.Combine(
+//    builder.Environment.ContentRootPath,
+//    ".env"
+//);
+
+//DotNetEnv.Env.Load(envPath);
+
 builder.Services.AddControllers();
     //.AddJsonOptions(options =>
     //{

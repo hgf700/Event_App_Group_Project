@@ -42,7 +42,7 @@ public class PaymentService : IPaymentService
     // 1. Tworzenie sesji płatności
     public async Task<BuyTicketResult> BuyTicketAsync(string userId, int eventId)
     {
-        var stripeSecretKey = Environment.GetEnvironmentVariable("STRIPE_SECRET_KEY");
+        var stripeSecretKey = Environment.GetEnvironmentVariable("STRIP_SEC_KEY");
 
         if (string.IsNullOrWhiteSpace(stripeSecretKey))
         {
