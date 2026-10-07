@@ -38,26 +38,11 @@ export const routes: Routes = [
   { path: 'edit-user-password', component: EditUserPassword },
   { path: 'admin-panel', component: AdminPanel, children:
     [
-    {
-      path: '',
-      component: Dashbord
-    },
-    {
-      path: 'events',
-      component: Events
-    },
-    {
-      path: 'blocked-users',
-      component: BlockedUsers
-    },
-    {
-      path: 'tickets',
-      component: Tickets
-    },
-    {
-      path: 'users',
-      component: Users
-    },
+    { path: '', component: Dashbord },
+    { path: 'events', component: Events},
+    { path: 'blocked-users', component: BlockedUsers },
+    { path: 'tickets', component: Tickets },
+    { path: 'users', component: Users },
     ]},
 ];
 

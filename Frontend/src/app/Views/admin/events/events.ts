@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { AdminService } from '../../../Services/AdminService';
 import { getEventAdminDto } from '../../../Dto/getEventAdminDto';
@@ -16,6 +16,8 @@ export class Events implements OnInit {
 
   constructor(
     private adminService: AdminService,
+    private cdr: ChangeDetectorRef,
+
   ) {}
 
   ngOnInit(): void {
@@ -28,6 +30,7 @@ export class Events implements OnInit {
       next: response => {
         this.loading = false;
         this.events = response;
+        this.cdr.detectChanges();
       },
       error: err => {
         this.loading = false;

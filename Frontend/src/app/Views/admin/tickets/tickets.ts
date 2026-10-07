@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AdminService } from '../../../Services/AdminService';
 import { getBoughtTicketDto } from '../../../Dto/getBoughtTicketDto';
 import { StatesOfTicket } from '../../../Enum/StatesOfTicket';
@@ -16,6 +16,7 @@ export class Tickets implements OnInit {
 
   constructor(
     private adminService: AdminService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -28,7 +29,7 @@ export class Tickets implements OnInit {
       next: response => {
         this.boughtTickets = response;
         this.loading = false;
-
+        this.cdr.detectChanges();
       },
       error: err => {
         this.loading = false;

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AdminService } from '../../../Services/AdminService';
 import { getAdminUserDto } from '../../../Dto/getAdminUserDto';
 
@@ -14,6 +14,8 @@ export class BlockedUsers implements OnInit {
 
   constructor(
     private adminService: AdminService,
+    private cdr: ChangeDetectorRef,
+
   ) {}
 
   ngOnInit(): void {
@@ -26,6 +28,7 @@ export class BlockedUsers implements OnInit {
       next: response => {
         this.blockedUsers = response;
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: err => {
         console.error(err);

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AdminService } from '../../../Services/AdminService';
 import { getAppUsageInfoDto } from '../../../Dto/getAppUsageInfoDto';
 
@@ -14,9 +14,11 @@ export class Dashbord implements OnInit{
 
   constructor(
     private adminService: AdminService,
+    private cdr: ChangeDetectorRef,
+        // this.cdr.detectChanges();
   ) {}
 
-    ngOnInit(): void {
+  ngOnInit(): void {
     this.loadDashboard();
   }
 
@@ -27,6 +29,7 @@ export class Dashbord implements OnInit{
       next: response => {
         this.loading=false;
         this.usageInfo = response;
+        this.cdr.detectChanges();
       },
       error: err => {
         this.loading=false;
