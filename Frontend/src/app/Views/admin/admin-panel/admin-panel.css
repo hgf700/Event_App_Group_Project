@@ -151,3 +151,40 @@
     padding: 12px;
   }
 }
+
+.seed-database:hover {
+  background-color: #bb2d3b;
+}
+
+.seed-database:active {
+  transform: scale(0.98);
+}
+
+.seed-database:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+
+.admin-tools {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.admin-tools span {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 12px;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.seed-database {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  background: #dc3545;
+  color: white;
+  cursor: pointer;
+}

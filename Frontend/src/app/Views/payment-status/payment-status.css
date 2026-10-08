@@ -16,24 +16,24 @@
   text-align: center;
 }
 
-.payment-card.failed {
-  border-top: 6px solid #c62828;
+.payment-card.success {
+  border-top: 6px solid #2e7d32;
 }
 
 .payment-icon-circle {
   width: 100px;
   height: 100px;
   margin: 0 auto 1.5rem;
-  background: linear-gradient(135deg, #ef5350 0%, #c62828 100%);
+  background: linear-gradient(135deg, #66bb6a 0%, #2e7d32 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 24px rgba(198, 40, 40, 0.3);
+  box-shadow: 0 8px 24px rgba(46, 125, 50, 0.3);
   animation: pop 0.5s ease-out;
 }
 
-.cross {
+.checkmark {
   font-size: 3.5rem;
   color: #fff;
   font-weight: bold;
@@ -68,7 +68,7 @@
 }
 
 .payment-info-box {
-  background-color: #ffebee;
+  background-color: var(--color-bg);
   border-radius: var(--radius);
   padding: 1.25rem;
   margin-bottom: 2rem;

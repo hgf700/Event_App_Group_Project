@@ -144,8 +144,8 @@ public class PaymentService : IPaymentService
                     Quantity = TicketAmount
                 }
             },
-            SuccessUrl = $"{YourDomain}/payment-success?paymentId={userEvent.Id}",
-            CancelUrl = $"{YourDomain}/payment-failed?paymentId={userEvent.Id}",
+            SuccessUrl = $"{YourDomain}/payment-status?paymentId={userEvent.Id}",
+            CancelUrl = $"{YourDomain}/payment-status?paymentId={userEvent.Id}&result=cancel",
 
             // Opcjonalnie: wygaśnięcie sesji po 30 minutach
             ExpiresAt = DateTime.UtcNow.AddMinutes(30)

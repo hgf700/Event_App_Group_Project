@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-admin-panel',
@@ -10,6 +10,10 @@ import { RouterModule } from '@angular/router';
   styleUrl: './admin-panel.css',
 })
 export class AdminPanel {
-  constructor(
-  ) {}
+
+  constructor(private router: Router) {}
+
+  seedDatabase(){
+    this.router.navigate(['/seed-database']);
+  }
 }

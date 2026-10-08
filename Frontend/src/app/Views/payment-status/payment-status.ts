@@ -5,17 +5,18 @@ import { PaymentService } from '../../Services/PaymentService';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-payment-success',
+  selector: 'app-payment-status',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './payment-success.html',
-  styleUrl: './payment-success.css',
+  templateUrl: './payment-status.html',
+  styleUrl: './payment-status.css',
 })
-export class PaymentSuccess implements OnInit, OnDestroy {
+export class PaymentStatus implements OnInit, OnDestroy {
   paymentId: number | null = null;
   loading = true;
   paymentState = '';
   error = false;
+  cancelled = false;
 
   private readonly maxAttempts = 20; // ~30 sekund (20 × 1.5s)
   private attempt = 0;
@@ -30,6 +31,9 @@ export class PaymentSuccess implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const paymentIdParam = this.route.snapshot.queryParamMap.get('paymentId');
+    const cancelledParam = this.route.snapshot.queryParamMap.get('cancelled');
+
+    this.cancelled = cancelledParam === 'true';
 
     if (!paymentIdParam) {
       console.error('Brak paymentId');
@@ -46,6 +50,17 @@ export class PaymentSuccess implements OnInit, OnDestroy {
     }
 
     this.paymentId = paymentId;
+
+    /*
+     * Użytkownik wrócił przez CancelUrl.
+     * Nie musimy czekać na webhook/polling.
+     */
+    if (this.cancelled) {
+      this.paymentState = 'Cancelled';
+      this.loading = false;
+      return;
+    }
+
     this.checkPaymentStatus();
   }
 
@@ -56,44 +71,50 @@ export class PaymentSuccess implements OnInit, OnDestroy {
 
     this.statusSub?.unsubscribe();
 
-    this.statusSub = this.paymentService.getPaymentStatus(this.paymentId).subscribe({
-      next: (res) => {
-        this.paymentState = res.state;
-        this.attempt++;
+    this.statusSub = this.paymentService
+      .getPaymentStatus(this.paymentId)
+      .subscribe({
+        next: (res) => {
+          this.paymentState = res.state;
+          this.attempt++;
 
-        // Sukces
-        if (res.state === 'Paid') {
-          this.loading = false;
-          return;
-        }
+          // Sukces
+          if (res.state === 'Paid') {
+            this.loading = false;
+            return;
+          }
 
-        // Stany końcowe negatywne
-        if (
-          res.state === 'Expired' ||
-          res.state === 'Cancelled' ||
-          res.state === 'Refunded'
-        ) {
-          this.loading = false;
-          return;
-        }
+          // Stany końcowe negatywne
+          if (
+            res.state === 'Expired' ||
+            res.state === 'Cancelled' ||
+            res.state === 'Refunded'
+          ) {
+            this.loading = false;
+            return;
+          }
 
-        // Nadal Pending – webhook mógł jeszcze nie dojść
-        if (this.attempt >= this.maxAttempts) {
-          // Po ~30 s uznajemy, że coś poszło nie tak
-          this.loading = false;
-          this.error = true;
-          return;
-        }
+          // Nadal Pending – czekamy na webhook
+          if (this.attempt >= this.maxAttempts) {
+            this.loading = false;
+            this.error = true;
+            return;
+          }
 
-        this.timeoutId = setTimeout(() => {
-          this.checkPaymentStatus();
-        }, 1500);
-      },
-      error: (err) => {
-        console.error('Nie udało się pobrać statusu płatności:', err);
-        this.finishWithError();
-      },
-    });
+          this.timeoutId = setTimeout(() => {
+            this.checkPaymentStatus();
+          }, 1500);
+        },
+
+        error: (err) => {
+          console.error(
+            'Nie udało się pobrać statusu płatności:',
+            err
+          );
+
+          this.finishWithError();
+        },
+      });
   }
 
   private finishWithError(): void {
@@ -109,6 +130,7 @@ export class PaymentSuccess implements OnInit, OnDestroy {
     if (this.timeoutId) {
       clearTimeout(this.timeoutId);
     }
+
     this.statusSub?.unsubscribe();
   }
 }
