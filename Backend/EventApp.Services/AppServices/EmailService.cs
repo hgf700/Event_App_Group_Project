@@ -27,69 +27,148 @@ public class EmailService : IEmailService
             <html>
             <head>
                 <meta charset='UTF-8'>
-                <title>Email</title>
+                <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                <title>Twoje wydarzenie</title>
             </head>
 
-            <body style='margin:0; padding:0; background-color:#f0f0f0; font-family:Arial, sans-serif;'>
+            <body style='margin:0; padding:0; background-color:#f4f4f5; font-family:Arial, Helvetica, sans-serif;'>
 
-                <table width='100%' cellpadding='0' cellspacing='0'>
+                <table width='100%' cellpadding='0' cellspacing='0' border='0'>
                     <tr>
-                        <td align='center' style='padding:30px;'>
+                        <td align='center' style='padding:40px 15px;'>
 
-                            <table width='600' cellpadding='0' cellspacing='0' 
-                                   style='background:#ffffff; border-radius:8px; padding:30px;'>
+                            <!-- MAIN CARD -->
+                            <table width='600' cellpadding='0' cellspacing='0' border='0'
+                                   style='max-width:600px; width:100%; background-color:#ffffff; border-radius:16px; overflow:hidden;'>
 
+                                <!-- HEADER -->
                                 <tr>
-                                    <td align='center'>
-                                        <h2 style='color:#333; margin-bottom:20px;'>
-                                            Email with event
-                                        </h2>
+                                    <td style='padding:28px 35px; background-color:#111827;'>
+
+                                        <table width='100%' cellpadding='0' cellspacing='0' border='0'>
+                                            <tr>
+                                                <td>
+                                                    <div style='font-size:13px; color:#9ca3af; text-transform:uppercase; letter-spacing:2px;'>
+                                                        EVENT TICKET
+                                                    </div>
+
+                                                    <div style='margin-top:8px; font-size:28px; font-weight:bold; color:#ffffff;'>
+                                                        Twoje wydarzenie
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+
                                     </td>
                                 </tr>
 
+                                <!-- HERO IMAGE -->
                                 <tr>
-                                    <td style='color:#555; font-size:15px; line-height:1.5;'>
+                                    <td>
+                                        <img src='cid:EmailPhoto'
+                                             alt='Event'
+                                             width='600'
+                                             style='display:block; width:100%; max-width:600px; height:auto; border:0;' />
+                                    </td>
+                                </tr>
 
-                                        <p>
-                                            Kliknij w poniższy link:
-                                        </p>
+                                <!-- CONTENT -->
+                                <tr>
+                                    <td style='padding:35px;'>
 
-                                        <!-- EVENT URL -->
-                                        <p>
-                                            <a href='{url}' 
-                                               style='color:#0066cc; text-decoration:none;'>
-                                                {url}
-                                            </a>
-                                        </p>
-
-                                        <hr style='border:none; border-top:1px solid #ddd; margin:25px 0;'>
-
-                                        <!-- MAIN IMAGE -->
-                                        <div style='text-align:center;'>
-                                            <img src='cid:EmailPhoto' 
-                                                 alt='test'
-                                                 style='max-width:100%; height:auto;' />
+                                        <div style='font-size:14px; color:#6b7280; margin-bottom:8px;'>
+                                            TWOJE WYDARZENIE
                                         </div>
 
-                                        <br />
+                                        <div style='font-size:24px; font-weight:bold; color:#111827; margin-bottom:20px;'>
+                                            Kliknij poniżej, aby zobaczyć wydarzenie
+                                        </div>
 
-                                        <!-- QR CODE -->
-                                        <div style='text-align:center;'>
-                                            <img src='cid:QRimage' 
-                                                 alt='QR'
-                                                 style='width:200px; height:200px;' />
+                                        <!-- CTA -->
+                                        <table cellpadding='0' cellspacing='0' border='0' style='margin-bottom:30px;'>
+                                            <tr>
+                                                <td align='center' bgcolor='#111827' style='border-radius:8px;'>
+                                                    <a href='{url}'
+                                                       style='display:inline-block; padding:14px 24px; font-size:15px; font-weight:bold; color:#ffffff; text-decoration:none;'>
+                                                        Zobacz wydarzenie →
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                        <!-- URL -->
+                                        <div style='font-size:12px; color:#9ca3af; margin-bottom:30px;'>
+                                            {url}
+                                        </div>
+
+                                        <!-- DIVIDER -->
+                                        <table width='100%' cellpadding='0' cellspacing='0' border='0'>
+                                            <tr>
+                                                <td style='border-top:1px solid #e5e7eb;'></td>
+                                            </tr>
+                                        </table>
+
+                                        <!-- QR SECTION -->
+                                        <table width='100%' cellpadding='0' cellspacing='0' border='0'>
+                                            <tr>
+                                                <td align='center' style='padding:30px 0 10px;'>
+
+                                                    <div style='font-size:18px; font-weight:bold; color:#111827;'>
+                                                        Twój kod QR
+                                                    </div>
+
+                                                    <div style='margin-top:7px; font-size:13px; color:#6b7280;'>
+                                                        Pokaż ten kod przy wejściu na wydarzenie
+                                                    </div>
+
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td align='center' style='padding:20px 0 10px;'>
+
+                                                    <table cellpadding='0' cellspacing='0' border='0'
+                                                           style='background:#ffffff; border:1px solid #e5e7eb; border-radius:12px; padding:15px;'>
+                                                        <tr>
+                                                            <td>
+                                                                <img src='cid:QRimage'
+                                                                     alt='QR Code'
+                                                                     width='200'
+                                                                     height='200'
+                                                                     style='display:block; width:200px; height:200px; border:0;' />
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                    </td>
+                                </tr>
+
+                                <!-- FOOTER -->
+                                <tr>
+                                    <td style='padding:22px 35px; background-color:#f9fafb; border-top:1px solid #e5e7eb;'>
+
+                                        <div style='text-align:center; font-size:12px; color:#9ca3af; line-height:1.5;'>
+                                            Ta wiadomość została wygenerowana automatycznie.<br>
+                                            Prosimy na nią nie odpowiadać.
                                         </div>
 
                                     </td>
                                 </tr>
 
+                            </table>
+
+                            <!-- OUTSIDE FOOTER -->
+                            <table width='600' cellpadding='0' cellspacing='0' border='0'
+                                   style='max-width:600px; width:100%;'>
                                 <tr>
-                                    <td align='center' 
-                                        style='padding-top:30px; color:#999; font-size:12px;'>
-                                        Wiadomość wygenerowana automatycznie.
+                                    <td align='center' style='padding:20px 10px; font-size:11px; color:#9ca3af;'>
+                                        © 2026
                                     </td>
                                 </tr>
-
                             </table>
 
                         </td>
@@ -126,9 +205,9 @@ public class EmailService : IEmailService
             data.TransferEncoding = TransferEncoding.Base64;
 
             ContentDisposition disposition = data.ContentDisposition;
-            disposition.CreationDate = System.IO.File.GetCreationTime(filePathPdf);
-            disposition.ModificationDate = System.IO.File.GetLastWriteTime(filePathPdf);
-            disposition.ReadDate = System.IO.File.GetLastAccessTime(filePathPdf);
+            disposition.CreationDate = File.GetCreationTime(filePathPdf);
+            disposition.ModificationDate = File.GetLastWriteTime(filePathPdf);
+            disposition.ReadDate = File.GetLastAccessTime(filePathPdf);
 
             LinkedResource image = new LinkedResource(fileNameEmailPhoto, MediaTypeNames.Image.Jpeg);
             LinkedResource pngimage = new LinkedResource(filePathQr, MediaTypeNames.Image.Png);
@@ -175,7 +254,7 @@ public class EmailService : IEmailService
                     };
 
                     smtp.Send(message);
-                    System.Console.WriteLine("Sent");
+                    Console.WriteLine("Sent");
                 }
             }
         }

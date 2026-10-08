@@ -1,4 +1,5 @@
 export interface getEventTicketWithQrDto {
+  userEventId: number;
   eventId: number;
   typeOfEvent: string;
   nameOfEvent: string;
