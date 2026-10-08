@@ -46,4 +46,8 @@
     <ProjectReference Include="..\EventApp.Services\EventApp.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Generated\" />
+  </ItemGroup>
+
 </Project>

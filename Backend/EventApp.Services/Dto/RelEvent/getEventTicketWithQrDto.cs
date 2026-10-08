@@ -4,6 +4,7 @@ namespace EventApp.Services.Dto.RelEvent;
 
 public class getEventTicketWithQrDto
 {
+    public int userEventId { get; set; }
     public int? eventId { get; set; }
     public string? typeOfEvent { get; set; }
     public string? nameOfEvent { get; set; }

@@ -411,7 +411,7 @@ public class PaymentService : IPaymentService
         byte[] qrBytes;
         try
         {
-            qrBytes = _qrCodeService.GenerateQrCodeBytes(ev.UrlOfEvent);
+            qrBytes = _qrCodeService.GenerateQrCode(ev.UrlOfEvent, userEvent.Id);
         }
         catch (Exception ex)
         {
@@ -432,7 +432,7 @@ public class PaymentService : IPaymentService
                 qrCode: qrBytes
             );
 
-            var resourcesPath = Path.Combine(Directory.GetCurrentDirectory(), "Resources");
+            var resourcesPath = Path.Combine(Directory.GetCurrentDirectory(), "Generated");
             Directory.CreateDirectory(resourcesPath);
 
             pdfPath = Path.Combine(resourcesPath, $"ticket-{userEvent.Id}.pdf");
@@ -456,7 +456,7 @@ public class PaymentService : IPaymentService
             {
                 // Jeśli masz metodę z załącznikiem – użyj jej
                 // _emailService.SendEmailWithAttachment(targetEmail, ev.UrlOfEvent, pdfPath);
-                _emailService.SendEmail(targetEmail, ev.UrlOfEvent);
+                _emailService.SendEmail(targetEmail, ev.UrlOfEvent, userEvent.Id);
             }
         }
         catch (Exception ex)

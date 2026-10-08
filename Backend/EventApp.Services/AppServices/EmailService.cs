@@ -8,17 +8,16 @@ namespace EventApp.Services.Services;
 
 public class EmailService : IEmailService
 {
-    public void SendEmail(string toEmail, string url)
+    public void SendEmail(string toEmail, string url, int userEventId)
     {
         try
         {
             // Mailtrap SMTP dane z ENV
             string smtpUser = Environment.GetEnvironmentVariable("MAILTRAP_SENDER_USER");
             string smtpPass = Environment.GetEnvironmentVariable("MAILTRAP_SENDER_PASS");
+
             if (string.IsNullOrEmpty(smtpUser) || string.IsNullOrEmpty(smtpPass))
-            {
                 throw new Exception("Brakuje zmiennych środowiskowych: MAILTRAP_USER lub MAILTRAP_PASS");
-            }
 
             var fromAddress = new MailAddress("test@example.com", "Mailtrap Test", System.Text.Encoding.UTF8);
             var toAddress = new MailAddress($"{toEmail}", "test email");
@@ -67,7 +66,7 @@ public class EmailService : IEmailService
 
                                         <!-- MAIN IMAGE -->
                                         <div style='text-align:center;'>
-                                            <img src='cid:testImage' 
+                                            <img src='cid:EmailPhoto' 
                                                  alt='test'
                                                  style='max-width:100%; height:auto;' />
                                         </div>
@@ -106,26 +105,36 @@ public class EmailService : IEmailService
             MailAddress bcc = new MailAddress("manager1@contoso.com");
             MailAddress copy = new MailAddress("Notification_List@contoso.com");
 
-            string dir = Path.Combine(Directory.GetCurrentDirectory(), "Resources");
-            Directory.SetCurrentDirectory(dir);
+            string basePath = Directory.GetCurrentDirectory();
 
-            string file = "bilet.pdf";
-            // Create  the file attachment for this email message.
-            Attachment data = new Attachment(file, MediaTypeNames.Text.Plain);
+            string resourcesPath = Path.Combine(basePath, "Resources");
+            string generatedPath = Path.Combine(basePath, "Generated");
+
+            Directory.CreateDirectory(resourcesPath);
+            Directory.CreateDirectory(generatedPath);
+
+            string fileNameEmailPhoto= Path.Combine(resourcesPath, "test.jpg");
+            string fileNameLogo = Path.Combine(resourcesPath, "logo.png");
+
+            string fileNamePdf = $"ticket-{userEventId}.pdf";
+            string fileNameQr = $"QR-{userEventId}.png";
+
+            string filePathPdf = Path.Combine(generatedPath, fileNamePdf);
+            string filePathQr = Path.Combine(generatedPath, fileNameQr);
+
+            Attachment data = new Attachment(filePathPdf, MediaTypeNames.Text.Plain);
             data.TransferEncoding = TransferEncoding.Base64;
-            // Add time stamp information for the file.
+
             ContentDisposition disposition = data.ContentDisposition;
-            disposition.CreationDate = System.IO.File.GetCreationTime(file);
-            disposition.ModificationDate = System.IO.File.GetLastWriteTime(file);
-            disposition.ReadDate = System.IO.File.GetLastAccessTime(file);
+            disposition.CreationDate = System.IO.File.GetCreationTime(filePathPdf);
+            disposition.ModificationDate = System.IO.File.GetLastWriteTime(filePathPdf);
+            disposition.ReadDate = System.IO.File.GetLastAccessTime(filePathPdf);
 
-            string imagePath = Path.Combine("test.jpg");
-            LinkedResource image = new LinkedResource(imagePath, MediaTypeNames.Image.Jpeg);
+            LinkedResource image = new LinkedResource(fileNameEmailPhoto, MediaTypeNames.Image.Jpeg);
+            LinkedResource pngimage = new LinkedResource(filePathQr, MediaTypeNames.Image.Png);
 
-            string pngPath = Path.Combine("QR.PNG");
-            LinkedResource pngimage = new LinkedResource(pngPath, MediaTypeNames.Image.Png);
-
-            image.ContentId = "testImage"; // ID dla cid
+            // ID dla cid
+            image.ContentId = "EmailPhoto"; 
             image.TransferEncoding = TransferEncoding.Base64;
 
             pngimage.ContentId = "QRimage";

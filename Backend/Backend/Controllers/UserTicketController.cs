@@ -104,6 +104,7 @@ public class UserTicketController : ControllerBase
                 ue.EventId == eventId)
             .Select(ue => new getEventTicketWithQrDto
             {
+                userEventId = ue.Id,
                 eventId = ue.Event.Id,
                 typeOfEvent = ue.Event.TypeOfEvent,
                 nameOfEvent = ue.Event.NameOfEvent,
@@ -118,7 +119,7 @@ public class UserTicketController : ControllerBase
         if (ticket == null)
             return NotFound("Ticket not found");
 
-        ticket.qrCode = _qrCodeService.GenerateQrCodeBytes(ticket.urlOfEvent);
+        ticket.qrCode = _qrCodeService.GenerateQrCode(ticket.urlOfEvent, ticket.userEventId);
 
         return Ok(ticket);
     }
