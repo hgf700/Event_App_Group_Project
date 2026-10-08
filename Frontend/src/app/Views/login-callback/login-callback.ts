@@ -60,11 +60,11 @@ export class LoginCallback implements OnInit {
     return this.eventsNavigtionService.adminPanel();
   }
 
-  isLogged(){
+  isLogged() {
     return this.authService.isLogged();
   }
 
-  isAdmin(){
+  isAdmin() {
     return this.authService.isAdmin();
   }
 

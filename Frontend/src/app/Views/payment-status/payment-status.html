@@ -1,6 +1,4 @@
 <div class="payment-wrapper">
-
-  
   @if (loading) {
     <div class="payment-card">
       <div class="payment-icon-circle">
@@ -10,8 +8,8 @@
       <h1 class="payment-title">Sprawdzamy płatność...</h1>
 
       <p class="payment-subtitle">
-        Płatność została przekazana do przetworzenia.
-        Chwilę jeszcze poczekaj, sprawdzamy jej status.
+        Płatność została przekazana do przetworzenia. Chwilę jeszcze poczekaj, sprawdzamy jej
+        status.
       </p>
     </div>
   }
@@ -26,8 +24,7 @@
       <h1 class="payment-title">Płatność udana!</h1>
 
       <p class="payment-subtitle">
-        Dziękujemy za zakup. Twój bilet został opłacony
-        i został dodany do Twojego konta.
+        Dziękujemy za zakup. Twój bilet został opłacony i został dodany do Twojego konta.
       </p>
 
       <div class="payment-info-box">
@@ -45,9 +42,7 @@
         <button class="btn-primary-payment" routerLink="/user-tickets">
           🎟️ Zobacz moje bilety
         </button>
-        <button class="btn-secondary-payment" (click)="returnToEvents()">
-          Wróć do wydarzeń
-        </button>
+        <button class="btn-secondary-payment" (click)="returnToEvents()">Wróć do wydarzeń</button>
       </div>
     </div>
   }
@@ -62,8 +57,8 @@
       <h1 class="payment-title">Płatność wygasła</h1>
 
       <p class="payment-subtitle">
-        Sesja płatności wygasła. Bilet nie został opłacony.
-        Możesz wrócić do wydarzeń i spróbować ponownie.
+        Sesja płatności wygasła. Bilet nie został opłacony. Możesz wrócić do wydarzeń i spróbować
+        ponownie.
       </p>
 
       <div class="payment-info-box">
@@ -78,12 +73,8 @@
       </div>
 
       <div class="payment-actions">
-        <button class="btn-primary-payment" (click)="returnToEvents()">
-          🔄 Spróbuj ponownie
-        </button>
-        <button class="btn-secondary-payment" routerLink="/login-callback">
-          Wróć do panelu
-        </button>
+        <button class="btn-primary-payment" (click)="returnToEvents()">🔄 Spróbuj ponownie</button>
+        <button class="btn-secondary-payment" routerLink="/login-callback">Wróć do panelu</button>
       </div>
     </div>
   }
@@ -97,9 +88,7 @@
 
       <h1 class="payment-title">Płatność anulowana</h1>
 
-      <p class="payment-subtitle">
-        Płatność została anulowana i bilet nie został opłacony.
-      </p>
+      <p class="payment-subtitle">Płatność została anulowana i bilet nie został opłacony.</p>
 
       <div class="payment-info-box">
         <div class="info-line">
@@ -113,12 +102,8 @@
       </div>
 
       <div class="payment-actions">
-        <button class="btn-primary-payment" (click)="returnToEvents()">
-          🔄 Spróbuj ponownie
-        </button>
-        <button class="btn-secondary-payment" routerLink="/login-callback">
-          Wróć do panelu
-        </button>
+        <button class="btn-primary-payment" (click)="returnToEvents()">🔄 Spróbuj ponownie</button>
+        <button class="btn-secondary-payment" routerLink="/login-callback">Wróć do panelu</button>
       </div>
     </div>
   }
@@ -132,17 +117,11 @@
 
       <h1 class="payment-title">Płatność zwrócona</h1>
 
-      <p class="payment-subtitle">
-        Środki zostały zwrócone. Bilet nie jest aktywny.
-      </p>
+      <p class="payment-subtitle">Środki zostały zwrócone. Bilet nie jest aktywny.</p>
 
       <div class="payment-actions">
-        <button class="btn-primary-payment" (click)="returnToEvents()">
-          Wróć do wydarzeń
-        </button>
-        <button class="btn-secondary-payment" routerLink="/login-callback">
-          Wróć do panelu
-        </button>
+        <button class="btn-primary-payment" (click)="returnToEvents()">Wróć do wydarzeń</button>
+        <button class="btn-secondary-payment" routerLink="/login-callback">Wróć do panelu</button>
       </div>
     </div>
   }
@@ -157,18 +136,13 @@
       <h1 class="payment-title">Nie udało się sprawdzić płatności</h1>
 
       <p class="payment-subtitle">
-        Nie mogliśmy pobrać aktualnego statusu płatności
-        lub przetwarzanie trwa zbyt długo.
-        Sprawdź sekcję „Moje bilety” za chwilę.
+        Nie mogliśmy pobrać aktualnego statusu płatności lub przetwarzanie trwa zbyt długo. Sprawdź
+        sekcję „Moje bilety” za chwilę.
       </p>
 
       <div class="payment-actions">
-        <button class="btn-primary-payment" (click)="returnToEvents()">
-          Wróć do wydarzeń
-        </button>
-        <button class="btn-secondary-payment" routerLink="/user-tickets">
-          🎟️ Moje bilety
-        </button>
+        <button class="btn-primary-payment" (click)="returnToEvents()">Wróć do wydarzeń</button>
+        <button class="btn-secondary-payment" routerLink="/user-tickets">🎟️ Moje bilety</button>
       </div>
     </div>
   }

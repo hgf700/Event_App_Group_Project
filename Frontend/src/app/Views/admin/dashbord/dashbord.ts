@@ -8,14 +8,14 @@ import { getAppUsageInfoDto } from '../../../Dto/getAppUsageInfoDto';
   templateUrl: './dashbord.html',
   styleUrl: './dashbord.css',
 })
-export class Dashbord implements OnInit{
+export class Dashbord implements OnInit {
   usageInfo: getAppUsageInfoDto | null = null;
   loading = false;
 
   constructor(
     private adminService: AdminService,
     private cdr: ChangeDetectorRef,
-        // this.cdr.detectChanges();
+    // this.cdr.detectChanges();
   ) {}
 
   ngOnInit(): void {
@@ -26,15 +26,15 @@ export class Dashbord implements OnInit{
     this.loading = true;
 
     this.adminService.getAppUsageInfo().subscribe({
-      next: response => {
-        this.loading=false;
+      next: (response) => {
+        this.loading = false;
         this.usageInfo = response;
         this.cdr.detectChanges();
       },
-      error: err => {
-        this.loading=false;
+      error: (err) => {
+        this.loading = false;
         console.error(err);
-      }
+      },
     });
   }
 }

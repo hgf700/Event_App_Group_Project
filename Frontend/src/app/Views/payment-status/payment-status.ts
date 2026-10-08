@@ -19,7 +19,7 @@ export class PaymentStatus implements OnInit, OnDestroy {
   cancelled = false;
 
   // ~30 sekund (20 × 1.5s)
-  private readonly maxAttempts = 50; 
+  private readonly maxAttempts = 50;
   private attempt = 0;
   private timeoutId: ReturnType<typeof setTimeout> | null = null;
   private statusSub?: Subscription;
@@ -74,48 +74,40 @@ export class PaymentStatus implements OnInit, OnDestroy {
     this.statusSub?.unsubscribe();
 
     this.statusSub = this.paymentService.getPaymentStatus(this.paymentId).subscribe({
-        next: (res) => {
+      next: (res) => {
+        this.paymentState = res.state;
+        this.attempt++;
 
-  this.paymentState = res.state;
-  this.attempt++;
+        if (res.state === 'Paid') {
+          this.loading = false;
+          this.cdr.detectChanges();
+          return;
+        }
 
-  if (res.state === 'Paid') {
-    this.loading = false;
-    this.cdr.detectChanges();
-    return;
-  }
+        if (res.state === 'Expired' || res.state === 'Cancelled' || res.state === 'Refunded') {
+          this.loading = false;
+          this.cdr.detectChanges();
+          return;
+        }
 
-  if (
-    res.state === 'Expired' ||
-    res.state === 'Cancelled' ||
-    res.state === 'Refunded'
-  ) {
-    this.loading = false;
-    this.cdr.detectChanges();
-    return;
-  }
+        if (this.attempt >= this.maxAttempts) {
+          this.loading = false;
+          this.error = true;
+          this.cdr.detectChanges();
+          return;
+        }
 
-  if (this.attempt >= this.maxAttempts) {
-    this.loading = false;
-    this.error = true;
-    this.cdr.detectChanges();
-    return;
-  }
+        this.timeoutId = setTimeout(() => {
+          this.checkPaymentStatus();
+        }, 1500);
+      },
 
-  this.timeoutId = setTimeout(() => {
-    this.checkPaymentStatus();
-  }, 1500);
-},
+      error: (err) => {
+        console.error('Nie udało się pobrać statusu płatności:', err);
 
-        error: (err) => {
-          console.error(
-            'Nie udało się pobrać statusu płatności:',
-            err
-          );
-
-          this.finishWithError();
-        },
-      });
+        this.finishWithError();
+      },
+    });
   }
 
   private finishWithError(): void {

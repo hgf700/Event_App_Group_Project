@@ -15,7 +15,6 @@ export class BlockedUsers implements OnInit {
   constructor(
     private adminService: AdminService,
     private cdr: ChangeDetectorRef,
-
   ) {}
 
   ngOnInit(): void {
@@ -25,27 +24,27 @@ export class BlockedUsers implements OnInit {
   loadBlockedUsers(): void {
     this.loading = true;
     this.adminService.getBlockedUsers().subscribe({
-      next: response => {
+      next: (response) => {
         this.blockedUsers = response;
         this.loading = false;
         this.cdr.detectChanges();
       },
-      error: err => {
+      error: (err) => {
         console.error(err);
         this.loading = false;
-      }
+      },
     });
   }
-  
+
   unblockUser(id: string): void {
     this.adminService.unblockUser(id).subscribe({
       next: () => {
         this.loadBlockedUsers();
       },
-      error: err => {
+      error: (err) => {
         console.error(err);
         alert('Nie udało się odblokować użytkownika.');
-      }
+      },
     });
   }
 
@@ -58,10 +57,10 @@ export class BlockedUsers implements OnInit {
       next: () => {
         this.loadBlockedUsers();
       },
-      error: err => {
+      error: (err) => {
         console.error(err);
         alert('Nie udało się usunąć użytkownika.');
-      }
+      },
     });
   }
 }

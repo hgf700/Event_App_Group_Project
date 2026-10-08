@@ -48,7 +48,7 @@ export class RegisterUser {
         localStorage.setItem('jwt', res.jwt);
         localStorage.setItem('email', res.email!);
         localStorage.setItem('userRole', res.userRole!);
-        
+
         this.router.navigate(['/login-callback']);
       },
       error: (err) => alert(err.error),

@@ -33,28 +33,16 @@
         </td>
 
         <td class="actions">
-          <button
-            mat-stroked-button
-            color="warn"
-            (click)="blockUser(user.id)">
-            Zablokuj
-          </button>
+          <button mat-stroked-button color="warn" (click)="blockUser(user.id)">Zablokuj</button>
 
-          <button
-            mat-stroked-button
-            color="warn"
-            (click)="deleteUser(user.id)">
-            Usuń
-          </button>
+          <button mat-stroked-button color="warn" (click)="deleteUser(user.id)">Usuń</button>
         </td>
       </tr>
     }
 
     @if (users.length === 0) {
       <tr>
-        <td colspan="5" class="empty">
-          Brak użytkowników
-        </td>
+        <td colspan="5" class="empty">Brak użytkowników</td>
       </tr>
     }
   </tbody>

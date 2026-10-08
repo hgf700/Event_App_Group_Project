@@ -2,9 +2,7 @@
   <div class="user-info">
     <div class="avatar">👤</div>
     <div>
-      <p class="hello-text">Witaj z powrotem! 
-        <br>{{ userEmailData() }}
-      </p>
+      <p class="hello-text">Witaj z powrotem! <br />{{ userEmailData() }}</p>
     </div>
   </div>
 </div>
@@ -13,36 +11,35 @@
 
 <div class="actions-grid">
   @if (isLogged()) {
-  <button class="action-card" (click)="eventsView()">
-    <div class="action-icon">🎫</div>
-    <h3>Przeglądaj wydarzenia</h3>
-    <p>Zobacz wszystkie dostępne koncerty, mecze i spektakle</p>
-  </button>
+    <button class="action-card" (click)="eventsView()">
+      <div class="action-icon">🎫</div>
+      <h3>Przeglądaj wydarzenia</h3>
+      <p>Zobacz wszystkie dostępne koncerty, mecze i spektakle</p>
+    </button>
 
-  <button class="action-card" (click)="userBoughtTickets()">
-    <div class="action-icon">🎟️</div>
-    <h3>Moje bilety</h3>
-    <p>Wszystkie Twoje zakupione bilety w jednym miejscu</p>
-  </button>
+    <button class="action-card" (click)="userBoughtTickets()">
+      <div class="action-icon">🎟️</div>
+      <h3>Moje bilety</h3>
+      <p>Wszystkie Twoje zakupione bilety w jednym miejscu</p>
+    </button>
 
-  <button class="action-card" (click)="editCurrentUser()">
-    <div class="action-icon">⚙️</div>
-    <h3>Ustawienia konta</h3>
-    <p>Zmień dane, email lub hasło</p>
-  </button>
+    <button class="action-card" (click)="editCurrentUser()">
+      <div class="action-icon">⚙️</div>
+      <h3>Ustawienia konta</h3>
+      <p>Zmień dane, email lub hasło</p>
+    </button>
 
-  <button class="action-card" (click)="searchAndImportView()">
-    <div class="action-icon">🔍</div>
-    <h3>Wyszukaj i importuj</h3>
-    <p>Znajdź nowe wydarzenia z Ticketmaster</p>
-  </button>
-
-  } @if (isAdmin()){
-  <button class="action-card" (click)="adminView()">
-    <div class="action-icon">🛡️</div>
-    <h3>adminView</h3>
-    <p>Midok admina</p>
-  </button>
+    <button class="action-card" (click)="searchAndImportView()">
+      <div class="action-icon">🔍</div>
+      <h3>Wyszukaj i importuj</h3>
+      <p>Znajdź nowe wydarzenia z Ticketmaster</p>
+    </button>
+  }
+  @if (isAdmin()) {
+    <button class="action-card" (click)="adminView()">
+      <div class="action-icon">🛡️</div>
+      <h3>adminView</h3>
+      <p>Midok admina</p>
+    </button>
   }
 </div>
-

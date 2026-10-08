@@ -14,16 +14,13 @@ export class Layout {
   // userEmailData = signal(localStorage.getItem('email') ?? '');
   // userRole = signal(localStorage.getItem('userRole'));
 
-  constructor(
-    public authService: AuthService
+  constructor(public authService: AuthService) {}
 
-  ) {}
-
-  isLogged(){
+  isLogged() {
     return this.authService.isLogged();
   }
 
-  isAdmin(){
+  isAdmin() {
     return this.authService.isAdmin();
   }
 

@@ -54,7 +54,7 @@ export class SubEventDetails implements OnInit {
     this.paymentService.buyTicket(eventId).subscribe({
       next: (res) => {
         this.loading = false;
-        
+
         window.location.href = res.url;
       },
       error: (err) => {

@@ -24,15 +24,15 @@ export class Users implements OnInit {
   loadUsers(): void {
     this.loading = true;
     this.adminService.getUsers().subscribe({
-      next: response => {
+      next: (response) => {
         this.users = response;
         this.loading = false;
         this.cdr.detectChanges();
       },
-      error: err => {
+      error: (err) => {
         console.error(err);
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -45,10 +45,10 @@ export class Users implements OnInit {
       next: () => {
         this.loadUsers();
       },
-      error: err => {
+      error: (err) => {
         console.error(err);
         alert('Nie udało się zablokować użytkownika.');
-      }
+      },
     });
   }
 
@@ -61,10 +61,10 @@ export class Users implements OnInit {
       next: () => {
         this.loadUsers();
       },
-      error: err => {
+      error: (err) => {
         console.error(err);
         alert('Nie udało się usunąć użytkownika.');
-      }
+      },
     });
   }
 }

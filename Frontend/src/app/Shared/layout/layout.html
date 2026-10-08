@@ -1,16 +1,16 @@
 <header>
   <nav class="navbar">
-      <div class="left">
-          <a routerLink="/" class="brand"> 🎫 EventApp </a>
-        @if (isLogged()) {
-          <a routerLink="/get-events">Wydarzenia</a>
-          <a routerLink="/login-callback">Mój panel</a>
-          <a routerLink="/search-and-import-events">Wyszukaj event</a>
-        }
-        @if (isAdmin()){
-          <a routerLink="/admin-panel" class="brand"> Admin Panel </a>
-        }
-      </div>
+    <div class="left">
+      <a routerLink="/" class="brand"> 🎫 EventApp </a>
+      @if (isLogged()) {
+        <a routerLink="/get-events">Wydarzenia</a>
+        <a routerLink="/login-callback">Mój panel</a>
+        <a routerLink="/search-and-import-events">Wyszukaj event</a>
+      }
+      @if (isAdmin()) {
+        <a routerLink="/admin-panel" class="brand"> Admin Panel </a>
+      }
+    </div>
 
     <div class="right">
       @if (isLogged()) {

@@ -28,28 +28,18 @@
         </td>
 
         <td>
-          <button
-            mat-stroked-button
-            color="primary"
-            (click)="unblockUser(user.id)">
+          <button mat-stroked-button color="primary" (click)="unblockUser(user.id)">
             Odblokuj
           </button>
 
-          <button
-            mat-stroked-button
-            color="warn"
-            (click)="deleteUser(user.id)">
-            Usuń
-          </button>
+          <button mat-stroked-button color="warn" (click)="deleteUser(user.id)">Usuń</button>
         </td>
       </tr>
     }
 
     @if (blockedUsers.length === 0) {
       <tr>
-        <td colspan="4" class="empty">
-          Brak zablokowanych użytkowników
-        </td>
+        <td colspan="4" class="empty">Brak zablokowanych użytkowników</td>
       </tr>
     }
   </tbody>

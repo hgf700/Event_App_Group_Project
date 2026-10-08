@@ -119,23 +119,23 @@ td:last-child button:last-child {
 
 /* Odblokuj */
 
-td:last-child button[color="primary"] {
+td:last-child button[color='primary'] {
   color: #16a34a;
   border-color: #16a34a;
 }
 
-td:last-child button[color="primary"]:hover {
+td:last-child button[color='primary']:hover {
   background: #f0fdf4;
 }
 
 /* Usuń */
 
-td:last-child button[color="warn"] {
+td:last-child button[color='warn'] {
   color: #dc2626;
   border-color: #dc2626;
 }
 
-td:last-child button[color="warn"]:hover {
+td:last-child button[color='warn']:hover {
   background: #fef2f2;
 }
 
@@ -157,7 +157,6 @@ td:last-child button[color="warn"]:hover {
    ========================= */
 
 @media (max-width: 700px) {
-
   table {
     display: block;
     overflow-x: auto;

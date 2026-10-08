@@ -18,25 +18,17 @@ export class PaymentService {
 
   //  * Tworzy sesję Stripe Checkout i zwraca URL do przekierowania. * Backend: POST /api/Payment/buy-ticket/{eventId}
   buyTicket(eventId: number): Observable<postBuyTicketResponseDto> {
-    return this.http.post<postBuyTicketResponseDto>(
-      `${this.apiUrl}/buy-ticket/${eventId}`,
-      {}
-    );
+    return this.http.post<postBuyTicketResponseDto>(`${this.apiUrl}/buy-ticket/${eventId}`, {});
   }
 
   //  * Pobiera aktualny status płatności. * Backend: GET /api/Payment/status/{paymentId}
   getPaymentStatus(paymentId: number): Observable<PaymentStatusResponse> {
-    return this.http.get<PaymentStatusResponse>(
-      `${this.apiUrl}/status/${paymentId}`
-    );
+    return this.http.get<PaymentStatusResponse>(`${this.apiUrl}/status/${paymentId}`);
   }
 
   //  * Anuluje oczekującą płatność (Pending). * Wymaga endpointu CancelPendingPaymentAsync w backendzie.
   //  * Backend: POST /api/Payment/cancel/{paymentId}
   cancelPendingPayment(paymentId: number): Observable<void> {
-    return this.http.post<void>(
-      `${this.apiUrl}/cancel/${paymentId}`,
-      {}
-    );
+    return this.http.post<void>(`${this.apiUrl}/cancel/${paymentId}`, {});
   }
 }

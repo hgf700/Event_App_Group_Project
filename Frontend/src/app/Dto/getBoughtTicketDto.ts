@@ -1,5 +1,5 @@
-import { StatesOfTicket } from "../Enum/StatesOfTicket";
-import { TicketState } from "../Enum/TicketState";
+import { StatesOfTicket } from '../Enum/StatesOfTicket';
+import { TicketState } from '../Enum/TicketState';
 
 export interface getBoughtTicketDto {
   userId: string | null;

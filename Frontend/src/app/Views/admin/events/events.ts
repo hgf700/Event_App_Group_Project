@@ -17,7 +17,6 @@ export class Events implements OnInit {
   constructor(
     private adminService: AdminService,
     private cdr: ChangeDetectorRef,
-
   ) {}
 
   ngOnInit(): void {
@@ -27,15 +26,15 @@ export class Events implements OnInit {
   loadEvents(): void {
     this.loading = true;
     this.adminService.getEvents().subscribe({
-      next: response => {
+      next: (response) => {
         this.loading = false;
         this.events = response;
         this.cdr.detectChanges();
       },
-      error: err => {
+      error: (err) => {
         this.loading = false;
         console.error(err);
-      }
+      },
     });
   }
 
@@ -46,12 +45,12 @@ export class Events implements OnInit {
 
     this.adminService.deleteEvent(id).subscribe({
       next: () => {
-        this.events = this.events.filter(e => e.id !== id);
+        this.events = this.events.filter((e) => e.id !== id);
       },
-      error: err => {
+      error: (err) => {
         console.error(err);
         alert('Nie udało się usunąć wydarzenia.');
-      }
+      },
     });
   }
 }

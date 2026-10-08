@@ -26,15 +26,15 @@ export class Tickets implements OnInit {
   loadBoughtTickets(): void {
     this.loading = true;
     this.adminService.getBoughtTickets().subscribe({
-      next: response => {
+      next: (response) => {
         this.boughtTickets = response;
         this.loading = false;
         this.cdr.detectChanges();
       },
-      error: err => {
+      error: (err) => {
         this.loading = false;
         console.error(err);
-      }
+      },
     });
   }
 

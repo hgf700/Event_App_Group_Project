@@ -2,9 +2,19 @@ ng test
 
 npm start
 
+#generacja widokow
 ng generate component Views/
 
 cd Frontend/src/app
 
 #prettier
 npx prettier --write src/
+
+npm install -g @angular/cli
+
+#stripe req
+npm i -g @stripe/cli@latest  
+
+stripe login  
+
+stripe listen --all-snapshot --forward-to https://localhost:7051/api/v1/payments/stripe-webhook

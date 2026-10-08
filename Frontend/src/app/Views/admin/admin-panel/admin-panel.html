@@ -6,43 +6,24 @@
       <a
         routerLink="/admin-panel"
         routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }">
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
         Dashboard
       </a>
 
-      <a
-        routerLink="/admin-panel/events"
-        routerLinkActive="active">
-        Wydarzenia
-      </a>
+      <a routerLink="/admin-panel/events" routerLinkActive="active"> Wydarzenia </a>
 
-      <a
-        routerLink="/admin-panel/users"
-        routerLinkActive="active">
-        Użytkownicy
-      </a>
+      <a routerLink="/admin-panel/users" routerLinkActive="active"> Użytkownicy </a>
 
-      <a
-        routerLink="/admin-panel/blocked-users"
-        routerLinkActive="active">
-        Zablokowani
-      </a>
+      <a routerLink="/admin-panel/blocked-users" routerLinkActive="active"> Zablokowani </a>
 
-      <a
-        routerLink="/admin-panel/tickets"
-        routerLinkActive="active">
-        Bilety
-      </a>
+      <a routerLink="/admin-panel/tickets" routerLinkActive="active"> Bilety </a>
     </nav>
 
     <div class="admin-tools">
       <span>Narzędzia administracyjne</span>
 
-      <button
-        class="seed-database"
-        (click)="seedDatabase()">
-        Seedowanie bazy danych
-      </button>
+      <button class="seed-database" (click)="seedDatabase()">Seedowanie bazy danych</button>
     </div>
   </aside>
 

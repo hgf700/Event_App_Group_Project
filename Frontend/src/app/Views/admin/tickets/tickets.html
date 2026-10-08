@@ -1,57 +1,55 @@
 <table>
-    <thead>
-        <tr>
-        <th>Użytkownik</th>
-        <th>Wydarzenie</th>
-        <th>Data wydarzenia</th>
-        <th>Zakup</th>
-        <th>Płatność</th>
-        <th>Bilet</th>
-        <th>Payment ID</th>
-        </tr>
-    </thead>
-    <tbody>
-        @for (ticket of boughtTickets; track ticket.eventId) {
-            <tr>
+  <thead>
+    <tr>
+      <th>Użytkownik</th>
+      <th>Wydarzenie</th>
+      <th>Data wydarzenia</th>
+      <th>Zakup</th>
+      <th>Płatność</th>
+      <th>Bilet</th>
+      <th>Payment ID</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (ticket of boughtTickets; track ticket.eventId) {
+      <tr>
         <td>
-            {{ ticket.userEmail }}
+          {{ ticket.userEmail }}
         </td>
 
         <td class="event-name">
-            {{ ticket.eventName }}
+          {{ ticket.eventName }}
         </td>
 
         <td>
-            {{ formatDate(ticket.eventDate) }}
+          {{ formatDate(ticket.eventDate) }}
         </td>
 
         <td>
-            {{ formatDate(ticket.createdAt) }}
+          {{ formatDate(ticket.createdAt) }}
         </td>
 
         <td>
-            <span class="status">
+          <span class="status">
             {{ getPaymentStateName(ticket.paymentState) }}
-            </span>
+          </span>
         </td>
 
         <td>
-            <span class="status">
+          <span class="status">
             {{ getTicketStateName(ticket.ticketState) }}
-            </span>
+          </span>
         </td>
 
         <td class="payment-id">
-            {{ ticket.paymentId || '-' }}
+          {{ ticket.paymentId || '-' }}
         </td>
-        </tr>
-        @if (boughtTickets.length === 0) {
+      </tr>
+      @if (boughtTickets.length === 0) {
         <tr>
-        <td colspan="7" class="empty">
-            Brak zakupionych biletów
-        </td>
+          <td colspan="7" class="empty">Brak zakupionych biletów</td>
         </tr>
+      }
     }
-    }
-    </tbody>
+  </tbody>
 </table>

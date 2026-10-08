@@ -13,72 +13,46 @@ export class AdminService {
   constructor(private http: HttpClient) {}
 
   seedDataBase() {
-    return this.http.post<boolean>(
-      `${this.apiUrl}/admin-seed-database`, {}
-    );
+    return this.http.post<boolean>(`${this.apiUrl}/admin-seed-database`, {});
   }
 
   getAppUsageInfo() {
-    return this.http.get<getAppUsageInfoDto>(
-      `${this.apiUrl}/admin-app-usage-info`
-    );
+    return this.http.get<getAppUsageInfoDto>(`${this.apiUrl}/admin-app-usage-info`);
   }
 
   getEvents() {
-    return this.http.get<getEventAdminDto[]>(
-      `${this.apiUrl}/admin-events`
-    );
+    return this.http.get<getEventAdminDto[]>(`${this.apiUrl}/admin-events`);
   }
 
   deleteEvent(id: number) {
-    return this.http.post<void>(
-      `${this.apiUrl}/admin-delete-event/${id}`,
-      {}
-    );
+    return this.http.post<void>(`${this.apiUrl}/admin-delete-event/${id}`, {});
   }
 
   getUsers() {
-    return this.http.get<getAdminUserDto[]>(
-      `${this.apiUrl}/admin-users`
-    );
+    return this.http.get<getAdminUserDto[]>(`${this.apiUrl}/admin-users`);
   }
 
   searchUser(id: string) {
-    return this.http.get<getAdminUserDto>(
-      `${this.apiUrl}/admin-search-user/${id}`
-    );
+    return this.http.get<getAdminUserDto>(`${this.apiUrl}/admin-search-user/${id}`);
   }
 
   deleteUser(id: string) {
-    return this.http.post<void>(
-      `${this.apiUrl}/admin-delete-user/${id}`,
-      {}
-    );
+    return this.http.post<void>(`${this.apiUrl}/admin-delete-user/${id}`, {});
   }
 
   blockUser(id: string) {
-    return this.http.post<void>(
-      `${this.apiUrl}/admin-block-user/${id}`,
-      {}
-    );
+    return this.http.post<void>(`${this.apiUrl}/admin-block-user/${id}`, {});
   }
 
   getBlockedUsers() {
-    return this.http.get<getAdminUserDto[]>(
-      `${this.apiUrl}/admin-blocked-users`
-    );
+    return this.http.get<getAdminUserDto[]>(`${this.apiUrl}/admin-blocked-users`);
   }
 
   unblockUser(id: string) {
-    return this.http.post<void>(
-      `${this.apiUrl}/admin-unblock-user/${id}`,
-      {}
-    );
+    return this.http.post<void>(`${this.apiUrl}/admin-unblock-user/${id}`, {});
   }
 
   getBoughtTickets() {
-    return this.http.get<getBoughtTicketDto[]>(
-      `${this.apiUrl}/admin-bought-tickets`
-    );
+    return this.http.get<getBoughtTicketDto[]>(`${this.apiUrl}/admin-bought-tickets`);
   }
 }

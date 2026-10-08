@@ -10,10 +10,9 @@ import { Router, RouterModule } from '@angular/router';
   styleUrl: './admin-panel.css',
 })
 export class AdminPanel {
-
   constructor(private router: Router) {}
 
-  seedDatabase(){
+  seedDatabase() {
     this.router.navigate(['/seed-database']);
   }
 }
