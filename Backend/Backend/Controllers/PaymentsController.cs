@@ -119,7 +119,8 @@ public class PaymentsController : ControllerBase
             stripeEvent = EventUtility.ConstructEvent(
                 json,
                 stripeSignature,
-                webhookSecret);
+                webhookSecret,
+                throwOnApiVersionMismatch: false);
         }
         catch (Exception ex)
         {

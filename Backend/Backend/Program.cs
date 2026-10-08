@@ -39,7 +39,12 @@ DotNetEnv.Env.Load();
 
 //DotNetEnv.Env.Load(envPath);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(
+            new System.Text.Json.Serialization.JsonStringEnumConverter());
+    }); ;
     //.AddJsonOptions(options =>
     //{
     //    options.JsonSerializerOptions.ReferenceHandler =

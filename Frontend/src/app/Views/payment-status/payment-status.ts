@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PaymentService } from '../../Services/PaymentService';
@@ -18,7 +18,8 @@ export class PaymentStatus implements OnInit, OnDestroy {
   error = false;
   cancelled = false;
 
-  private readonly maxAttempts = 20; // ~30 sekund (20 × 1.5s)
+  // ~30 sekund (20 × 1.5s)
+  private readonly maxAttempts = 50; 
   private attempt = 0;
   private timeoutId: ReturnType<typeof setTimeout> | null = null;
   private statusSub?: Subscription;
@@ -27,6 +28,7 @@ export class PaymentStatus implements OnInit, OnDestroy {
     private paymentService: PaymentService,
     private route: ActivatedRoute,
     private router: Router,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -71,40 +73,39 @@ export class PaymentStatus implements OnInit, OnDestroy {
 
     this.statusSub?.unsubscribe();
 
-    this.statusSub = this.paymentService
-      .getPaymentStatus(this.paymentId)
-      .subscribe({
+    this.statusSub = this.paymentService.getPaymentStatus(this.paymentId).subscribe({
         next: (res) => {
-          this.paymentState = res.state;
-          this.attempt++;
 
-          // Sukces
-          if (res.state === 'Paid') {
-            this.loading = false;
-            return;
-          }
+  this.paymentState = res.state;
+  this.attempt++;
 
-          // Stany końcowe negatywne
-          if (
-            res.state === 'Expired' ||
-            res.state === 'Cancelled' ||
-            res.state === 'Refunded'
-          ) {
-            this.loading = false;
-            return;
-          }
+  if (res.state === 'Paid') {
+    this.loading = false;
+    this.cdr.detectChanges();
+    return;
+  }
 
-          // Nadal Pending – czekamy na webhook
-          if (this.attempt >= this.maxAttempts) {
-            this.loading = false;
-            this.error = true;
-            return;
-          }
+  if (
+    res.state === 'Expired' ||
+    res.state === 'Cancelled' ||
+    res.state === 'Refunded'
+  ) {
+    this.loading = false;
+    this.cdr.detectChanges();
+    return;
+  }
 
-          this.timeoutId = setTimeout(() => {
-            this.checkPaymentStatus();
-          }, 1500);
-        },
+  if (this.attempt >= this.maxAttempts) {
+    this.loading = false;
+    this.error = true;
+    this.cdr.detectChanges();
+    return;
+  }
+
+  this.timeoutId = setTimeout(() => {
+    this.checkPaymentStatus();
+  }, 1500);
+},
 
         error: (err) => {
           console.error(
@@ -120,6 +121,7 @@ export class PaymentStatus implements OnInit, OnDestroy {
   private finishWithError(): void {
     this.loading = false;
     this.error = true;
+    this.cdr.detectChanges();
   }
 
   returnToEvents(): void {

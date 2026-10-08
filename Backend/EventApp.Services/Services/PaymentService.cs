@@ -118,6 +118,8 @@ public class PaymentService : IPaymentService
         _context.UserEvents.Add(userEvent);
         await _context.SaveChangesAsync();
 
+        _logger.LogInformation("UserEvent created with Id = {Id}", userEvent.Id);
+
         var options = new SessionCreateOptions
         {
             Mode = "payment",
@@ -145,7 +147,7 @@ public class PaymentService : IPaymentService
                 }
             },
             SuccessUrl = $"{YourDomain}/payment-status?paymentId={userEvent.Id}",
-            CancelUrl = $"{YourDomain}/payment-status?paymentId={userEvent.Id}&result=cancel",
+            CancelUrl = $"{YourDomain}/payment-status?paymentId={userEvent.Id}&cancelled=true",
 
             // Opcjonalnie: wygaśnięcie sesji po 30 minutach
             ExpiresAt = DateTime.UtcNow.AddMinutes(30)

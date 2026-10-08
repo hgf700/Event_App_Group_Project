@@ -1,5 +1,7 @@
 ﻿using EventApp.Domain.Model;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EventApp.Services.Model;
 
@@ -8,6 +10,8 @@ namespace EventApp.Services.Model;
 [Index(nameof(PaymentId))]
 public class UserEvent
 {
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
     public string? UserId { get; set; } 
