@@ -53,3 +53,5 @@ uzycie observer do serwisu z sms i email?
 validatory do formularzy
 
 popr generowanie pdf nazwa w folderze i wysylanie konkretnie go
+
+w admin panel wyswietlanie wybranego 1 obiektu

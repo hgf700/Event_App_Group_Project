@@ -22,7 +22,12 @@ export class EditUserEmail {
     private userService: UserService,
   ) {
     this.editUserEmailForm = this.fb.group({
-      newEmail: [''],
+      newEmail: ['',
+        [
+          Validators.required,
+          // Validators.email
+        ]
+      ],
     });
   }
 

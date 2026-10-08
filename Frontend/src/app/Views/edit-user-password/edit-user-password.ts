@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { UserService } from '../../Services/UserService';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { changePasswordMatchValidator } from '../../Validators/changePasswordMatchValidator';
+import { changeUserPasswordValidator } from '../../Validators/changeUserPasswordValidator';
 
 @Component({
   selector: 'app-edit-user-password',
@@ -24,10 +24,20 @@ export class EditUserPassword {
   ) {
     this.editUserPasswordForm = this.fb.group(
       {
-        newPassword: [''],
-        repeatNewPassword: [''],
+        newPassword: ['',
+        Validators.required,
+        // Validators.minLength(8),
+        // Validators.maxLength(20),
+        // Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).+$/)
+        ],
+        repeatNewPassword: ['',
+        Validators.required,
+        // Validators.minLength(8),
+        // Validators.maxLength(20),
+        // Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).+$/)
+        ],
       },
-      { validators: changePasswordMatchValidator },
+      { validators: changeUserPasswordValidator },
     );
   }
 

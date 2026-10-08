@@ -32,7 +32,12 @@ export class SearchAndImportEvents implements OnInit {
     private dialog: MatDialog,
   ) {
     this.searchAndImportEventsForm = this.fb.group({
-      city: ['', [Validators.required]],
+      city: ['', [
+        Validators.required,
+        // Validators.minLength(3),
+        // Validators.maxLength(50),
+        // Validators.pattern(/^[A-Za-zÀ-ÿ\s-]+$/)
+      ]],
     });
   }
 

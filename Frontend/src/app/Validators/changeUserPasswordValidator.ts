@@ -1,6 +1,6 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
-export const changePasswordMatchValidator: ValidatorFn = (
+export const changeUserPasswordValidator: ValidatorFn = (
   control: AbstractControl,
 ): ValidationErrors | null => {
   const Password = control.get('newPassword')?.value;

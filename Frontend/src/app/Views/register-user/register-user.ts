@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../Services/AuthService';
-import { registerPasswordMatchValidator } from '../../Validators/registerPasswordMatchValidator';
+import { registerUserValidator } from '../../Validators/registerUserValidator';
 
 @Component({
   selector: 'app-register-user',
@@ -24,11 +24,24 @@ export class RegisterUser {
   ) {
     this.registerUserForm = this.fb.group(
       {
-        email: ['', [Validators.required]],
-        password: ['', [Validators.required]],
-        confirmPassword: ['', [Validators.required]],
+        email: ['', [
+          Validators.required,
+          // Validators.email
+        ]],
+        password: ['', [
+          Validators.required,
+        // Validators.minLength(8),
+        // Validators.maxLength(20),
+        // Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).+$/)
+        ]],
+        confirmPassword: ['', [
+          Validators.required,
+          // Validators.minLength(8),
+        // Validators.maxLength(20),
+        // Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).+$/)
+        ]],
       },
-      { validators: registerPasswordMatchValidator },
+      { validators: registerUserValidator },
     );
   }
   // , Validators.email
