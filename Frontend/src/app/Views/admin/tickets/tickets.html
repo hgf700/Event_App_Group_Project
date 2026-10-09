@@ -1,3 +1,16 @@
+<div class="search-container">
+  <input
+    type="text"
+    [(ngModel)]="searchText"
+    (input)="filterUsers()"
+    placeholder="Szukaj po nazwie użytkownika lub emailu..."
+  />
+
+  <button type="button" (click)="clearSearch()">
+    Wyczyść
+  </button>
+</div>
+
 <table>
   <thead>
     <tr>

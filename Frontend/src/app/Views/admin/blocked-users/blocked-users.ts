@@ -1,16 +1,19 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AdminService } from '../../../Services/AdminService';
 import { getAdminUserDto } from '../../../Dto/getAdminUserDto';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-blocked-users',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './blocked-users.html',
   styleUrl: './blocked-users.css',
 })
 export class BlockedUsers implements OnInit {
   blockedUsers: getAdminUserDto[] = [];
   loading = false;
+  searchText = '';
+  filteredBlockedUsers: getAdminUserDto[] = [];
 
   constructor(
     private adminService: AdminService,
@@ -19,6 +22,20 @@ export class BlockedUsers implements OnInit {
 
   ngOnInit(): void {
     this.loadBlockedUsers();
+  }
+
+  filterUsers() {
+    const search = this.searchText.toLowerCase().trim();
+
+    this.filteredBlockedUsers = this.blockedUsers.filter(user =>
+      user.email.toLowerCase().includes(search) ||
+      user.id.toLowerCase().includes(search) 
+    );
+  }
+
+  clearSearch() {
+    this.searchText = '';
+    this.filteredBlockedUsers = this.blockedUsers;
   }
 
   loadBlockedUsers(): void {

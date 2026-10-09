@@ -1,6 +1,6 @@
 export interface getAdminUserDto {
   id: string;
-  email: number;
-  userName: number;
+  email: string;
+  userName: string;
   roles: string[];
 }

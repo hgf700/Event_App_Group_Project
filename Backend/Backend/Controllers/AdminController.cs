@@ -171,7 +171,10 @@ public class AdminController : ControllerBase
             _context.Events.Remove(ev);
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return Ok(new
+            {
+                message = "event deleted successfully"
+            });
         }
         catch (Exception ex)
         {
@@ -200,7 +203,7 @@ public class AdminController : ControllerBase
                 .Where(u => u.IsActive)
                 .ToListAsync();
 
-            var result = new List<object>();
+            var result = new List<getAdminUserDto>();
 
             foreach (var user in users)
             {
@@ -227,43 +230,54 @@ public class AdminController : ControllerBase
         }
     }
 
-    [HttpGet("admin-search-user/{id}")]
+    [HttpGet("admin-search-user/{userEmailOrId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<getAdminUserDto>> AdminSearchUser(string id)
+    public async Task<ActionResult<getAdminUserDto>> AdminSearchUsers(string userEmailOrId)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId == null)
+        var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (currentUserId == null)
             return Unauthorized();
 
-        if (string.IsNullOrWhiteSpace(id))
+        if (string.IsNullOrWhiteSpace(userEmailOrId))
             return BadRequest();
 
         try
         {
-            var user = await _userManager.Users
+            var users = await _userManager.Users
                 .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.IsActive && u.Id == id);
+                .Where(u => u.IsActive &&
+                    (u.Email == userEmailOrId ||
+                     u.Id == userEmailOrId))
+                .ToListAsync();
 
-            if (user == null)
+            if (users.Count == 0)
                 return NotFound();
 
-            var roles = await _userManager.GetRolesAsync(user);
+            var result = new List<getAdminUserDto>();
 
-            var response = new getAdminUserDto
+            foreach (var user in users)
             {
-                id = user.Id,
-                email = user.Email,
-                userName = user.UserName,
-                roles = roles
-            };
+                var roles = await _userManager.GetRolesAsync(user);
 
-            return Ok(response);
+                result.Add(new getAdminUserDto
+                {
+                    id = user.Id,
+                    email = user.Email,
+                    userName = user.UserName,
+                    roles = roles
+                });
+            }
+
+            return Ok(result);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error while GetAppInfo");
+            _logger.LogError(ex, "Error while searching for an admin user");
 
             return StatusCode(
                 StatusCodes.Status500InternalServerError,
@@ -289,22 +303,6 @@ public class AdminController : ControllerBase
                 return BadRequest();
 
             var result = await _userManager.DeleteAsync(user);
-
-            if (!result.Succeeded)
-            {
-                foreach (var error in result.Errors)
-                {
-                    _logger.LogError(
-                        "Error deleting user {UserId}: {Code} - {Description}",
-                        id,
-                        error.Code,
-                        error.Description);
-                }
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    "Failed to delete user");
-            }
 
             return Ok(new
             {

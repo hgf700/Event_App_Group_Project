@@ -88,3 +88,19 @@ where T : struct
 public void Process<T>(T value) where T : struct { }
 Process(10);
 Process(DateTime.Now);
+
+z tego podejscia filtrowania w frontendzie korzystac tylko przy malych danych dla wiekszych paginacja
+  <input
+    type="text"
+    [(ngModel)]="searchText"
+    (input)="filterUsers()"
+    placeholder="Szukaj po nazwie użytkownika lub emailu..."
+  />
+  filterUsers() {
+    const search = this.searchText.toLowerCase().trim();
+    this.filteredBlockedUsers = this.blockedUsers.filter(user =>
+      user.email.toLowerCase().includes(search) ||
+      user.id.toLowerCase().includes(search) 
+    );
+  }
+

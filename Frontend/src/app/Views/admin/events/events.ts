@@ -2,17 +2,21 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { AdminService } from '../../../Services/AdminService';
 import { getEventAdminDto } from '../../../Dto/getEventAdminDto';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-events',
   standalone: true,
-  imports: [DatePipe],
+  imports: [DatePipe, FormsModule],
   templateUrl: './events.html',
   styleUrl: './events.css',
 })
 export class Events implements OnInit {
   events: getEventAdminDto[] = [];
   loading = false;
+
+  searchText = '';
+  filteredEvents: getEventAdminDto[] = [];
 
   constructor(
     private adminService: AdminService,
@@ -36,6 +40,21 @@ export class Events implements OnInit {
         console.error(err);
       },
     });
+  }
+
+  filterUsers() {
+    const search = this.searchText.toLowerCase().trim();
+
+    this.filteredEvents = this.events.filter(event =>
+      event.city.toLowerCase().includes(search) ||
+      event.nameOfClub.toLowerCase().includes(search) ||
+      event.nameOfEvent.toLowerCase().includes(search) 
+    );
+  }
+
+  clearSearch() {
+    this.searchText = '';
+    this.filteredEvents = this.events;
   }
 
   deleteEvent(id: number): void {
