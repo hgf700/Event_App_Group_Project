@@ -45,6 +45,11 @@ export class RegisterUser {
     );
   }
   // , Validators.email
+
+  get passwordControl() {
+    return this.registerUserForm.get('newPassword');
+  }
+
   onSubmit() {
     this.submitted = true;
 

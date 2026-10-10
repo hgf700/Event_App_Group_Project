@@ -45,6 +45,10 @@ export class EditUserPassword {
     this.router.navigate(['/login-callback']);
   }
 
+  get passwordControl() {
+    return this.editUserPasswordForm.get('newPassword');
+  }
+
   onSubmit() {
     this.submitted = true;
 

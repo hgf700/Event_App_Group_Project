@@ -20,6 +20,9 @@
           placeholder="twoj@email.com"
           autocomplete="email"
         />
+
+        
+
         @if (submitted && registerUserForm.controls['email'].errors?.['required']) {
           <span class="form-error">Email jest wymagany</span>
         }
@@ -34,6 +37,33 @@
           placeholder="••••••••"
           autocomplete="new-password"
         />
+
+        <div class="password-requirements">
+    <p>Hasło musi zawierać:</p>
+
+    <ul>
+      <li [class.valid]="passwordControl?.value?.length >= 8">
+        Minimum 8 znaków
+      </li>
+
+      <li [class.valid]="passwordControl?.value?.length <= 20 && passwordControl?.value?.length >= 1">
+        Maksymalnie 20 znaków
+      </li>
+
+      <li [class.valid]="/[a-z]/.test(passwordControl?.value || '')">
+        Małą literę (a–z)
+      </li>
+
+      <li [class.valid]="/[A-Z]/.test(passwordControl?.value || '')">
+        Wielką literę (A–Z)
+      </li>
+
+      <li [class.valid]="/[!@#$%^&*]/.test(passwordControl?.value || '')">
+        Znak specjalny (!@#$%^&*)
+      </li>
+    </ul>
+  </div>
+  
         @if (submitted && registerUserForm.controls['password'].errors?.['required']) {
           <span class="form-error">Hasło jest wymagane</span>
         }
