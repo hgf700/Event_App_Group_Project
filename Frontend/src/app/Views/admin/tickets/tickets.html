@@ -2,8 +2,8 @@
   <input
     type="text"
     [(ngModel)]="searchText"
-    (input)="filterUsers()"
-    placeholder="Szukaj po nazwie użytkownika lub emailu..."
+    (input)="filterTickets()"
+    placeholder="Szukaj biletu po eventName lub userEmail"
   />
 
   <button type="button" (click)="clearSearch()">
@@ -24,7 +24,7 @@
     </tr>
   </thead>
   <tbody>
-    @for (ticket of boughtTickets; track ticket.eventId) {
+    @for (ticket of filteredTickets; track ticket.eventId) {
       <tr>
         <td>
           {{ ticket.userEmail }}

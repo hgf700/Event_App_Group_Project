@@ -24,26 +24,13 @@ export class BlockedUsers implements OnInit {
     this.loadBlockedUsers();
   }
 
-  filterUsers() {
-    const search = this.searchText.toLowerCase().trim();
-
-    this.filteredBlockedUsers = this.blockedUsers.filter(user =>
-      user.email.toLowerCase().includes(search) ||
-      user.id.toLowerCase().includes(search) 
-    );
-  }
-
-  clearSearch() {
-    this.searchText = '';
-    this.filteredBlockedUsers = this.blockedUsers;
-  }
-
   loadBlockedUsers(): void {
     this.loading = true;
     this.adminService.getBlockedUsers().subscribe({
       next: (response) => {
         this.blockedUsers = response;
         this.loading = false;
+        this.filteredBlockedUsers = [...response]; 
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -51,6 +38,20 @@ export class BlockedUsers implements OnInit {
         this.loading = false;
       },
     });
+  }
+
+    filterUsers() {
+    const search = this.searchText.toLowerCase().trim();
+
+    this.filteredBlockedUsers = this.blockedUsers.filter(user =>
+      (user.email ?? '').toLowerCase().includes(search) ||
+      (user.id ?? '').toLowerCase().includes(search) 
+    );
+  }
+
+  clearSearch() {
+    this.searchText = '';
+    this.filteredBlockedUsers = this.blockedUsers;
   }
 
   unblockUser(id: string): void {

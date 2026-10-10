@@ -33,6 +33,7 @@ export class Events implements OnInit {
       next: (response) => {
         this.loading = false;
         this.events = response;
+        this.filteredEvents = [...response]; // pokaż wszystkie na początku
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -42,13 +43,13 @@ export class Events implements OnInit {
     });
   }
 
-  filterUsers() {
+  filterUsers(): void {
     const search = this.searchText.toLowerCase().trim();
 
     this.filteredEvents = this.events.filter(event =>
-      event.city.toLowerCase().includes(search) ||
-      event.nameOfClub.toLowerCase().includes(search) ||
-      event.nameOfEvent.toLowerCase().includes(search) 
+      (event.city ?? '').toLowerCase().includes(search) ||
+      (event.nameOfClub ?? '').toLowerCase().includes(search) ||
+      (event.nameOfEvent ?? '').toLowerCase().includes(search)
     );
   }
 

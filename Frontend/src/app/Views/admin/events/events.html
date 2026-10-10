@@ -3,7 +3,7 @@
     type="text"
     [(ngModel)]="searchText"
     (input)="filterUsers()"
-    placeholder="Szukaj po nazwie użytkownika lub emailu..."
+    placeholder="Szukaj po city lub nameOfClub lub nameOfEvent"
   />
 
   <button type="button" (click)="clearSearch()">
@@ -24,7 +24,7 @@
   </thead>
 
   <tbody>
-    @for (event of events; track event.id) {
+    @for (event of filteredEvents; track event.id) {
       <tr>
         <td>
           {{ event.id }}

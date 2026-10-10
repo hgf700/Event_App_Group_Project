@@ -104,3 +104,7 @@ z tego podejscia filtrowania w frontendzie korzystac tylko przy malych danych dl
     );
   }
 
+        this.filteredEvents = [...response]; // pokaż wszystkie na początku
+Te trzy kropki ... w tym kodzie to operator spread (operator rozprzestrzeniania) w JavaScript / 
+TypeScript.
+Jego zadaniem jest skopiowanie elementów tablicy response do nowej tablicy filteredEvents.

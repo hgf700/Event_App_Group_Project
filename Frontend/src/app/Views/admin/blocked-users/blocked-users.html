@@ -3,7 +3,7 @@
     type="text"
     [(ngModel)]="searchText"
     (input)="filterUsers()"
-    placeholder="Szukaj po nazwie użytkownika lub emailu..."
+    placeholder="Szukaj użytkownika po id lub emailu..."
   />
 
   <button type="button" (click)="clearSearch()">
@@ -22,7 +22,7 @@
   </thead>
 
   <tbody>
-    @for (user of blockedUsers; track user.id) {
+    @for (user of filteredBlockedUsers; track user.id) {
       <tr>
         <td class="user-name">
           {{ user.userName }}

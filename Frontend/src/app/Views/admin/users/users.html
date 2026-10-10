@@ -23,7 +23,7 @@
   </thead>
 
   <tbody>
-    @for (user of users; track user.id) {
+    @for (user of filteredUsers; track user.id) {
       <tr>
         <td class="user-name">
           {{ user.userName }}

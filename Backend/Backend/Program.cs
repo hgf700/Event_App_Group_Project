@@ -39,12 +39,14 @@ DotNetEnv.Env.Load();
 
 //DotNetEnv.Env.Load(envPath);
 
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.Converters.Add(
-            new System.Text.Json.Serialization.JsonStringEnumConverter());
-    }); ;
+builder.Services.AddControllers();
+// zamiast liczb string
+    //.AddJsonOptions(options =>
+    //{
+    //    options.JsonSerializerOptions.Converters.Add(
+    //        new System.Text.Json.Serialization.JsonStringEnumConverter());
+    //}); ;
+// cykle jakies
     //.AddJsonOptions(options =>
     //{
     //    options.JsonSerializerOptions.ReferenceHandler =
