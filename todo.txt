@@ -7,7 +7,6 @@ app.UseOutputCache();
 Jeżeli w Twoim systemie jedno UserEvent = jeden bilet, to OrderId jest bardzo przydatny.
 Nie powinieneś natomiast generować nowego OrderId dla każdego biletu w ramach jednego zakupu.
 Wtedy wszystkie bilety z tego zakupu mają wspólny OrderId.
-paginacje tez trzeba by bylo
 OrderId potem dodam
 
 uzytkownik jak trafi na strone z authorize a nie jest to redirect na login od razu
@@ -40,9 +39,6 @@ zamiast local storage to lepiej http cookies i same site strict ale to potem
 zrobic revoked dla refersh token jesli jest expired
 
 dla github actions testy jednostkowe i iplementacyjne back i front dorobic
-
-uzycie rate limit i innych zabezpieczen w controller rate limity dorobic moze na ip lub jwt lepiej ale mozna 
-chyba tez na ip?
 
 mozna ale raczej ciezko uzyc
 uzycie when.all z tpl (parallel library) jesli 1 rzecz nie jest zalezna od drugiej dzieki temu szybko sie wykona

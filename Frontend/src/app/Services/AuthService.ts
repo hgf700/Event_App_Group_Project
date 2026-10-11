@@ -1,10 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, Injectable, signal } from '@angular/core';
 import { authResponseDto } from '../Dto/authResponseDto';
+import { Observable } from 'rxjs';
+import { postRefreshTokenResponse } from '../Dto/postRefreshTokenResponse';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private apiUrl = 'https://localhost:7051/api/v1/auth';
+  private refreshTokenApiUrl = 'https://localhost:7051/api/v1/refresh-token';
+
   userEmail = signal<string | null>(localStorage.getItem('email'));
   userRole = signal<string | null>(localStorage.getItem('userRole'));
 
@@ -50,5 +54,13 @@ export class AuthService {
 
   loginWithGoogleOauth() {
     window.location.href = `${this.apiUrl}/sign-in-google`;
+  }
+
+  refreshToken(): Observable<postRefreshTokenResponse> {
+    return this.http.post<postRefreshTokenResponse>(
+      `${this.refreshTokenApiUrl}/refresh`,
+      {},
+      { withCredentials: true }
+    );
   }
 }

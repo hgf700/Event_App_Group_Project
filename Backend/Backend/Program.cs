@@ -34,13 +34,7 @@ var builder = WebApplication.CreateBuilder(args);
 DotNetEnv.Env.Load();
 
 builder.Services.AddControllers();
-// zamiast liczb string
-    //.AddJsonOptions(options =>
-    //{
-    //    options.JsonSerializerOptions.Converters.Add(
-    //        new System.Text.Json.Serialization.JsonStringEnumConverter());
-    //}); ;
-// cykle jakies
+// cykle przy relacjach chyba w db
     //.AddJsonOptions(options =>
     //{
     //    options.JsonSerializerOptions.ReferenceHandler =
@@ -96,19 +90,37 @@ builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddAuthorization();
 
+//dev identity
+//builder.Services.Configure<IdentityOptions>(options =>
+//{
+//    options.Password.RequireDigit = false;
+//    options.Password.RequireLowercase = false;
+//    options.Password.RequiredLength = 1;
+//    options.Password.RequireNonAlphanumeric = false;
+//    options.Password.RequireUppercase = false;
+
+//    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(1);
+//    options.Lockout.MaxFailedAccessAttempts = 20;
+//    options.Lockout.AllowedForNewUsers = false;
+
+//    options.User.RequireUniqueEmail = false;
+//});
+
 builder.Services.Configure<IdentityOptions>(options =>
 {
-    options.Password.RequireDigit = false;
-    options.Password.RequireLowercase = false;
-    options.Password.RequiredLength = 1;
-    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredLength = 8;
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
 
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(1);
-    options.Lockout.MaxFailedAccessAttempts = 20;
-    options.Lockout.AllowedForNewUsers = false;
+    options.Lockout.DefaultLockoutTimeSpan =
+        TimeSpan.FromMinutes(15);
 
-    options.User.RequireUniqueEmail = false;
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.AllowedForNewUsers = true;
+
+    options.User.RequireUniqueEmail = true;
 });
 
 builder.Services.ConfigureApplicationCookie(options =>
@@ -123,7 +135,6 @@ builder.Services.AddDataProtection()
     .PersistKeysToFileSystem(new DirectoryInfo("/var/dpkeys"))
     .SetApplicationName("projekt-app");
 
-// Google OAuth + jwt z refresh tokenem
 string googleClientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");
 string googleClientSecret = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET");
 string JWT_SECRET = Environment.GetEnvironmentVariable("JWT_SECRET");
@@ -134,74 +145,53 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
 //oauth
-//.AddJwtBearer(options =>
-//{
-//    options.RequireHttpsMetadata = false;
-//    options.SaveToken = false;
-//    options.TokenValidationParameters = new TokenValidationParameters
-//    {
-//        ValidateIssuerSigningKey = true,
-//        IssuerSigningKey = new SymmetricSecurityKey(
-//            Encoding.UTF8.GetBytes(JWT_SECRET)
-//        ),
-//        ValidateIssuer = false,
-//        ValidateAudience = false,
-//        ClockSkew = TimeSpan.Zero
-//    };
-//})
-//.AddGoogle(options =>
-//{
-//    options.ClientId = googleClientId;
-//    options.ClientSecret = googleClientSecret;
-//    options.CallbackPath = "/signin-google";
-//    options.SaveTokens = true;
-//});
-
-//bez oauth
 .AddJwtBearer(options =>
 {
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = false;
     options.TokenValidationParameters = new TokenValidationParameters
     {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(JWT_SECRET)
+        ),
         ValidateIssuer = false,
         ValidateAudience = false,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWT_SECRET)
-        ),
         ClockSkew = TimeSpan.Zero
     };
+})
+.AddGoogle(options =>
+{
+    options.ClientId = googleClientId;
+    options.ClientSecret = googleClientSecret;
+    options.CallbackPath = "/signin-google";
+    options.SaveTokens = true;
 });
 
-//credentials jesli korzystam z cookie //.AllowCredentials()
+//bez oauth
+//.AddJwtBearer(options =>
+//{
+//    options.TokenValidationParameters = new TokenValidationParameters
+//    {
+//        ValidateIssuer = false,
+//        ValidateAudience = false,
+//        ValidateLifetime = true,
+//        ValidateIssuerSigningKey = true,
+//        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWT_SECRET)
+//        ),
+//        ClockSkew = TimeSpan.Zero
+//    };
+//});
+
+//credentials jesli korzystam z cookie
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("Prod",
-        policy => policy
+    options.AddPolicy("Prod", policy => policy
             .WithOrigins("http://localhost:4200")
             .AllowAnyMethod()
-            .AllowAnyHeader());
+            .AllowAnyHeader()
+            .AllowCredentials());
 });
-
-//builder.Services.AddRateLimiter(options =>
-//{
-//    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
-//    {
-//        var userId =
-//            httpContext.User?.Identity?.Name ??
-//            httpContext.Connection.RemoteIpAddress?.ToString() ??
-//            "anonymous";
-
-//        return RateLimitPartition.GetFixedWindowLimiter(
-//            userId,
-//            _ => new FixedWindowRateLimiterOptions
-//            {
-//                AutoReplenishment = true,
-//                QueueLimit = 0,
-//                PermitLimit = 100,
-//                Window = TimeSpan.FromMinutes(1)
-//            });
-//    });
-//});
 
 builder.Services.AddRateLimiter(options =>
 {
@@ -288,19 +278,6 @@ using (var scope = app.Services.CreateScope())
     await IdentitySeeder.SeedAsync(scope.ServiceProvider);
 }
 
-// Middleware bezpieczeństwa
-//app.Use(async (context, next) =>
-//{
-//    context.Response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate";
-//    context.Response.Headers["Pragma"] = "no-cache";
-//    context.Response.Headers["Expires"] = "-1";
-//    context.Response.Headers["X-Content-Type-Options"] = "nosniff";
-//    context.Response.Headers["X-Frame-Options"] = "DENY";
-//    context.Response.Headers["X-XSS-Protection"] = "1; mode=block";
-
-//    await next.Invoke();
-//});
-
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -308,26 +285,49 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.UseDeveloperExceptionPage();
 }
+else
+{
+    app.UseExceptionHandler();
+    app.UseHsts();
+}
 
 Console.WriteLine(app.Environment.EnvironmentName);
 
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.Use(async (context, next) =>
+{
+    context.Response.OnStarting(() =>
+    {
+        context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+        context.Response.Headers["X-Frame-Options"] = "DENY";
+
+        // Dla API zwracającego dane wrażliwe.
+        context.Response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate";
+
+        context.Response.Headers["Pragma"] = "no-cache";
+        context.Response.Headers["Expires"] = "0";
+
+        return Task.CompletedTask;
+    });
+
+    await next();
+});
+
 app.UseCors("Prod");
 
-app.UseRateLimiter();
-
 app.UseAuthentication();
+app.UseRateLimiter();
 app.UseAuthorization();
+
+app.UseSerilogRequestLogging();
 
 //prometheus
 app.UseHttpMetrics();
 app.MapMetrics();
 
 app.MapControllers();
-
-app.UseSerilogRequestLogging();
 
 // MIGRATIONS (tylko DEV/PROD, NIE TESTY)
 //if (!app.Environment.IsEnvironment("UnitTest") &&

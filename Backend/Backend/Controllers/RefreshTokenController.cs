@@ -15,7 +15,7 @@ using System.Security.Claims;
 namespace Backend.Controllers;
 
 [ApiController]
-[Authorize(Roles = "admin,user")]
+//[Authorize(Roles = "admin,user")]
 [Route("api/v1/refresh-token")]
 public class RefreshTokenController : ControllerBase
 {
@@ -33,38 +33,40 @@ public class RefreshTokenController : ControllerBase
         _jwtService = jwtService;
     }
 
+    [AllowAnonymous]
     [HttpPost("refresh")]
     [EnableRateLimiting("PostPolicy")]
     [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> Refresh(string refreshToken)
+    public async Task<ActionResult<postRefreshTokenResponse>> Refresh()
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId == null)
+        if (!Request.Cookies.TryGetValue("refreshToken", out var refreshToken)
+            || string.IsNullOrWhiteSpace(refreshToken))
+        {
+            return Unauthorized();
+        }
+
+        var storedToken = await _context.RefreshTokens
+            .FirstOrDefaultAsync(x =>
+                x.Token == refreshToken &&
+                x.Expires >= DateTime.UtcNow &&
+                x.Revoked == null);
+
+        if (storedToken == null)
             return Unauthorized();
 
-        try
+        var user = await _userManager.FindByIdAsync(storedToken.UserId);
+
+        if (user == null)
+            return Unauthorized();
+
+        var newAccessToken = await _jwtService.GenerateToken(user);
+
+        return Ok(new postRefreshTokenResponse
         {
-            var token = await _context.RefreshTokens
-                .FirstOrDefaultAsync(x => x.UserId == userId && x.Expires >= DateTime.UtcNow && x.Revoked == null);
-
-            if (token == null)
-                return Unauthorized();
-
-            var user = await _userManager.FindByIdAsync(token.UserId);
-
-            var newRefreshJwt = _jwtService.GenerateToken(user);
-
-            return Ok(new
-            {
-                accessToken = newRefreshJwt
-            });
-        }
-        catch (Exception ex) {
-            Console.WriteLine(ex);
-            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
-        }
+            accessToken = newAccessToken
+        });
     }
 }
