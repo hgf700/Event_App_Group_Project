@@ -25,9 +25,10 @@ public class BookmarkController : ControllerBase
         _userManager = userManager;
     }
 
-    //[EnableRateLimiting("RateLimitGet")]
     //do innej tabeli i dodac opcje na usuniecie 
     //[HttpPost("bookmark-event/{id}")]
+    //[EnableRateLimiting("GetPolicy")]
+    //[ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     //[ProducesResponseType(StatusCodes.Status200OK)]
     //[ProducesResponseType(StatusCodes.Status400BadRequest)]
     //[ProducesResponseType(StatusCodes.Status401Unauthorized)]

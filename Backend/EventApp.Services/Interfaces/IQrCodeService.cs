@@ -6,5 +6,5 @@ namespace EventApp.Services.Interfaces;
 
 public interface IQrCodeService
 {
-    byte[] GenerateQrCode(string content, int userEventId);
+    byte[] GenerateQrCode(string content, int userEventId, string email);
 }

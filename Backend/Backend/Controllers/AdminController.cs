@@ -6,6 +6,7 @@ using EventApp.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using QuestPDF.Helpers;
 using System.Security.Claims;
@@ -37,6 +38,8 @@ public class AdminController : ControllerBase
     }
 
     [HttpPost("admin-seed-database")]
+    [EnableRateLimiting("PostPolicy")]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -66,7 +69,8 @@ public class AdminController : ControllerBase
     }
 
     [HttpGet("admin-app-usage-info")]
-    //[EnableRateLimiting("RateLimitGet")]
+    [EnableRateLimiting("GetPolicy")]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -112,6 +116,8 @@ public class AdminController : ControllerBase
     }
 
     [HttpGet("admin-events")]
+    [EnableRateLimiting("GetPolicy")]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -151,6 +157,8 @@ public class AdminController : ControllerBase
     }
 
     [HttpPost("admin-delete-event/{id:int:min(0)}")]
+    [EnableRateLimiting("PostPolicy")]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -187,6 +195,8 @@ public class AdminController : ControllerBase
     }
 
     [HttpGet("admin-users")]
+    [EnableRateLimiting("GetPolicy")]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -231,6 +241,8 @@ public class AdminController : ControllerBase
     }
 
     [HttpGet("admin-search-user/{userEmailOrId}")]
+    [EnableRateLimiting("GetPolicy")]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -286,7 +298,8 @@ public class AdminController : ControllerBase
     }
 
     [HttpPost("admin-delete-user/{id}")]
-    //[EnableRateLimiting("RateLimitGet")]
+    [EnableRateLimiting("PostPolicy")]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -320,6 +333,8 @@ public class AdminController : ControllerBase
     }
 
     [HttpPost("admin-block-user/{id}")]
+    [EnableRateLimiting("PostPolicy")]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -374,6 +389,8 @@ public class AdminController : ControllerBase
     }
 
     [HttpGet("admin-blocked-users")]
+    [EnableRateLimiting("GetPolicy")]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -418,6 +435,8 @@ public class AdminController : ControllerBase
     }
 
     [HttpPost("admin-unblock-user/{id}")]
+    [EnableRateLimiting("PostPolicy")]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -469,6 +488,8 @@ public class AdminController : ControllerBase
     }
 
     [HttpGet("admin-bought-tickets")]
+    [EnableRateLimiting("GetPolicy")]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]

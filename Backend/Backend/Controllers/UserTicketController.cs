@@ -8,6 +8,7 @@ using EventApp.Services.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using System.Data.SqlTypes;
 using System.Net.Sockets;
@@ -38,7 +39,8 @@ public class UserTicketController : ControllerBase
     }
 
     [HttpGet("user-tickets")]
-    //[EnableRateLimiting("RateLimitGet")]
+    [EnableRateLimiting("GetPolicy")]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -87,6 +89,8 @@ public class UserTicketController : ControllerBase
     }
 
     [HttpGet("ticket-detail-with-qr/{eventId:int:min(0)}")]
+    [EnableRateLimiting("GetPolicy")]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -96,6 +100,10 @@ public class UserTicketController : ControllerBase
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null)
+            return Unauthorized();
+
+        var userEmail = User.FindFirstValue(ClaimTypes.Email);
+        if (userEmail == null)
             return Unauthorized();
 
         var ticket = await _context.UserEvents
@@ -133,7 +141,7 @@ public class UserTicketController : ControllerBase
         }
         else
         {
-            ticket.qrCode = _qrCodeService.GenerateQrCode(ticket.urlOfEvent, ticket.userEventId);
+            ticket.qrCode = _qrCodeService.GenerateQrCode(ticket.urlOfEvent, ticket.userEventId, userEmail);
 
             await System.IO.File.WriteAllBytesAsync(filePathQr, ticket.qrCode);
         }

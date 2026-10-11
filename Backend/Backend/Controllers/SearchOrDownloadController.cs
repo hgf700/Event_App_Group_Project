@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
@@ -52,15 +53,15 @@ public class SearchOrDownloadController : ControllerBase
     }
 
     [HttpPost("search-event-and-download")]
-    //[EnableRateLimiting("RateLimitGet")]
+    [EnableRateLimiting("PostPolicy")]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<List<postSearchOrDownloadQueryDto>>> SearchEventOrDownload([FromQuery] string? city, 
-        [FromBody] postSearchEventDto? body
-        )
+        [FromBody] postSearchEventDto? body)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null)

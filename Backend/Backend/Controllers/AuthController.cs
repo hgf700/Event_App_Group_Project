@@ -36,7 +36,6 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register-norm")]
-    //[EnableRateLimiting("RateLimitGet")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]

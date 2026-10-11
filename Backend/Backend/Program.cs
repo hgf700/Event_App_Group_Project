@@ -24,6 +24,7 @@ using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.Grafana.Loki;
 using Stripe;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.RateLimiting;
 QuestPDF.Settings.License = LicenseType.Community;
@@ -31,13 +32,6 @@ QuestPDF.Settings.License = LicenseType.Community;
 var builder = WebApplication.CreateBuilder(args);
 
 DotNetEnv.Env.Load();
-
-//var envPath = Path.Combine(
-//    builder.Environment.ContentRootPath,
-//    ".env"
-//);
-
-//DotNetEnv.Env.Load(envPath);
 
 builder.Services.AddControllers();
 // zamiast liczb string
@@ -59,8 +53,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //db
-var connectionString =
-    builder.Configuration.GetConnectionString("Default");
+var connectionString = builder.Configuration.GetConnectionString("Default");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString, o =>
@@ -87,7 +80,6 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 
 //app services
-//builder.Services.AddTransient<IEmailSender, NullEmailSender>();
 builder.Services.AddScoped<IQrCodeService, QrCodeService>();
 builder.Services.AddScoped<ISmsService, SmsService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
@@ -136,12 +128,12 @@ string googleClientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");
 string googleClientSecret = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET");
 string JWT_SECRET = Environment.GetEnvironmentVariable("JWT_SECRET");
 
-//oauth
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
+//oauth
 //.AddJwtBearer(options =>
 //{
 //    options.RequireHttpsMetadata = false;
@@ -190,26 +182,102 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader());
 });
 
+//builder.Services.AddRateLimiter(options =>
+//{
+//    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+//    {
+//        var userId =
+//            httpContext.User?.Identity?.Name ??
+//            httpContext.Connection.RemoteIpAddress?.ToString() ??
+//            "anonymous";
+
+//        return RateLimitPartition.GetFixedWindowLimiter(
+//            userId,
+//            _ => new FixedWindowRateLimiterOptions
+//            {
+//                AutoReplenishment = true,
+//                QueueLimit = 0,
+//                PermitLimit = 100,
+//                Window = TimeSpan.FromMinutes(1)
+//            });
+//    });
+//});
+
 builder.Services.AddRateLimiter(options =>
 {
-    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    // Globalny limit IP — obejmuje wszystkie endpointy.
+    options.GlobalLimiter =
+        PartitionedRateLimiter.CreateChained(
+            PartitionedRateLimiter.Create<HttpContext, string>(context =>
+            {
+                var ip = context.Connection.RemoteIpAddress?.ToString()
+                         ?? "unknown-ip";
+
+                return RateLimitPartition.GetFixedWindowLimiter(
+                    $"ip:{ip}",
+                    _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 300,
+                        Window = TimeSpan.FromMinutes(1),
+                        QueueLimit = 0,
+                        AutoReplenishment = true
+                    });
+            })
+        );
+
+    // GET — limit per użytkownik.
+    options.AddPolicy("GetPolicy", context =>
     {
-        var userId =
-            httpContext.User?.Identity?.Name ??
-            httpContext.Connection.RemoteIpAddress?.ToString() ??
-            "anonymous";
+        var key = GetUserKey(context);
 
         return RateLimitPartition.GetFixedWindowLimiter(
-            userId,
+            $"get:{key}",
             _ => new FixedWindowRateLimiterOptions
             {
-                AutoReplenishment = true,
+                PermitLimit = 120,
+                Window = TimeSpan.FromMinutes(1),
                 QueueLimit = 0,
-                PermitLimit = 100,
-                Window = TimeSpan.FromMinutes(1)
+                AutoReplenishment = true
+            });
+    });
+
+    // POST — limit per użytkownik.
+    options.AddPolicy("PostPolicy", context =>
+    {
+        var key = GetUserKey(context);
+
+        return RateLimitPartition.GetFixedWindowLimiter(
+            $"post:{key}",
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 10,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0,
+                AutoReplenishment = true
             });
     });
 });
+
+static string GetUserKey(HttpContext context)
+{
+    // Identyfikator z uwierzytelnionego JWT.
+    if (context.User.Identity?.IsAuthenticated == true)
+    {
+        var userId = context.User.FindFirstValue(
+            ClaimTypes.NameIdentifier);
+
+        if (!string.IsNullOrWhiteSpace(userId))
+            return $"user:{userId}";
+    }
+
+    // Fallback dla niezalogowanych użytkowników.
+    var ip = context.Connection.RemoteIpAddress?.ToString()
+             ?? "unknown-ip";
+
+    return $"ip:{ip}";
+}
 
 builder.Services.AddHttpClient();
 
@@ -248,7 +316,7 @@ app.UseRouting();
 
 app.UseCors("Prod");
 
-//app.UseRateLimiter();
+app.UseRateLimiter();
 
 app.UseAuthentication();
 app.UseAuthorization();

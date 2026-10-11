@@ -3,6 +3,7 @@ using EventApp.Services.Dto.RelEvent;
 using EventApp.Services.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
 using Stripe.Checkout;
@@ -30,6 +31,8 @@ public class PaymentsController : ControllerBase
     }
 
     [HttpPost("buy-ticket/{id:int:min(0)}")]
+    [EnableRateLimiting("PostPolicy")]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -163,6 +166,8 @@ public class PaymentsController : ControllerBase
     }
 
     [HttpGet("status/{id:int}")]
+    [EnableRateLimiting("GetPolicy")]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

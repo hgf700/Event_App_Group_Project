@@ -20,6 +20,8 @@ public class PaymentService : IPaymentService
     private readonly IQrCodeService _qrCodeService;
     private readonly ISmsService _smsService;
     private readonly IEmailService _emailService;
+    private readonly UserManager<ApplicationUser> _userManager;
+
 
     private const string YourDomain = "http://localhost:4200";
     private const long AmountToPay = 1000;
@@ -30,16 +32,18 @@ public class PaymentService : IPaymentService
         ApplicationDbContext dbContext,
         IQrCodeService qrCodeService,
         ISmsService smsService,
-        IEmailService emailService)
+        IEmailService emailService,
+        UserManager<ApplicationUser> userManager
+        )
     {
         _logger = logger;
         _context = dbContext;
         _qrCodeService = qrCodeService;
         _smsService = smsService;
         _emailService = emailService;
+        _userManager = userManager;
     }
 
-    // 1. Tworzenie sesji płatności
     public async Task<BuyTicketResult> BuyTicketAsync(string userId, int eventId)
     {
         var stripeSecretKey = Environment.GetEnvironmentVariable("STRIP_SEC_KEY");
@@ -198,7 +202,6 @@ public class PaymentService : IPaymentService
         };
     }
 
-    // 2. Webhook – udana płatność
     public async Task HandleSuccessfulPaymentAsync(Session session)
     {
         if (session == null || string.IsNullOrWhiteSpace(session.Id))
@@ -294,11 +297,14 @@ public class PaymentService : IPaymentService
             return;
         }
 
+        var user = await _userManager.FindByIdAsync(userEvent.UserId);
+        string email = user.Email;
+
         // Wydanie biletu (SMS / QR / PDF / Email) – nie wpływa na status płatności
-        await IssueTicketAsync(userEvent, ev);
+
+        await IssueTicketAsync(userEvent, ev, email);
     }
 
-    // 3. Webhook – wygaśnięcie sesji
     public async Task HandleExpiredPaymentAsync(Session session)
     {
         if (session == null || string.IsNullOrWhiteSpace(session.Id))
@@ -335,7 +341,6 @@ public class PaymentService : IPaymentService
             userEvent.Id, session.Id);
     }
 
-    // 4. Webhook – refund (opcjonalnie)
     public async Task HandleRefundedPaymentAsync(string sessionId)
     {
         if (string.IsNullOrWhiteSpace(sessionId))
@@ -365,7 +370,6 @@ public class PaymentService : IPaymentService
             userEvent.Id, sessionId);
     }
 
-    // 5. Anulowanie pending płatności przez użytkownika
     public async Task<bool> CancelPendingPaymentAsync(string userId, int userEventId)
     {
         var userEvent = await _context.UserEvents
@@ -390,9 +394,8 @@ public class PaymentService : IPaymentService
     }
 
     // 6. Wydanie biletu (SMS + QR + PDF + Email)
-    private async Task IssueTicketAsync(UserEvent userEvent, Domain.Model.Event ev)
+    private async Task IssueTicketAsync(UserEvent userEvent, Domain.Model.Event ev, string email)
     {
-        // --- SMS ---
         try
         {
             bool.TryParse(Environment.GetEnvironmentVariable("TWILIO_SMS_SEND_STATE"), out var sendSms);
@@ -406,12 +409,11 @@ public class PaymentService : IPaymentService
         {
             _logger.LogError(ex, "Failed to send SMS for UserEventId: {UserEventId}", userEvent.Id);
         }
-
-        // --- QR Code ---
+        
         byte[] qrBytes;
         try
         {
-            qrBytes = _qrCodeService.GenerateQrCode(ev.UrlOfEvent, userEvent.Id);
+            qrBytes = _qrCodeService.GenerateQrCode(ev.UrlOfEvent, userEvent.Id, email);
         }
         catch (Exception ex)
         {
@@ -419,7 +421,6 @@ public class PaymentService : IPaymentService
             return; // bez QR nie generujemy PDF
         }
 
-        // --- PDF ---
         string? pdfPath = null;
         try
         {
@@ -435,11 +436,10 @@ public class PaymentService : IPaymentService
             var resourcesPath = Path.Combine(Directory.GetCurrentDirectory(), "Generated");
             Directory.CreateDirectory(resourcesPath);
 
-            pdfPath = Path.Combine(resourcesPath, $"ticket-{userEvent.Id}.pdf");
+            pdfPath = Path.Combine(resourcesPath, $"ticket-{userEvent.Id}-{email}.pdf");
             doc.GeneratePdf(pdfPath);
 
-            _logger.LogInformation(
-                "Ticket PDF generated. UserEventId: {UserEventId}, Path: {Path}",
+            _logger.LogInformation("Ticket PDF generated. UserEventId: {UserEventId}, Path: {Path}",
                 userEvent.Id, pdfPath);
         }
         catch (Exception ex)
@@ -447,7 +447,6 @@ public class PaymentService : IPaymentService
             _logger.LogError(ex, "Failed to generate ticket PDF for UserEventId: {UserEventId}", userEvent.Id);
         }
 
-        // --- Email ---
         try
         {
             var targetEmail = Environment.GetEnvironmentVariable("TARGET_EMAIL");
@@ -464,7 +463,7 @@ public class PaymentService : IPaymentService
                     "Attempting to send ticket email for UserEventId: {UserEventId}",
                     userEvent.Id);
 
-                await _emailService.SendEmail(targetEmail, ev.UrlOfEvent, userEvent.Id);
+                await _emailService.SendEmail(targetEmail, ev.UrlOfEvent, userEvent.Id, email);
 
                 _logger.LogInformation(
                     "Ticket email sent for UserEventId: {UserEventId}",

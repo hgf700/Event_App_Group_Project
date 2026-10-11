@@ -8,7 +8,7 @@ namespace EventApp.Services.Services;
 
 public class EmailService : IEmailService
 {
-    public async Task SendEmail(string toEmail, string url, int userEventId)
+    public async Task SendEmail(string toEmail, string url, int userEventId, string email)
     {
         try
         {
@@ -195,8 +195,8 @@ public class EmailService : IEmailService
             string fileNameEmailPhoto= Path.Combine(resourcesPath, "test.jpg");
             string fileNameLogo = Path.Combine(resourcesPath, "logo.png");
 
-            string fileNamePdf = $"ticket-{userEventId}.pdf";
-            string fileNameQr = $"QR-{userEventId}.png";
+            string fileNamePdf = $"ticket-{userEventId}-{email}.pdf";
+            string fileNameQr = $"QR-{userEventId}-{email}.png";
 
             string filePathPdf = Path.Combine(generatedPath, fileNamePdf);
             string filePathQr = Path.Combine(generatedPath, fileNameQr);

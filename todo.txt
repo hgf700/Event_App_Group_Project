@@ -49,5 +49,3 @@ uzycie when.all z tpl (parallel library) jesli 1 rzecz nie jest zalezna od drugi
 akcja
 
 uzycie observer do serwisu z sms i email?
-
-pdf powinien miec email w nazwie usytkownika kupujacego i qr tez

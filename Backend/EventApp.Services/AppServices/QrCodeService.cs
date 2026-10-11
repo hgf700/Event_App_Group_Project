@@ -7,7 +7,7 @@ namespace EventApp.Services.Services;
 
 public class QrCodeService : IQrCodeService
 {
-    public byte[] GenerateQrCode(string content, int userEventId)
+    public byte[] GenerateQrCode(string content, int userEventId, string email)
     {
         string baseDir = Directory.GetCurrentDirectory();
         string resourceDir = Path.Combine(baseDir, "Resources");
@@ -16,7 +16,7 @@ public class QrCodeService : IQrCodeService
         Directory.CreateDirectory(resourceDir);
         Directory.CreateDirectory(generatedDir);
 
-        string outputPath = Path.Combine(generatedDir, $"QR-{userEventId}.png");
+        string outputPath = Path.Combine(generatedDir, $"QR-{userEventId}-{email}.png");
         string logoPath = Path.Combine(resourceDir, "logo.png");
 
         if (!File.Exists(logoPath))
