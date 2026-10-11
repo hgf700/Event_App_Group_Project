@@ -1,0 +1,4 @@
+#ignoruje konflikty i bierze wszystko z dev branch
+git merge origin/dev -X theirs
+
+git checkout main
