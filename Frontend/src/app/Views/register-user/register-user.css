@@ -167,8 +167,6 @@
   border-left: 4px solid #c62828;
 }
 
-
-
 .password-requirements {
   margin-top: 8px;
   font-size: 13px;
@@ -190,7 +188,7 @@
 }
 
 .password-requirements li::before {
-  content: "○";
+  content: '○';
   margin-right: 8px;
   color: #999;
 }
@@ -200,6 +198,6 @@
 }
 
 .password-requirements li.valid::before {
-  content: "✓";
+  content: '✓';
   color: #16803d;
 }

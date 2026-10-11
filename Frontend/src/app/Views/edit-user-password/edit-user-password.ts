@@ -24,17 +24,19 @@ export class EditUserPassword {
   ) {
     this.editUserPasswordForm = this.fb.group(
       {
-        newPassword: ['',
-        Validators.required,
-        // Validators.minLength(8),
-        // Validators.maxLength(20),
-        // Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).+$/)
+        newPassword: [
+          '',
+          Validators.required,
+          // Validators.minLength(8),
+          // Validators.maxLength(20),
+          // Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).+$/)
         ],
-        repeatNewPassword: ['',
-        Validators.required,
-        // Validators.minLength(8),
-        // Validators.maxLength(20),
-        // Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).+$/)
+        repeatNewPassword: [
+          '',
+          Validators.required,
+          // Validators.minLength(8),
+          // Validators.maxLength(20),
+          // Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).+$/)
         ],
       },
       { validators: changeUserPasswordValidator },

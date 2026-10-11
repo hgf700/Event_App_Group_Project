@@ -60,7 +60,7 @@ export class AuthService {
     return this.http.post<postRefreshTokenResponse>(
       `${this.refreshTokenApiUrl}/refresh`,
       {},
-      { withCredentials: true }
+      { withCredentials: true },
     );
   }
 }

@@ -175,7 +175,9 @@ td:last-child button:hover {
   border-radius: 10px;
   outline: none;
   box-sizing: border-box;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .search-container input::placeholder {
@@ -203,7 +205,9 @@ td:last-child button:hover {
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .search-container button:hover {
@@ -232,4 +236,3 @@ td:last-child button:hover {
     width: 100%;
   }
 }
-

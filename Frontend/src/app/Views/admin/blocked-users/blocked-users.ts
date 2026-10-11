@@ -30,7 +30,7 @@ export class BlockedUsers implements OnInit {
       next: (response) => {
         this.blockedUsers = response;
         this.loading = false;
-        this.filteredBlockedUsers = [...response]; 
+        this.filteredBlockedUsers = [...response];
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -40,12 +40,13 @@ export class BlockedUsers implements OnInit {
     });
   }
 
-    filterUsers() {
+  filterUsers() {
     const search = this.searchText.toLowerCase().trim();
 
-    this.filteredBlockedUsers = this.blockedUsers.filter(user =>
-      (user.email ?? '').toLowerCase().includes(search) ||
-      (user.id ?? '').toLowerCase().includes(search) 
+    this.filteredBlockedUsers = this.blockedUsers.filter(
+      (user) =>
+        (user.email ?? '').toLowerCase().includes(search) ||
+        (user.id ?? '').toLowerCase().includes(search),
     );
   }
 

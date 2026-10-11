@@ -22,18 +22,23 @@ export class LoginUser {
     private authService: AuthService,
   ) {
     this.loginUserForm = this.fb.group({
-      email: ['', [
-        Validators.required,
-        // Validators.email
-      ]],
-      password: ['', [
-        Validators.required,
-        // Validators.minLength(8),
-        // Validators.maxLength(20),
-        // Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).+$/)
-      ]],
-      },  
-    );
+      email: [
+        '',
+        [
+          Validators.required,
+          // Validators.email
+        ],
+      ],
+      password: [
+        '',
+        [
+          Validators.required,
+          // Validators.minLength(8),
+          // Validators.maxLength(20),
+          // Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).+$/)
+        ],
+      ],
+    });
   }
 
   onSubmit() {

@@ -43,9 +43,8 @@ export class Users implements OnInit {
   filterUsers() {
     const search = this.searchText.toLowerCase().trim();
 
-    this.filteredUsers = this.users.filter(user =>
-      user.email.toLowerCase().includes(search) ||
-      user.id.toLowerCase().includes(search) 
+    this.filteredUsers = this.users.filter(
+      (user) => user.email.toLowerCase().includes(search) || user.id.toLowerCase().includes(search),
     );
   }
 

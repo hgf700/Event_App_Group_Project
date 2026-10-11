@@ -24,22 +24,31 @@ export class RegisterUser {
   ) {
     this.registerUserForm = this.fb.group(
       {
-        email: ['', [
-          Validators.required,
-          // Validators.email
-        ]],
-        password: ['', [
-          Validators.required,
-        // Validators.minLength(8),
-        // Validators.maxLength(20),
-        // Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).+$/)
-        ]],
-        confirmPassword: ['', [
-          Validators.required,
-          // Validators.minLength(8),
-        // Validators.maxLength(20),
-        // Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).+$/)
-        ]],
+        email: [
+          '',
+          [
+            Validators.required,
+            // Validators.email
+          ],
+        ],
+        password: [
+          '',
+          [
+            Validators.required,
+            // Validators.minLength(8),
+            // Validators.maxLength(20),
+            // Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).+$/)
+          ],
+        ],
+        confirmPassword: [
+          '',
+          [
+            Validators.required,
+            // Validators.minLength(8),
+            // Validators.maxLength(20),
+            // Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).+$/)
+          ],
+        ],
       },
       { validators: registerUserValidator },
     );

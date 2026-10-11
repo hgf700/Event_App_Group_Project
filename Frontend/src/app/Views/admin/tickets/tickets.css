@@ -163,7 +163,6 @@ td:nth-child(4) {
   }
 }
 
-
 .search-container {
   display: flex;
   align-items: center;
@@ -186,7 +185,9 @@ td:nth-child(4) {
   border-radius: 10px;
   outline: none;
   box-sizing: border-box;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .search-container input::placeholder {
@@ -214,7 +215,9 @@ td:nth-child(4) {
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .search-container button:hover {
@@ -243,5 +246,3 @@ td:nth-child(4) {
     width: 100%;
   }
 }
-
-
