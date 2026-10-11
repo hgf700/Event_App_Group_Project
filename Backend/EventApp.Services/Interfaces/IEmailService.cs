@@ -2,5 +2,5 @@
 
 public interface IEmailService
 {
-    void SendEmail(string toEmail, string url, int userEventId);
+    Task SendEmail(string toEmail, string url, int userEventId);
 }

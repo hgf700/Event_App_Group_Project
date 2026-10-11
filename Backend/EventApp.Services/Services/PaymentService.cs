@@ -452,11 +452,23 @@ public class PaymentService : IPaymentService
         {
             var targetEmail = Environment.GetEnvironmentVariable("TARGET_EMAIL");
 
-            if (!string.IsNullOrWhiteSpace(targetEmail))
+            if (string.IsNullOrWhiteSpace(targetEmail))
             {
-                // Jeśli masz metodę z załącznikiem – użyj jej
-                // _emailService.SendEmailWithAttachment(targetEmail, ev.UrlOfEvent, pdfPath);
-                _emailService.SendEmail(targetEmail, ev.UrlOfEvent, userEvent.Id);
+                _logger.LogWarning(
+                    "TARGET_EMAIL is missing. Email skipped for UserEventId: {UserEventId}",
+                    userEvent.Id);
+            }
+            else
+            {
+                _logger.LogInformation(
+                    "Attempting to send ticket email for UserEventId: {UserEventId}",
+                    userEvent.Id);
+
+                await _emailService.SendEmail(targetEmail, ev.UrlOfEvent, userEvent.Id);
+
+                _logger.LogInformation(
+                    "Ticket email sent for UserEventId: {UserEventId}",
+                    userEvent.Id);
             }
         }
         catch (Exception ex)

@@ -8,7 +8,7 @@ namespace EventApp.Services.Services;
 
 public class EmailService : IEmailService
 {
-    public void SendEmail(string toEmail, string url, int userEventId)
+    public async Task SendEmail(string toEmail, string url, int userEventId)
     {
         try
         {
@@ -201,7 +201,7 @@ public class EmailService : IEmailService
             string filePathPdf = Path.Combine(generatedPath, fileNamePdf);
             string filePathQr = Path.Combine(generatedPath, fileNameQr);
 
-            Attachment data = new Attachment(filePathPdf, MediaTypeNames.Text.Plain);
+            Attachment data = new Attachment(filePathPdf, MediaTypeNames.Application.Pdf);
             data.TransferEncoding = TransferEncoding.Base64;
 
             ContentDisposition disposition = data.ContentDisposition;
@@ -260,7 +260,11 @@ public class EmailService : IEmailService
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
+            Console.WriteLine($"Email sending failed for UserEventId: {userEventId}");
+
+            Console.WriteLine(ex.ToString());
+
+            throw;
         }
     }
 }

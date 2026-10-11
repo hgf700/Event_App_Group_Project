@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data.SqlTypes;
 using System.Net.Sockets;
 using System.Security.Claims;
 
@@ -119,7 +120,23 @@ public class UserTicketController : ControllerBase
         if (ticket == null)
             return NotFound("Ticket not found");
 
-        ticket.qrCode = _qrCodeService.GenerateQrCode(ticket.urlOfEvent, ticket.userEventId);
+        string basePath = Directory.GetCurrentDirectory();
+        string generatedPath = Path.Combine(basePath, "Generated");
+        Directory.CreateDirectory(generatedPath);
+
+        string fileNameQr = $"QR-{ticket.userEventId}.png";
+        string filePathQr = Path.Combine(generatedPath, fileNameQr);
+
+        if (System.IO.File.Exists(filePathQr))
+        {
+            ticket.qrCode = await System.IO.File.ReadAllBytesAsync(filePathQr);
+        }
+        else
+        {
+            ticket.qrCode = _qrCodeService.GenerateQrCode(ticket.urlOfEvent, ticket.userEventId);
+
+            await System.IO.File.WriteAllBytesAsync(filePathQr, ticket.qrCode);
+        }
 
         return Ok(ticket);
     }

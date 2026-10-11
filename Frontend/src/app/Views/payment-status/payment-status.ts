@@ -3,128 +3,141 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PaymentService } from '../../Services/PaymentService';
 import { Subscription } from 'rxjs';
+import { StatesOfTicket } from '../../Enum/StatesOfTicket';
 
 @Component({
-  selector: 'app-payment-status',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
-  templateUrl: './payment-status.html',
-  styleUrl: './payment-status.css',
+selector: 'app-payment-status',
+standalone: true,
+imports: [CommonModule, RouterModule],
+templateUrl: './payment-status.html',
+styleUrl: './payment-status.css',
 })
 export class PaymentStatus implements OnInit, OnDestroy {
-  paymentId: number | null = null;
-  loading = true;
-  paymentState = '';
-  error = false;
-  cancelled = false;
+readonly StatesOfTicket = StatesOfTicket;
 
-  // ~30 sekund (20 × 1.5s)
-  private readonly maxAttempts = 50;
-  private attempt = 0;
-  private timeoutId: ReturnType<typeof setTimeout> | null = null;
-  private statusSub?: Subscription;
+paymentId: number | null = null;
+loading = true;
+paymentState: StatesOfTicket | null = null;
+error = false;
+cancelled = false;
 
-  constructor(
-    private paymentService: PaymentService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private cdr: ChangeDetectorRef,
-  ) {}
+private readonly maxAttempts = 50;
+private attempt = 0;
+private timeoutId: ReturnType<typeof setTimeout> | null = null;
+private statusSub?: Subscription;
 
-  ngOnInit(): void {
-    const paymentIdParam = this.route.snapshot.queryParamMap.get('paymentId');
-    const cancelledParam = this.route.snapshot.queryParamMap.get('cancelled');
+constructor(
+private paymentService: PaymentService,
+private route: ActivatedRoute,
+private router: Router,
+private cdr: ChangeDetectorRef,
+) {}
 
-    this.cancelled = cancelledParam === 'true';
+ngOnInit(): void {
+const paymentIdParam = this.route.snapshot.queryParamMap.get('paymentId');
+const cancelledParam = this.route.snapshot.queryParamMap.get('cancelled');
 
-    if (!paymentIdParam) {
-      console.error('Brak paymentId');
+this.cancelled = cancelledParam === 'true';
+
+if (!paymentIdParam) {
+  console.error('Brak paymentId');
+  this.finishWithError();
+  return;
+}
+
+const paymentId = Number(paymentIdParam);
+
+if (!Number.isInteger(paymentId) || paymentId <= 0) {
+  console.error('Nieprawidłowe paymentId:', paymentIdParam);
+  this.finishWithError();
+  return;
+}
+
+this.paymentId = paymentId;
+
+if (this.cancelled) {
+  this.paymentState = StatesOfTicket.Cancelled;
+  this.loading = false;
+  return;
+}
+
+this.checkPaymentStatus();
+
+}
+
+private checkPaymentStatus(): void {
+if (this.paymentId === null) {
+return;
+}
+
+this.statusSub?.unsubscribe();
+
+this.statusSub = this.paymentService
+  .getPaymentStatus(this.paymentId)
+  .subscribe({
+    next: (res) => {
+      // Backend zwraca numeryczny enum.
+      this.paymentState = Number(res.state) as StatesOfTicket;
+      this.attempt++;
+
+      if (this.paymentState === StatesOfTicket.Paid) {
+        this.loading = false;
+        this.error = false;
+        this.cdr.detectChanges();
+        return;
+      }
+
+      if (
+        this.paymentState === StatesOfTicket.Expired ||
+        this.paymentState === StatesOfTicket.Cancelled ||
+        this.paymentState === StatesOfTicket.Refunded
+      ) {
+        this.loading = false;
+        this.error = false;
+        this.cdr.detectChanges();
+        return;
+      }
+
+      if (this.attempt >= this.maxAttempts) {
+        this.loading = false;
+        this.error = true;
+        this.cdr.detectChanges();
+        return;
+      }
+
+      this.timeoutId = setTimeout(() => {
+        this.checkPaymentStatus();
+      }, 1500);
+    },
+
+    error: (err) => {
+      console.error(
+        'Nie udało się pobrać statusu płatności:',
+        err,
+      );
+
       this.finishWithError();
-      return;
-    }
+    },
+  });
 
-    const paymentId = Number(paymentIdParam);
+}
 
-    if (!Number.isInteger(paymentId) || paymentId <= 0) {
-      console.error('Nieprawidłowe paymentId:', paymentIdParam);
-      this.finishWithError();
-      return;
-    }
+private finishWithError(): void {
+this.loading = false;
+this.error = true;
+this.cdr.detectChanges();
+}
 
-    this.paymentId = paymentId;
+returnToEvents(): void {
+this.router.navigate(['/get-events']);
+}
 
-    /*
-     * Użytkownik wrócił przez CancelUrl.
-     * Nie musimy czekać na webhook/polling.
-     */
-    if (this.cancelled) {
-      this.paymentState = 'Cancelled';
-      this.loading = false;
-      return;
-    }
+ngOnDestroy(): void {
+if (this.timeoutId !== null) {
+clearTimeout(this.timeoutId);
+}
 
-    this.checkPaymentStatus();
-  }
+this.statusSub?.unsubscribe();
 
-  private checkPaymentStatus(): void {
-    if (this.paymentId === null) {
-      return;
-    }
-
-    this.statusSub?.unsubscribe();
-
-    this.statusSub = this.paymentService.getPaymentStatus(this.paymentId).subscribe({
-      next: (res) => {
-        this.paymentState = res.state;
-        this.attempt++;
-
-        if (res.state === 'Paid') {
-          this.loading = false;
-          this.cdr.detectChanges();
-          return;
-        }
-
-        if (res.state === 'Expired' || res.state === 'Cancelled' || res.state === 'Refunded') {
-          this.loading = false;
-          this.cdr.detectChanges();
-          return;
-        }
-
-        if (this.attempt >= this.maxAttempts) {
-          this.loading = false;
-          this.error = true;
-          this.cdr.detectChanges();
-          return;
-        }
-
-        this.timeoutId = setTimeout(() => {
-          this.checkPaymentStatus();
-        }, 1500);
-      },
-
-      error: (err) => {
-        console.error('Nie udało się pobrać statusu płatności:', err);
-
-        this.finishWithError();
-      },
-    });
-  }
-
-  private finishWithError(): void {
-    this.loading = false;
-    this.error = true;
-    this.cdr.detectChanges();
-  }
-
-  returnToEvents(): void {
-    this.router.navigate(['/get-events']);
-  }
-
-  ngOnDestroy(): void {
-    if (this.timeoutId) {
-      clearTimeout(this.timeoutId);
-    }
-
-    this.statusSub?.unsubscribe();
-  }
+}
 }

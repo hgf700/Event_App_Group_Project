@@ -50,6 +50,4 @@ akcja
 
 uzycie observer do serwisu z sms i email?
 
-validatory do formularzy
-
-popr generowanie pdf nazwa w folderze i wysylanie konkretnie go
+pdf powinien miec email w nazwie usytkownika kupujacego i qr tez

@@ -34,29 +34,14 @@ public class QrCodeService : IQrCodeService
             lightColor: Color.FromArgb(255, 0, 0),
             icon: icon,
             iconSizePercent: 20,
-            iconBorderWidth: 20,
+            iconBorderWidth: 1,
             drawQuietZones: true
         );
 
+        qrCodeImage.Save(outputPath, ImageFormat.Png);
+
         using var stream = new MemoryStream();
         qrCodeImage.Save(stream, ImageFormat.Png);
-
         return stream.ToArray();
     }
 }
-
-//public class QrCodeService : IQrCodeService
-//{
-//    public byte[] GenerateQrCodeBytes(string content)
-//    {
-//        using var qrGenerator = new QRCodeGenerator();
-
-//        var qrCodeData = qrGenerator.CreateQrCode(
-//            content,
-//            QRCodeGenerator.ECCLevel.Q);
-
-//        var qrCode = new PngByteQRCode(qrCodeData);
-
-//        return qrCode.GetGraphic(10);
-//    }
-//}
