@@ -1,6 +1,5 @@
 ﻿using EventApp.Services.Model;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using EventApp.Domain.Model;
 

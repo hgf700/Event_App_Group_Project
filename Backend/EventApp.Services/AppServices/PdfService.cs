@@ -1,7 +1,6 @@
 ﻿
 using EventApp.Services.Interfaces;
 using Microsoft.Playwright;
-using QRCoder;
 using System.Net;
 
 namespace EventApp.Services.Services;

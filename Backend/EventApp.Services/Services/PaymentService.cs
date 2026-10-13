@@ -1,5 +1,4 @@
-﻿using AngleSharp.Dom;
-using EventApp.Domain.Model;
+﻿using EventApp.Domain.Model;
 using EventApp.Infrastructure.Db;
 using EventApp.Services.Interfaces;
 using EventApp.Services.Model;
@@ -7,9 +6,7 @@ using EventApp.Services.Services.Interfaces;
 using EventApp.Services.Services.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
-using QuestPDF.Fluent;
 using Stripe;
 using Stripe.Checkout;
 
@@ -23,7 +20,6 @@ public class PaymentService : IPaymentService
     private readonly ISmsService _smsService;
     private readonly IEmailService _emailService;
     private readonly IPdfService _pdfService;
-
     private readonly UserManager<ApplicationUser> _userManager;
 
 
@@ -37,7 +33,8 @@ public class PaymentService : IPaymentService
         IQrCodeService qrCodeService,
         ISmsService smsService,
         IEmailService emailService,
-        UserManager<ApplicationUser> userManager
+        UserManager<ApplicationUser> userManager,
+        IPdfService pdfService
         )
     {
         _logger = logger;
@@ -46,6 +43,7 @@ public class PaymentService : IPaymentService
         _smsService = smsService;
         _emailService = emailService;
         _userManager = userManager;
+        _pdfService = pdfService;
     }
 
     public async Task<BuyTicketResult> BuyTicketAsync(string userId, int eventId)

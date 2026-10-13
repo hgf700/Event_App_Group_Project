@@ -1,6 +1,5 @@
 ﻿using EventApp.Domain.Model;
 using EventApp.Services.Interfaces;
-using EventApp.Services.Model;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

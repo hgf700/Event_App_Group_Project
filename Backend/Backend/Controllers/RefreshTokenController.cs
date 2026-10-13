@@ -1,16 +1,12 @@
 ﻿using EventApp.Domain.Model;
 using EventApp.Infrastructure.Db;
 using EventApp.Services.Dto.RelAuth;
-using EventApp.Services.Dto.RelEvent;
 using EventApp.Services.Interfaces;
-using EventApp.Services.Model;
-using EventApp.Services.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 
 namespace Backend.Controllers;
 

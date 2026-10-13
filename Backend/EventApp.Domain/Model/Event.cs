@@ -1,5 +1,4 @@
 ﻿using EventApp.Services.Model;
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace EventApp.Domain.Model;

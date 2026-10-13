@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace EventApp.Services.Dto.RelAuth;
+﻿namespace EventApp.Services.Dto.RelAuth;
 
 public class getAdminUserDto
 {

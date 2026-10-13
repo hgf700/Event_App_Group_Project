@@ -3,13 +3,9 @@ using EventApp.Infrastructure.Db;
 using EventApp.Services.Dto.RelAuth;
 using EventApp.Services.Interfaces;
 using EventApp.Services.Services.Interfaces;
-using EventApp.Services.Services.model;
 using EventApp.Services.Services.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace EventApp.Services.Services;
 

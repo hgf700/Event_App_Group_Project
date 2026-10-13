@@ -15,7 +15,6 @@
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="10.0.12" />
     <PackageReference Include="Microsoft.Playwright" Version="1.63.0" />
     <PackageReference Include="QRCoder" Version="1.8.0" />
-    <PackageReference Include="QuestPDF" Version="2026.9.0" />
     <PackageReference Include="Stripe.net" Version="52.4.2" />
     <PackageReference Include="Superpower" Version="3.0.0" />
     <PackageReference Include="Twilio" Version="7.14.9" />

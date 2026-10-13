@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-
-namespace EventApp.Services.Patterns;
+﻿namespace EventApp.Services.Patterns;
 
 public class StringContext
 {

@@ -2,7 +2,6 @@
 using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
-using Twilio.TwiML.Messaging;
 
 namespace EventApp.Services.Services;
 
@@ -13,8 +12,11 @@ public class EmailService : IEmailService
         try
         {
             // Mailtrap SMTP dane z ENV
-            string smtpUser = Environment.GetEnvironmentVariable("MAILTRAP_SENDER_USER");
-            string smtpPass = Environment.GetEnvironmentVariable("MAILTRAP_SENDER_PASS");
+            string smtpUser = Environment.GetEnvironmentVariable("MAILTRAP_SENDER_USER")
+                ?? throw new InvalidOperationException("MAILTRAP_SENDER_USER is not set.");
+
+            string smtpPass = Environment.GetEnvironmentVariable("MAILTRAP_SENDER_PASS") 
+                ?? throw new InvalidOperationException("MAILTRAP_SENDER_PASS is not set.");
 
             if (string.IsNullOrEmpty(smtpUser) || string.IsNullOrEmpty(smtpPass))
                 throw new Exception("Brakuje zmiennych środowiskowych: MAILTRAP_USER lub MAILTRAP_PASS");

@@ -1,20 +1,14 @@
-﻿using EventApp.Domain.Model;
-using EventApp.Infrastructure.Db;
+﻿using EventApp.Infrastructure.Db;
 using EventApp.Services.Dto.RelAuth;
-using EventApp.Services.Interfaces;
-using EventApp.Services.Model;
 using EventApp.Services.Services.Interface;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
-using Stripe;
 using System.Security.Claims;
-using Twilio.TwiML.Messaging;
 
 namespace Backend.Controllers;
 

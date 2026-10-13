@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
-using Stripe.Checkout;
 using System.Security.Claims;
 
 namespace Backend.Controllers;

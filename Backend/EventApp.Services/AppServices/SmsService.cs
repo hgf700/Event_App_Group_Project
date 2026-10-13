@@ -12,10 +12,17 @@ public class SmsService : ISmsService
 
         if (twilio_sms_state == true)
         {
-            string twilio_sid = Environment.GetEnvironmentVariable("TWILIO_SID");
-            string twilio_token = Environment.GetEnvironmentVariable("TWILIO_TOKEN");
-            string sms_receiver = Environment.GetEnvironmentVariable("SMS_RECEIVER");
-            string twilio_number = Environment.GetEnvironmentVariable("TWILIO_NUMBER");
+            string twilio_sid = Environment.GetEnvironmentVariable("TWILIO_SID")
+                ?? throw new InvalidOperationException("TWILIO_SID is not set.");
+
+            string twilio_token = Environment.GetEnvironmentVariable("TWILIO_TOKEN")
+                ?? throw new InvalidOperationException("TWILIO_TOKEN is not set.");
+
+            string sms_receiver = Environment.GetEnvironmentVariable("SMS_RECEIVER")
+                ?? throw new InvalidOperationException("SMS_RECEIVER is not set.");
+
+            string twilio_number = Environment.GetEnvironmentVariable("TWILIO_NUMBER")
+                ?? throw new InvalidOperationException("TWILIO_NUMBER is not set.");
 
             TwilioClient.Init(twilio_sid, twilio_token);
 
