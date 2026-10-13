@@ -18,9 +18,6 @@ public class EmailService : IEmailService
             string smtpPass = Environment.GetEnvironmentVariable("MAILTRAP_SENDER_PASS") 
                 ?? throw new InvalidOperationException("MAILTRAP_SENDER_PASS is not set.");
 
-            if (string.IsNullOrEmpty(smtpUser) || string.IsNullOrEmpty(smtpPass))
-                throw new Exception("Brakuje zmiennych środowiskowych: MAILTRAP_USER lub MAILTRAP_PASS");
-
             var fromAddress = new MailAddress("test@example.com", "Mailtrap Test", System.Text.Encoding.UTF8);
             var toAddress = new MailAddress($"{toEmail}", "test email");
 

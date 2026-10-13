@@ -65,4 +65,8 @@ export class LoginUser {
       error: (err) => alert(err.error),
     });
   }
+
+  loginWithGoogle(){
+    return this.authService.loginWithGoogleOauth();
+  }
 }

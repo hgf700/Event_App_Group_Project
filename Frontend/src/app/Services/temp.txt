@@ -1,4 +1,6 @@
-event
+resiliance
+
+
 
   getEvents(): Observable<getEventDto[]> {
     return this.http.get<getEventDto[]>(`${this.apiUrl}/get-events`, {
@@ -7,8 +9,6 @@ event
         RetryHelper()
       );
   }
-
-
 
 // import { HttpClient } from '@angular/common/http';
 // import { Injectable } from '@angular/core';
