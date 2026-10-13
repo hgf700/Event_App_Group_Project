@@ -6,5 +6,14 @@ namespace EventApp.Services.Interfaces;
 
 public interface IPdfService
 {
-    Task GeneratePdfAsync();
+    Task GeneratePdfAsync(
+        string eventName,
+        string eventDate,
+        string eventAddress,
+        string eventType,
+        string eventUrl,
+        string email,
+        int userEventId,
+        byte[] qrCode
+        );
 }

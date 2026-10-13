@@ -1,22 +1,14 @@
 ﻿
 using EventApp.Services.Interfaces;
 using Microsoft.Playwright;
+using QRCoder;
 using System.Net;
 
 namespace EventApp.Services.Services;
 
 public class PdfService : IPdfService
 {
-    public string EventName { get; }
-    public string EventDate { get; }
-    public string EventAddress { get; }
-    public string EventType { get; }
-    public string EventUrl { get; }
-    public string Email { get; }
-    public int UserEventId { get; }
-    private readonly byte[] _qrCode;
-
-    public PdfService(
+    public async Task GeneratePdfAsync(
         string eventName,
         string eventDate,
         string eventAddress,
@@ -26,24 +18,20 @@ public class PdfService : IPdfService
         int userEventId,
         byte[] qrCode)
     {
-        EventName = eventName;
-        EventDate = eventDate;
-        EventAddress = eventAddress;
-        EventType = eventType;
-        EventUrl = eventUrl;
-        Email = email;
-        UserEventId = userEventId;
-        _qrCode = qrCode;
-    }
-
-    public async Task GeneratePdfAsync()
-    {
         var generatedPath= Path.Combine(Directory.GetCurrentDirectory(), "Generated");
         Directory.CreateDirectory(generatedPath);
 
-        var pdfPath = Path.Combine(generatedPath, $"ticket-{UserEventId}-{Email}.pdf");
+        var pdfPath = Path.Combine(generatedPath, $"ticket-{userEventId}-{email}.pdf");
 
-        var html = GenerateHtml();
+        var html = GenerateHtml(
+            eventName,
+            eventDate,
+            eventAddress,
+            eventType,
+            eventUrl,
+            email,
+            userEventId,
+            qrCode);
 
         using var playwright = await Playwright.CreateAsync();
 
@@ -66,18 +54,32 @@ public class PdfService : IPdfService
         });
     }
 
-    private string GenerateHtml()
+    private static string GenerateHtml(
+        string eventName,
+        string eventDate,
+        string eventAddress,
+        string eventType,
+        string eventUrl,
+        string email,
+        int userEventId,
+        byte[] qrCode)
     {
-        // Kod QR wstawiamy bezpośrednio jako obraz Base64.
-        var qrBase64 = Convert.ToBase64String(_qrCode);
+        var qrBase64 = Convert.ToBase64String(qrCode);
 
-        // Kodujemy dane tekstowe, aby nie traktować ich jako HTML.
-        var eventName = WebUtility.HtmlEncode(EventName);
-        var eventDate = WebUtility.HtmlEncode(EventDate);
-        var eventAddress = WebUtility.HtmlEncode(EventAddress);
-        var eventType = WebUtility.HtmlEncode(EventType);
-        var email = WebUtility.HtmlEncode(Email);
-        var eventUrl = WebUtility.HtmlEncode(EventUrl);
+        eventName = WebUtility.HtmlEncode(eventName);
+        eventDate = WebUtility.HtmlEncode(eventDate);
+        eventAddress = WebUtility.HtmlEncode(eventAddress);
+        eventType = WebUtility.HtmlEncode(eventType);
+        email = WebUtility.HtmlEncode(email);
+
+        var safeEventUrl = Uri.TryCreate(
+                   eventUrl,
+                   UriKind.Absolute,
+                   out var parsedUrl)
+                   && (parsedUrl.Scheme == Uri.UriSchemeHttps
+                       || parsedUrl.Scheme == Uri.UriSchemeHttp)
+                       ? WebUtility.HtmlEncode(parsedUrl.AbsoluteUri)
+                       : "#";
 
         return $$"""
         <!DOCTYPE html>
@@ -256,14 +258,14 @@ public class PdfService : IPdfService
 
                         <tr>
                             <td>Numer rezerwacji</td>
-                            <td>{{UserEventId}}</td>
+                            <td>{{userEventId}}</td>
                         </tr>
                     </table>
 
                     <div class="buyer">
                         <p><strong>Dane kupującego</strong></p>
                         <p>E-mail: {{email}}</p>
-                        <p>Numer biletu: {{UserEventId}}</p>
+                        <p>Numer biletu: {{userEventId}}</p>
                     </div>
 
                     <section class="qr-section">

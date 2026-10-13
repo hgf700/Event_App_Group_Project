@@ -425,19 +425,17 @@ public class PaymentService : IPaymentService
             return; // bez QR nie generujemy PDF
         }
 
-        var generator = new PdfService(
-            eventName: ev.NameOfEvent,
-            eventDate: ev.StartOfEvent.ToString(),
-            eventAddress: ev.Address,
-            eventType: ev.TypeOfEvent,
-            eventUrl: ev.UrlOfEvent,
-            email: email,
-            userEventId: userEvent.Id,
-            qrCode: qrBytes);
-
         try
         {
-            await generator.GeneratePdfAsync();
+            await _pdfService.GeneratePdfAsync(
+                eventName: ev.NameOfEvent,
+                eventDate: ev.StartOfEvent.ToString(),
+                eventAddress: ev.Address,
+                eventType: ev.TypeOfEvent,
+                eventUrl: ev.UrlOfEvent,
+                email: email,
+                userEventId: userEvent.Id,
+                qrCode: qrBytes);
 
             _logger.LogInformation("Ticket PDF generated. UserEventId: {UserEventId}", userEvent.Id);
         }
