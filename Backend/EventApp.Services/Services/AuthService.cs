@@ -71,28 +71,29 @@ public class AuthService : IAuthService
         var roles = await _userManager.GetRolesAsync(user);
 
         var token = await _jwtService.GenerateToken(user);
+        
+        var refreshTokenValue = _jwtService.GenerateRefreshToken();
 
         var refreshToken = new RefreshToken
         {
             UserId = user.Id,
-            Token = _jwtService.GenerateRefreshToken(),
+            Token = refreshTokenValue,
             Expires = DateTime.UtcNow.AddDays(30),
             Created = DateTime.UtcNow
         };
 
         _context.RefreshTokens.Add(refreshToken);
-            
+
         await _context.SaveChangesAsync();
 
-        _logger.LogInformation(
-            "User successfully registered {Email}",
-            dto.email);
+        _logger.LogInformation("User successfully registered {Email}", dto.email);
 
         return new NormalRegisterResult
         {
             Response = new authResponseDto
             {
                 jwt = token,
+                refreshToken = refreshTokenValue,
                 email = dto.email,
                 userRole = roles.FirstOrDefault() ?? ""
             },
@@ -133,18 +134,20 @@ public class AuthService : IAuthService
 
         var token = await _jwtService.GenerateToken(existingUser);
 
-        var existsRefresh = await _context.RefreshTokens
-             .AnyAsync(b =>
+        var refreshTokenEntity = await _context.RefreshTokens
+             .FirstOrDefaultAsync(b =>
                  b.UserId == existingUser.Id &&
                  b.Expires >= DateTime.UtcNow &&
                  b.Revoked == null);
 
-        if (!existsRefresh)
+        if (refreshTokenEntity == null)
         {
+            var refreshTokenValue = _jwtService.GenerateRefreshToken();
+
             var refreshToken = new RefreshToken
             {
                 UserId = existingUser.Id,
-                Token = _jwtService.GenerateRefreshToken(),
+                Token = refreshTokenValue,
                 Expires = DateTime.UtcNow.AddDays(30),
                 Created = DateTime.UtcNow,
             };
@@ -158,6 +161,7 @@ public class AuthService : IAuthService
             Response = new authResponseDto
             {
                 jwt = token,
+                refreshToken = refreshTokenEntity.Token,
                 email = dto.email,
                 userRole = roles.FirstOrDefault() ?? ""
             },
@@ -268,19 +272,21 @@ public class AuthService : IAuthService
         var token = await _jwtService.GenerateToken(user);
 
         // 6. Sprawdzamy refresh token
-        var existsRefresh = await _context.RefreshTokens
-            .AnyAsync(b =>
-                b.UserId == user.Id &&
-                b.Expires >= DateTime.UtcNow &&
-                b.Revoked == null);
+        var refreshTokenEntity = await _context.RefreshTokens
+             .FirstOrDefaultAsync(b =>
+                 b.UserId == user.Id &&
+                 b.Expires >= DateTime.UtcNow &&
+                 b.Revoked == null);
 
         // 7. Tworzymy refresh token, jeżeli użytkownik go nie ma
-        if (!existsRefresh)
+        if (refreshTokenEntity == null)
         {
+            var refreshTokenValue = _jwtService.GenerateRefreshToken();
+
             var refreshToken = new RefreshToken
             {
                 UserId = user.Id,
-                Token = _jwtService.GenerateRefreshToken(),
+                Token = refreshTokenValue,
                 Expires = DateTime.UtcNow.AddDays(30),
                 Created = DateTime.UtcNow
             };
@@ -299,6 +305,7 @@ public class AuthService : IAuthService
             Response = new authResponseDto
             {
                 jwt = token,
+                refreshToken = refreshTokenEntity.Token,
                 email = email,
                 userRole = roles.FirstOrDefault() ?? ""
             },

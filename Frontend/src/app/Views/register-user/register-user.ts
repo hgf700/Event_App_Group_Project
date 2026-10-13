@@ -35,7 +35,7 @@ export class RegisterUser {
           '',
           [
             Validators.required,
-            // Validators.minLength(8),
+            // Validators.minLength(5),
             // Validators.maxLength(20),
             // Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).+$/)
           ],
@@ -44,7 +44,7 @@ export class RegisterUser {
           '',
           [
             Validators.required,
-            // Validators.minLength(8),
+            // Validators.minLength(5),
             // Validators.maxLength(20),
             // Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).+$/)
           ],

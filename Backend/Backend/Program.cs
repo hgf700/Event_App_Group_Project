@@ -91,37 +91,37 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddAuthorization();
 
 //dev identity
-//builder.Services.Configure<IdentityOptions>(options =>
-//{
-//    options.Password.RequireDigit = false;
-//    options.Password.RequireLowercase = false;
-//    options.Password.RequiredLength = 1;
-//    options.Password.RequireNonAlphanumeric = false;
-//    options.Password.RequireUppercase = false;
-
-//    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(1);
-//    options.Lockout.MaxFailedAccessAttempts = 20;
-//    options.Lockout.AllowedForNewUsers = false;
-
-//    options.User.RequireUniqueEmail = false;
-//});
-
 builder.Services.Configure<IdentityOptions>(options =>
 {
-    options.Password.RequiredLength = 8;
-    options.Password.RequireDigit = true;
-    options.Password.RequireLowercase = true;
-    options.Password.RequireUppercase = false;
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequiredLength = 1;
     options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
 
-    options.Lockout.DefaultLockoutTimeSpan =
-        TimeSpan.FromMinutes(15);
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(1);
+    options.Lockout.MaxFailedAccessAttempts = 20;
+    options.Lockout.AllowedForNewUsers = false;
 
-    options.Lockout.MaxFailedAccessAttempts = 5;
-    options.Lockout.AllowedForNewUsers = true;
-
-    options.User.RequireUniqueEmail = true;
+    options.User.RequireUniqueEmail = false;
 });
+
+//builder.Services.Configure<IdentityOptions>(options =>
+//{
+//    options.Password.RequiredLength = 5;
+//    options.Password.RequireDigit = true;
+//    options.Password.RequireLowercase = true;
+//    options.Password.RequireUppercase = false;
+//    options.Password.RequireNonAlphanumeric = false;
+
+//    options.Lockout.DefaultLockoutTimeSpan =
+//        TimeSpan.FromMinutes(15);
+
+//    options.Lockout.MaxFailedAccessAttempts = 5;
+//    options.Lockout.AllowedForNewUsers = true;
+
+//    options.User.RequireUniqueEmail = true;
+//});
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -152,9 +152,7 @@ builder.Services.AddAuthentication(options =>
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(JWT_SECRET)
-        ),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWT_SECRET)),
         ValidateIssuer = false,
         ValidateAudience = false,
         ClockSkew = TimeSpan.Zero

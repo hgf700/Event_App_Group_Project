@@ -2,7 +2,8 @@
 
 public class authResponseDto
 {
-    public string jwt { get; set; } = "";
-    public string? email { get; set; }
-    public string? userRole { get; set; }
+    public string jwt { get; set; } = string.Empty;
+    public string refreshToken { get; set; } = string.Empty;
+    public string email { get; set; } = string.Empty;
+    public string userRole { get; set; } = string.Empty;
 }

@@ -45,3 +45,18 @@ uzycie when.all z tpl (parallel library) jesli 1 rzecz nie jest zalezna od drugi
 akcja
 
 uzycie observer do serwisu z sms i email?
+
+Google OAuth
+
+Tutaj zwracasz JWT w query stringu. Nie dokładaj do niego refresh tokena w URL. Zamiast tego możesz 
+ustawić ciasteczko w GoogleResponse:
+Response.Cookies.Append("refreshToken",
+    result.Response!.refreshToken,
+    new CookieOptions
+    {
+        HttpOnly = true,
+        Secure = true, // HTTPS
+        SameSite = SameSiteMode.Lax,
+        Expires = DateTimeOffset.UtcNow.AddDays(30),
+        Path = "/api/v1/refresh-token/refersh"
+    });
