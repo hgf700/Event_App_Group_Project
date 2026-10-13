@@ -25,6 +25,7 @@ public class AuthService : IAuthService
     private readonly string UserRole = "user";
     private readonly string AdminRole = "admin";
 
+
     public AuthService(UserManager<ApplicationUser> userManager,
         IJwtService jwtService,
         ILogger<AuthService> logger,
@@ -144,7 +145,7 @@ public class AuthService : IAuthService
         {
             var refreshTokenValue = _jwtService.GenerateRefreshToken();
 
-            var refreshToken = new RefreshToken
+            refreshTokenEntity = new RefreshToken
             {
                 UserId = existingUser.Id,
                 Token = refreshTokenValue,
@@ -152,7 +153,7 @@ public class AuthService : IAuthService
                 Created = DateTime.UtcNow,
             };
 
-            _context.RefreshTokens.Add(refreshToken);
+            _context.RefreshTokens.Add(refreshTokenEntity);
             await _context.SaveChangesAsync();
         }
 
@@ -283,7 +284,7 @@ public class AuthService : IAuthService
         {
             var refreshTokenValue = _jwtService.GenerateRefreshToken();
 
-            var refreshToken = new RefreshToken
+            refreshTokenEntity = new RefreshToken
             {
                 UserId = user.Id,
                 Token = refreshTokenValue,
@@ -291,8 +292,7 @@ public class AuthService : IAuthService
                 Created = DateTime.UtcNow
             };
 
-            _context.RefreshTokens.Add(refreshToken);
-
+            _context.RefreshTokens.Add(refreshTokenEntity);
             await _context.SaveChangesAsync();
         }
 

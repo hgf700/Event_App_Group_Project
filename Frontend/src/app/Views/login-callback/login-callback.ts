@@ -33,8 +33,8 @@ export class LoginCallback implements OnInit {
   }
 
   generateJWT() {
-    const tokenFromUrl = this.route.snapshot.queryParamMap.get('jwt');
-    const tokenFromStorage = localStorage.getItem('jwt');
+    const jwtFromUrl = this.route.snapshot.queryParamMap.get('jwt');
+    const jwtFromStorage = localStorage.getItem('jwt');
 
     const emailFromUrl = this.route.snapshot.queryParamMap.get('email');
     const emailFromStorage = localStorage.getItem('email');
@@ -42,17 +42,17 @@ export class LoginCallback implements OnInit {
     const roleFromUrl = this.route.snapshot.queryParamMap.get('userRole');
     const roleFromStorage = localStorage.getItem('userRole');
 
-    const token = tokenFromUrl ?? tokenFromStorage;
+    const jwt = jwtFromUrl ?? jwtFromStorage;
     const email = emailFromUrl ?? emailFromStorage;
     const role = roleFromUrl ?? roleFromStorage;
 
-    if (!token) {
+    if (!jwt) {
       console.error('Brak tokena – użytkownik niezalogowany');
       return;
     }
 
     if (email && role) {
-      this.authService.setAuthData(token, email, role);
+      this.authService.setAuthData(jwt, email, role);
     }
   }
 

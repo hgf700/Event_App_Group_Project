@@ -18,13 +18,27 @@ export class AuthService {
     return this.http.post<authResponseDto>(`${this.apiUrl}/register-norm`, {
       email,
       password,
-    });
+    },
+    {withCredentials: true}
+    );
   }
 
   loginUserNorm(email: string, password: string) {
     return this.http.post<authResponseDto>(`${this.apiUrl}/login-norm`, {
       email,
       password,
+    },
+    {withCredentials: true}
+    );
+  }
+
+  logout(): void {
+    this.http.post(`${this.apiUrl}/logout`, 
+      {},
+      { withCredentials: true }
+    ).subscribe({
+      next: () => this.clearAuthData(),
+      error: () => this.clearAuthData()
     });
   }
 
@@ -37,6 +51,18 @@ export class AuthService {
     this.userRole.set(role);
   }
 
+  refreshToken(): Observable<postRefreshTokenResponse> {
+    return this.http.post<postRefreshTokenResponse>(
+      `${this.refreshTokenApiUrl}/refresh`,
+      {},
+      { withCredentials: true },
+    )
+  }
+
+  loginWithGoogleOauth() {
+    window.location.href = `${this.apiUrl}/sign-in-google`;
+  }
+
   isLogged = computed(() => {
     const role = this.userRole();
     return role === 'user' || role === 'admin';
@@ -44,23 +70,14 @@ export class AuthService {
 
   isAdmin = computed(() => this.userRole() === 'admin');
 
-  logout(): void {
+  private clearAuthData(): void {
     localStorage.removeItem('jwt');
     localStorage.removeItem('email');
     localStorage.removeItem('userRole');
 
+    this.userEmail.set('');
+    this.userRole.set('');
+
     window.location.href = '/';
-  }
-
-  loginWithGoogleOauth() {
-    window.location.href = `${this.apiUrl}/sign-in-google`;
-  }
-
-  refreshToken(): Observable<postRefreshTokenResponse> {
-    return this.http.post<postRefreshTokenResponse>(
-      `${this.refreshTokenApiUrl}/refresh`,
-      {},
-      { withCredentials: true },
-    );
   }
 }

@@ -24,15 +24,19 @@ public class AuthController : ControllerBase
 {
     private readonly ILogger<AuthController> _logger;
     private readonly IAuthService _authService;
-    private readonly string YOUR_DOMAIN = "http://localhost:4200";
+    private readonly ApplicationDbContext _context;
 
+    private readonly string YOUR_DOMAIN = "http://localhost:4200";
+    private readonly string RefreshTokenPath = "/api/v1/refresh-token/refresh";
     public AuthController(
         ILogger<AuthController> logger,
-        IAuthService authService
+        IAuthService authService,
+        ApplicationDbContext context
         )
     {
         _logger= logger;
         _authService = authService;
+        _context= context;
     }
 
     [HttpPost("register-norm")]
@@ -51,6 +55,17 @@ public class AuthController : ControllerBase
 
             if (result.Errors != null)
                 return BadRequest(result.Errors);
+
+            Response.Cookies.Append("refreshToken",
+                result.Response!.refreshToken,
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Lax,
+                    Expires = DateTimeOffset.UtcNow.AddDays(30),
+                    Path = RefreshTokenPath
+                });
 
             return StatusCode(
                 StatusCodes.Status201Created,
@@ -78,6 +93,17 @@ public class AuthController : ControllerBase
 
             if(result.IncorrectUserCredentials)
                 return Unauthorized("Invalid email or password");
+
+            Response.Cookies.Append("refreshToken",
+                result.Response!.refreshToken,
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Lax,
+                    Expires = DateTimeOffset.UtcNow.AddDays(30),
+                    Path = RefreshTokenPath
+                });
 
             return Ok(result.Response);
         }
@@ -148,9 +174,20 @@ public class AuthController : ControllerBase
                 return BadRequest("Google login failed");
             }
 
+            Response.Cookies.Append("refreshToken",
+                result.Response!.refreshToken,
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true, 
+                    SameSite = SameSiteMode.Lax,
+                    Expires = DateTimeOffset.UtcNow.AddDays(30),
+                    Path = RefreshTokenPath
+                });
+
             return Redirect(
                 $"{YOUR_DOMAIN}/login-callback" +
-                $"?token={Uri.EscapeDataString(result.Response!.jwt)}" +
+                $"?jwt={Uri.EscapeDataString(result.Response!.jwt)}" +
                 $"&email={Uri.EscapeDataString(result.Response!.email)}" +
                 $"&role={Uri.EscapeDataString(result.Response!.userRole)}"
                 );
@@ -164,6 +201,51 @@ public class AuthController : ControllerBase
             return StatusCode(
                 StatusCodes.Status500InternalServerError,
                 "Internal server error");
+        }
+    }
+
+    [HttpPost("logout")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult> LogoutUser()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+            return Unauthorized();
+
+        try
+        {
+            var refreshToken = Request.Cookies["refreshToken"];
+
+            if (!string.IsNullOrEmpty(refreshToken))
+            {
+                var tokenEntity = await _context.RefreshTokens
+                    .FirstOrDefaultAsync(t =>
+                        t.Token == refreshToken &&
+                        t.Revoked == null);
+
+                if (tokenEntity != null)
+                {
+                    tokenEntity.Revoked = DateTime.UtcNow;
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            Response.Cookies.Delete("refreshToken", new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Lax,
+                Path = RefreshTokenPath
+            });
+
+            return Ok();
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex);
+            _logger.LogError(ex, "Error while seeding db");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
 }
