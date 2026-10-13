@@ -51,6 +51,3 @@ Google OAuth
 Tutaj zwracasz JWT w query stringu. Nie dokładaj do niego refresh tokena w URL. Zamiast tego możesz 
 ustawić ciasteczko w GoogleResponse:
 Response.Cookies.Append("refreshToken",)
-
-pdf moge generowac jako html zamiast sie meczyc z generatorem
-using IronPdf;

@@ -82,6 +82,7 @@ builder.Services.AddSingleton<IRefreshTokenEncryptionService, RefreshTokenEncryp
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<ISeedDbService, SeedDbService>();
 builder.Services.AddScoped<ISendOrDownloadFromApiService, SendOrDownloadFromApiService>();
+builder.Services.AddScoped<IPdfService, PdfService>();
 
 //controller services
 builder.Services.AddScoped<IAuthService, AuthService>();

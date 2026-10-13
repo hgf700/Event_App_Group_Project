@@ -1,4 +1,5 @@
-﻿using EventApp.Domain.Model;
+﻿using AngleSharp.Dom;
+using EventApp.Domain.Model;
 using EventApp.Infrastructure.Db;
 using EventApp.Services.Interfaces;
 using EventApp.Services.Model;
@@ -6,6 +7,7 @@ using EventApp.Services.Services.Interfaces;
 using EventApp.Services.Services.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 using QuestPDF.Fluent;
 using Stripe;
@@ -20,6 +22,8 @@ public class PaymentService : IPaymentService
     private readonly IQrCodeService _qrCodeService;
     private readonly ISmsService _smsService;
     private readonly IEmailService _emailService;
+    private readonly IPdfService _pdfService;
+
     private readonly UserManager<ApplicationUser> _userManager;
 
 
@@ -421,26 +425,21 @@ public class PaymentService : IPaymentService
             return; // bez QR nie generujemy PDF
         }
 
-        string? pdfPath = null;
+        var generator = new PdfService(
+            eventName: ev.NameOfEvent,
+            eventDate: ev.StartOfEvent.ToString(),
+            eventAddress: ev.Address,
+            eventType: ev.TypeOfEvent,
+            eventUrl: ev.UrlOfEvent,
+            email: email,
+            userEventId: userEvent.Id,
+            qrCode: qrBytes);
+
         try
         {
-            var doc = new InvoiceDocument(
-                eventName: ev.NameOfEvent,
-                eventDate: ev.StartOfEvent.ToString(),
-                eventAddress: ev.Address,
-                eventType: ev.TypeOfEvent,
-                eventUrl: ev.UrlOfEvent,
-                qrCode: qrBytes
-            );
+            await generator.GeneratePdfAsync();
 
-            var resourcesPath = Path.Combine(Directory.GetCurrentDirectory(), "Generated");
-            Directory.CreateDirectory(resourcesPath);
-
-            pdfPath = Path.Combine(resourcesPath, $"ticket-{userEvent.Id}-{email}.pdf");
-            doc.GeneratePdf(pdfPath);
-
-            _logger.LogInformation("Ticket PDF generated. UserEventId: {UserEventId}, Path: {Path}",
-                userEvent.Id, pdfPath);
+            _logger.LogInformation("Ticket PDF generated. UserEventId: {UserEventId}", userEvent.Id);
         }
         catch (Exception ex)
         {
