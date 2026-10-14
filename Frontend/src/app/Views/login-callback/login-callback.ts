@@ -15,9 +15,6 @@ import { UserNavigationService } from '../../RootingServices/UserNavigationServi
   styleUrl: './login-callback.css',
 })
 export class LoginCallback implements OnInit {
-  // private authService = inject(AuthService);
-
-  // userEmailData = this.authService.userEmail;
   userEmailData: typeof this.authService.userEmail;
   userRoleData = signal(localStorage.getItem('userRole') ?? '');
 
@@ -38,26 +35,17 @@ export class LoginCallback implements OnInit {
   }
 
   generateJWT() {
-    const jwtFromUrl = this.route.snapshot.queryParamMap.get('jwt');
-    const jwtFromStorage = localStorage.getItem('jwt');
-
     const emailFromUrl = this.route.snapshot.queryParamMap.get('email');
     const emailFromStorage = localStorage.getItem('email');
 
     const roleFromUrl = this.route.snapshot.queryParamMap.get('userRole');
     const roleFromStorage = localStorage.getItem('userRole');
 
-    const jwt = jwtFromUrl ?? jwtFromStorage;
     const email = emailFromUrl ?? emailFromStorage;
     const role = roleFromUrl ?? roleFromStorage;
 
-    if (!jwt) {
-      console.error('Brak tokena – użytkownik niezalogowany');
-      return;
-    }
-
     if (email && role) {
-      this.authService.setAuthData(jwt, email, role);
+      this.authService.setAuthData(email, role);
     }
   }
 

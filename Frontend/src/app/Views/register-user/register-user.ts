@@ -73,7 +73,6 @@ export class RegisterUser {
 
     this.authService.registerUserNorm(email, password).subscribe({
       next: (res) => {
-        localStorage.setItem('jwt', res.jwt);
         localStorage.setItem('email', res.email!);
         localStorage.setItem('userRole', res.userRole!);
 

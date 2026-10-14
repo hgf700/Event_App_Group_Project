@@ -22,8 +22,6 @@ export const Error401Interceptor: HttpInterceptorFn = (req, next) => {
       ) {
         return authService.refreshToken().pipe(
           switchMap((response) => {
-            localStorage.setItem('jwt', response.accessToken);
-
             const retryReq = req.clone({
               setHeaders: {
                 Authorization: `Bearer ${response.accessToken}`

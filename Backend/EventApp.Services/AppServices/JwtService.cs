@@ -54,29 +54,4 @@ public class JwtService : IJwtService
         rng.GetBytes(randomNumber);
         return Convert.ToBase64String(randomNumber);
     }
-
-    public async Task<string> GenerateTokenFromRefreshToken(ApplicationUser user)
-    {
-        var isAdmin = await _userManager.IsInRoleAsync(user, "admin");
-
-        var claims = new[]
-        {
-            new Claim(ClaimTypes.NameIdentifier, user.Id),
-            new Claim(ClaimTypes.Email, user.Email!),
-            new Claim(ClaimTypes.Role,  isAdmin ? "admin" : "user")
-        };
-
-        var key = new SymmetricSecurityKey(
-           Encoding.UTF8.GetBytes(_jwtSecret));
-
-        var creds = new SigningCredentials(
-            key, SecurityAlgorithms.HmacSha256);
-
-        var token = new JwtSecurityToken(
-             claims: claims,
-             expires: DateTime.UtcNow.AddDays(7),
-             signingCredentials: creds);
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
-    }
 }

@@ -140,13 +140,31 @@ builder.Services.AddAuthentication(options =>
 {
     options.RequireHttpsMetadata = false;
     options.SaveToken = false;
+
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWT_SECRET)),
         ValidateIssuer = false,
         ValidateAudience = false,
+        ValidateLifetime = true,
         ClockSkew = TimeSpan.Zero
+    };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var token = context.Request.Cookies["jwt"];
+
+            Console.WriteLine(
+                $"JWT cookie received: {!string.IsNullOrEmpty(token)}"
+            );
+
+            context.Token = token;
+
+            return Task.CompletedTask;
+        }
     };
 })
 .AddGoogle(options =>
@@ -177,8 +195,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("Prod", policy => policy
             .WithOrigins("http://localhost:4200")
-            .AllowAnyMethod()
             .AllowAnyHeader()
+            .AllowAnyMethod()
             .AllowCredentials());
 });
 

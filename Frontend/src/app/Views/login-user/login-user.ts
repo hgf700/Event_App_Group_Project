@@ -54,7 +54,6 @@ export class LoginUser {
 
     this.authService.loginUserNorm(email, password).subscribe({
       next: (res) => {
-        localStorage.setItem('jwt', res.jwt);
         localStorage.setItem('email', res.email!);
         localStorage.setItem('userRole', res.userRole!);
 

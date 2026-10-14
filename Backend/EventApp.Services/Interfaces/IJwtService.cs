@@ -7,6 +7,4 @@ public interface IJwtService
 {
     Task<string> GenerateToken(ApplicationUser user);
     string GenerateRefreshToken();
-    Task<string> GenerateTokenFromRefreshToken(ApplicationUser user);
-
 }

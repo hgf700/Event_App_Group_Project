@@ -41,8 +41,7 @@ export class AuthService {
     });
   }
 
-  setAuthData(jwt: string, email: string, role: string): void {
-    localStorage.setItem('jwt', jwt);
+  setAuthData(email: string, role: string): void {
     localStorage.setItem('email', email);
     localStorage.setItem('userRole', role);
 
@@ -70,9 +69,9 @@ export class AuthService {
   isAdmin = computed(() => this.userRole() === 'admin');
 
   private clearAuthData(): void {
-    localStorage.removeItem('jwt');
     localStorage.removeItem('email');
     localStorage.removeItem('userRole');
+    localStorage.removeItem('jwt');
 
     this.userEmail.set('');
     this.userRole.set('');

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using Superpower.Model;
 using System.Security.Claims;
 
 namespace Backend.Controllers;
@@ -28,6 +29,8 @@ public class AuthController : ControllerBase
 
     private readonly string YOUR_DOMAIN = "http://localhost:4200";
     private readonly string RefreshTokenPath = "/api/v1/auth/refresh";
+    private readonly string JwtPath = "/";
+
     public AuthController(
         ILogger<AuthController> logger,
         IAuthService authService,
@@ -41,6 +44,31 @@ public class AuthController : ControllerBase
         _context= context;
         _userManager = userManager;
         _jwtService = jwtService;
+    }
+
+    private void SetJwtCookie(string jwt)
+    {
+        Response.Cookies.Append("jwt", jwt, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.None,
+            Path = JwtPath,
+            Expires = DateTimeOffset.UtcNow.AddDays(7),
+            IsEssential = true
+        });
+    }
+
+    private void SetRefreshTOkenCookie(string refershToken)
+    {
+        Response.Cookies.Append("refreshToken", refershToken, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.None,
+            Expires = DateTimeOffset.UtcNow.AddDays(30),
+            Path = RefreshTokenPath
+        });
     }
 
     [HttpPost("register-norm")]
@@ -60,16 +88,8 @@ public class AuthController : ControllerBase
             if (result.Errors != null)
                 return BadRequest(result.Errors);
 
-            Response.Cookies.Append("refreshToken",
-                result.Response!.refreshToken,
-                new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = true,
-                    SameSite = SameSiteMode.Lax,
-                    Expires = DateTimeOffset.UtcNow.AddDays(30),
-                    Path = RefreshTokenPath
-                });
+            SetJwtCookie(result.Response!.jwt);
+            SetRefreshTOkenCookie(result.Response!.refreshToken);
 
             return StatusCode(
                 StatusCodes.Status201Created,
@@ -98,16 +118,8 @@ public class AuthController : ControllerBase
             if(result.IncorrectUserCredentials)
                 return Unauthorized("Invalid email or password");
 
-            Response.Cookies.Append("refreshToken",
-                result.Response!.refreshToken,
-                new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = true,
-                    SameSite = SameSiteMode.Lax,
-                    Expires = DateTimeOffset.UtcNow.AddDays(30),
-                    Path = RefreshTokenPath
-                });
+            SetJwtCookie(result.Response!.jwt);
+            SetRefreshTOkenCookie(result.Response!.refreshToken);
 
             return Ok(result.Response);
         }
@@ -178,20 +190,11 @@ public class AuthController : ControllerBase
                 return BadRequest("Google login failed");
             }
 
-            Response.Cookies.Append("refreshToken",
-                result.Response!.refreshToken,
-                new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = true, 
-                    SameSite = SameSiteMode.Lax,
-                    Expires = DateTimeOffset.UtcNow.AddDays(30),
-                    Path = RefreshTokenPath
-                });
+            SetJwtCookie(result.Response!.jwt);
+            SetRefreshTOkenCookie(result.Response!.refreshToken);
 
             return Redirect(
                 $"{YOUR_DOMAIN}/login-callback" +
-                $"?jwt={Uri.EscapeDataString(result.Response!.jwt)}" +
                 $"&email={Uri.EscapeDataString(result.Response!.email)}" +
                 $"&userRole={Uri.EscapeDataString(result.Response!.userRole)}"
                 );
@@ -239,10 +242,9 @@ public class AuthController : ControllerBase
 
         var newAccessToken = await _jwtService.GenerateToken(user);
 
-        return Ok(new postRefreshTokenResponse
-        {
-            accessToken = newAccessToken
-        });
+        SetJwtCookie(newAccessToken);
+
+        return Ok();
     }
 
     [HttpPost("logout")]
@@ -280,6 +282,14 @@ public class AuthController : ControllerBase
                 Secure = true,
                 SameSite = SameSiteMode.Lax,
                 Path = RefreshTokenPath
+            });
+
+            Response.Cookies.Delete("jwt", new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Lax,
+                Path = JwtPath
             });
 
             return Ok();
