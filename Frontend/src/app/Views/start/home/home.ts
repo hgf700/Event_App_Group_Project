@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../Services/AuthService';
+import { AuthService } from '../../../Services/AuthService';
 
 @Component({
   selector: 'app-home',

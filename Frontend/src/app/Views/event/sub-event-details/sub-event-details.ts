@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
-import { EventService } from '../../Services/EventService';
-import { PaymentService } from '../../Services/PaymentService';
-import { getEventDto } from '../../Dto/getEventDto';
+import { getEventDto } from '../../../Dto/getEventDto';
+import { EventService } from '../../../Services/EventService';
+import { PaymentService } from '../../../Services/PaymentService';
 
 @Component({
   selector: 'app-sub-event-details',

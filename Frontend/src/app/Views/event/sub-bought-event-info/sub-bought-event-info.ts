@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
-import { EventService } from '../../Services/EventService';
-import { PaymentService } from '../../Services/PaymentService';
-import { getEventTicketWithQrDto } from '../../Dto/getEventQrCodeInfoDto';
+import { EventService } from '../../../Services/EventService';
+import { PaymentService } from '../../../Services/PaymentService';
+import { getEventTicketWithQrDto } from '../../../Dto/getEventQrCodeInfoDto';
 
 @Component({
   selector: 'app-sub-bought-event-info',

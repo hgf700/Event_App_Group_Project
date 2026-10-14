@@ -78,4 +78,12 @@ export class AuthService {
 
     window.location.href = '/';
   }
+
+  checkAuth() {
+    return this.http.get<boolean>(
+      `${this.apiUrl}/check`,
+      { withCredentials: true }
+    );
+  }
+
 }

@@ -2,12 +2,10 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { UserService } from '../../Services/UserService';
-import { EventService } from '../../Services/EventService';
-import { UserTicketService } from '../../Services/UserTicketService';
-import { SubBoughtEventInfo } from '../sub-bought-event-info/sub-bought-event-info';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { getUserBoughtTicketDto } from '../../Dto/getUserBoughtTicketDto';
+import { getUserBoughtTicketDto } from '../../../Dto/getUserBoughtTicketDto';
+import { UserTicketService } from '../../../Services/UserTicketService';
+import { SubBoughtEventInfo } from '../../event/sub-bought-event-info/sub-bought-event-info';
 
 @Component({
   selector: 'app-user-tickets',

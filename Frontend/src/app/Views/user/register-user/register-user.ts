@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { AuthService } from '../../Services/AuthService';
-import { registerUserValidator } from '../../Validators/registerUserValidator';
+import { AuthService } from '../../../Services/AuthService';
+import { registerUserValidator } from '../../../Validators/registerUserValidator';
 
 @Component({
   selector: 'app-register-user',

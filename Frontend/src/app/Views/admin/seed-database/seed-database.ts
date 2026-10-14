@@ -2,9 +2,9 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { EventService } from '../../Services/EventService';
-import { SearchOrDownloadEventService } from '../../Services/SearchOrDownloadEventService';
-import { AdminService } from '../../Services/AdminService';
+import { EventService } from '../../../Services/EventService';
+import { SearchOrDownloadEventService } from '../../../Services/SearchOrDownloadEventService';
+import { AdminService } from '../../../Services/AdminService';
 
 @Component({
   selector: 'app-seed-database',

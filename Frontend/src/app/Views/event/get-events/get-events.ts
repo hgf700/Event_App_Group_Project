@@ -3,11 +3,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { getEventDto } from '../../Dto/getEventDto';
-import { EventService } from '../../Services/EventService';
 import { SubEventDetails } from '../sub-event-details/sub-event-details';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { PageEvent } from '@angular/material/paginator';
+import { getEventDto } from '../../../Dto/getEventDto';
+import { EventService } from '../../../Services/EventService';
 
 @Component({
   selector: 'app-get-events',

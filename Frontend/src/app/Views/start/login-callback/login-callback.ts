@@ -2,10 +2,10 @@ import { Component, OnInit, ChangeDetectorRef, signal, inject } from '@angular/c
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { UserService } from '../../Services/UserService';
-import { AuthService } from '../../Services/AuthService';
-import { EventsNavigationService } from '../../RootingServices/EventsNavigationService';
-import { UserNavigationService } from '../../RootingServices/UserNavigationService';
+import { UserService } from '../../../Services/UserService';
+import { AuthService } from '../../../Services/AuthService';
+import { EventsNavigationService } from '../../../RootingServices/EventsNavigationService';
+import { UserNavigationService } from '../../../RootingServices/UserNavigationService';
 
 @Component({
   selector: 'app-login-callback',

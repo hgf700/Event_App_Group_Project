@@ -9,13 +9,6 @@ Nie powinieneś natomiast generować nowego OrderId dla każdego biletu w ramach
 Wtedy wszystkie bilety z tego zakupu mają wspólny OrderId.
 OrderId potem dodam
 
-uzytkownik jak trafi na strone z authorize a nie jest to redirect na login od razu
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-.AddCookie(options => 
-{
-options.LoginPath = "/login";
-}); 
-
 builder.Services.AddProblemDetails();
 app.UseExceptionHandler("/Error")   //dla 500
 https://learn.microsoft.com/en-us/aspnet/core/fundamentals/error-handling?view=aspnetcore-10.0
@@ -28,13 +21,7 @@ builder.Services.AddHealthChecks();
 app.MapHealthChecks("/healthz");
 https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-10.0
 
-uzycie notification model dla sledzenia stanu wyslania email 
-i/lub do potwierdzenia rejestracji bardziej przez email i dla emaili co najwyzej 2 stany
-wyslane, i wysylany, i nie wyslany tylko nie wiem czy jest to mozliwy stan?
-
 ressiliance np retry,circut breaker dla frontu w angular
-
-zamiast local storage to lepiej http cookies i same site strict ale to potem
 
 zrobic revoked dla refersh token jesli jest expired
 
@@ -46,6 +33,10 @@ akcja
 
 uzycie observer do serwisu z sms i email?
 
-Tutaj zwracasz JWT w query stringu. Nie dokładaj do niego refresh tokena w URL. Zamiast tego możesz 
-ustawić ciasteczko w GoogleResponse:
-Response.Cookies.Append("refreshToken",)
+dodac auth guard
+uzytkownik jak trafi na strone z authorize a nie jest to redirect na login od razu
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+.AddCookie(options => 
+{
+options.LoginPath = "/login";
+});

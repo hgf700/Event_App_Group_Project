@@ -3,12 +3,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { getEventDto } from '../../Dto/getEventDto';
-import { postCitySearchDto } from '../../Dto/postCitySearchDto';
-import { SearchOrDownloadEventService } from '../../Services/SearchOrDownloadEventService';
-import { EventService } from '../../Services/EventService';
-import { SubEventDetails } from '../sub-event-details/sub-event-details';
+import { getEventDto } from '../../../Dto/getEventDto';
+import { postCitySearchDto } from '../../../Dto/postCitySearchDto';
+import { SearchOrDownloadEventService } from '../../../Services/SearchOrDownloadEventService';
+import { EventService } from '../../../Services/EventService';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { SubEventDetails } from '../sub-event-details/sub-event-details';
 
 @Component({
   selector: 'app-search-and-import-events',

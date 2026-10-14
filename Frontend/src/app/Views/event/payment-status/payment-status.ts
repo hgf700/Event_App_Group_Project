@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { PaymentService } from '../../Services/PaymentService';
+import { PaymentService } from '../../../Services/PaymentService';
 import { Subscription } from 'rxjs';
-import { StatesOfTicket } from '../../Enum/StatesOfTicket';
+import { StatesOfTicket } from '../../../Enum/StatesOfTicket';
 
 @Component({
   selector: 'app-payment-status',

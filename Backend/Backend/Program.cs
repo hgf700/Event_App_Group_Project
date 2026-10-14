@@ -26,12 +26,6 @@ var builder = WebApplication.CreateBuilder(args);
 DotNetEnv.Env.Load();
 
 builder.Services.AddControllers();
-// cykle przy relacjach chyba w db
-    //.AddJsonOptions(options =>
-    //{
-    //    options.JsonSerializerOptions.ReferenceHandler =
-    //        System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
-    //});
 
 //swager
 builder.Services.AddOpenApi();
@@ -99,6 +93,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.User.RequireUniqueEmail = false;
 });
 
+//prod identity
 //builder.Services.Configure<IdentityOptions>(options =>
 //{
 //    options.Password.RequiredLength = 5;
@@ -159,9 +154,7 @@ builder.Services.AddAuthentication(options =>
         {
             var token = context.Request.Cookies["jwt"];
 
-            Console.WriteLine(
-                $"JWT cookie received: {!string.IsNullOrEmpty(token)}"
-            );
+            //Console.WriteLine($"JWT cookie received: {!string.IsNullOrEmpty(token)}");
 
             context.Token = token;
 
@@ -177,22 +170,6 @@ builder.Services.AddAuthentication(options =>
     options.SaveTokens = true;
 });
 
-//bez oauth
-//.AddJwtBearer(options =>
-//{
-//    options.TokenValidationParameters = new TokenValidationParameters
-//    {
-//        ValidateIssuer = false,
-//        ValidateAudience = false,
-//        ValidateLifetime = true,
-//        ValidateIssuerSigningKey = true,
-//        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWT_SECRET)
-//        ),
-//        ClockSkew = TimeSpan.Zero
-//    };
-//});
-
-//credentials jesli korzystam z cookie
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Prod", policy => policy
