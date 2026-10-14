@@ -19,30 +19,31 @@ import { GetEvents } from '../Views/event/get-events/get-events';
 import { SubEventDetails } from '../Views/event/sub-event-details/sub-event-details';
 import { UserTickets } from '../Views/user/user-tickets/user-tickets';
 import { EditUserEmail } from '../Views/user/edit-user-email/edit-user-email';
+import { authGuard } from '../helpers/authGuard';
 
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'login-user', component: LoginUser },
   { path: 'register-user', component: RegisterUser },
   { path: 'login-callback', component: LoginCallback },
-  { path: 'seed-database', component: SeedDatabase },
-  { path: 'get-events', component: GetEvents },
-  { path: 'sub-event-details/:id', component: SubEventDetails },
-  { path: 'payment-status', component: PaymentStatus },
-  { path: 'search-and-import-events', component: SearchAndImportEvents },
-  { path: 'user-tickets', component: UserTickets },
-  { path: 'edit-user', component: EditUser },
-  { path: 'edit-user-email', component: EditUserEmail },
-  { path: 'edit-user-password', component: EditUserPassword },
+  { path: 'seed-database',canActivate: [authGuard], component: SeedDatabase },
+  { path: 'get-events',canActivate: [authGuard], component: GetEvents },
+  { path: 'sub-event-details/:id',canActivate: [authGuard], component: SubEventDetails },
+  { path: 'payment-status',canActivate: [authGuard], component: PaymentStatus },
+  { path: 'search-and-import-events',canActivate: [authGuard], component: SearchAndImportEvents },
+  { path: 'user-tickets',canActivate: [authGuard], component: UserTickets },
+  { path: 'edit-user',canActivate: [authGuard], component: EditUser },
+  { path: 'edit-user-email',canActivate: [authGuard], component: EditUserEmail },
+  { path: 'edit-user-password',canActivate: [authGuard], component: EditUserPassword },
   {
     path: 'admin-panel',
     component: AdminPanel,
     children: [
-      { path: '', component: Dashbord },
-      { path: 'events', component: Events },
-      { path: 'blocked-users', component: BlockedUsers },
-      { path: 'tickets', component: Tickets },
-      { path: 'users', component: Users },
+      { path: '',canActivate: [authGuard], component: Dashbord },
+      { path: 'events',canActivate: [authGuard], component: Events },
+      { path: 'blocked-users',canActivate: [authGuard], component: BlockedUsers },
+      { path: 'tickets',canActivate: [authGuard], component: Tickets },
+      { path: 'users',canActivate: [authGuard], component: Users },
     ],
   },
   

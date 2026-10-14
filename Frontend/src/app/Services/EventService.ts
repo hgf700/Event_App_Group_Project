@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RetryHelper } from '../helpers/ResilianceHelpers';
 import { getEventDto } from '../Dto/getEventDto';
 import { paginatedResponse } from '../model/paginatedResponse';
 import { getEventTicketWithQrDto } from '../Dto/getEventQrCodeInfoDto';
