@@ -30,6 +30,8 @@ public class AuthController : ControllerBase
     private readonly string YOUR_DOMAIN = "http://localhost:4200";
     private readonly string RefreshTokenPath = "/api/v1/auth/refresh";
     private readonly string JwtPath = "/";
+    private readonly SameSiteMode cookiesSettings = SameSiteMode.None;
+
 
     public AuthController(
         ILogger<AuthController> logger,
@@ -52,7 +54,7 @@ public class AuthController : ControllerBase
         {
             HttpOnly = true,
             Secure = true,
-            SameSite = SameSiteMode.None,
+            SameSite = cookiesSettings,
             Path = JwtPath,
             Expires = DateTimeOffset.UtcNow.AddDays(7),
             IsEssential = true
@@ -65,7 +67,7 @@ public class AuthController : ControllerBase
         {
             HttpOnly = true,
             Secure = true,
-            SameSite = SameSiteMode.None,
+            SameSite = cookiesSettings,
             Expires = DateTimeOffset.UtcNow.AddDays(30),
             Path = RefreshTokenPath
         });
@@ -280,7 +282,7 @@ public class AuthController : ControllerBase
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Lax,
+                SameSite = cookiesSettings,
                 Path = RefreshTokenPath
             });
 
@@ -288,7 +290,7 @@ public class AuthController : ControllerBase
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Lax,
+                SameSite = cookiesSettings,
                 Path = JwtPath
             });
 

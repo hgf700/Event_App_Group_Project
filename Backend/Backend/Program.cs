@@ -19,6 +19,8 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.RateLimiting;
 
+SameSiteMode cookiesSettings = SameSiteMode.None;
+
 var builder = WebApplication.CreateBuilder(args);
 
 DotNetEnv.Env.Load();
@@ -118,7 +120,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     //options.Cookie.HttpOnly = true;
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-    options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.SameSite = cookiesSettings;
 });
 
 //chyba wazne cos z cookies
