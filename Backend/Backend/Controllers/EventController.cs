@@ -3,6 +3,7 @@ using EventApp.Infrastructure.Db;
 using EventApp.Services.Dto.RelEvent;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -24,6 +25,61 @@ public class EventController : ControllerBase
     {
         _context = context;
         _logger = logger;
+    }
+
+    [AllowAnonymous]
+    [HttpGet("public-get-events")]
+    [EnableRateLimiting("GetPolicy")]
+    [OutputCache(Duration = 60)]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<paginatedResponse<getEventsDto>>> PublicGetEvents(int page = 1, int pageSize = 20)
+    {
+        try
+        {
+            var totalCount = await _context.Events.CountAsync();
+
+            var events = await _context.Events
+                .AsNoTracking()
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(e => new getEventsDto
+                {
+                    eventId = e.Id,
+                    typeOfEvent = e.TypeOfEvent,
+                    nameOfEvent = e.NameOfEvent,
+                    urlOfEvent = e.UrlOfEvent,
+                    photoUrl = e.PhotoUrl,
+                    startOfEvent = e.StartOfEvent,
+                    address = e.Address,
+                    city = e.City,
+                    country = e.Country,
+                    nameOfClub = e.NameOfClub
+                })
+                .ToArrayAsync();
+
+            if (events == null)
+                return NotFound();
+
+            var response = new paginatedResponse<getEventsDto>
+            {
+                data = events,
+                totalCount = totalCount,
+                pageNumber = page,
+                pageSize = pageSize
+            };
+
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            _logger.LogError(ex, "Error while getting events.");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+        }
     }
 
     [HttpGet("get-events")]

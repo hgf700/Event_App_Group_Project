@@ -25,12 +25,14 @@ import { Forbidden } from '../Views/http-status/forbidden/forbidden';
 import { NotFound } from '../Views/http-status/not-found/not-found';
 import { ServerError } from '../Views/http-status/server-error/server-error';
 import { Unauthorised } from '../Views/http-status/unauthorised/unauthorised';
+import { PublicEvents } from '../Views/event/public-events/public-events';
 
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'login-user', component: LoginUser },
   { path: 'register-user', component: RegisterUser },
   { path: 'login-callback', component: LoginCallback },
+  { path: 'public-events', component: PublicEvents },
   { path: 'seed-database',canActivate: [authGuard], component: SeedDatabase },
   { path: 'get-events',canActivate: [authGuard], component: GetEvents },
   { path: 'sub-event-details/:id',canActivate: [authGuard], component: SubEventDetails },

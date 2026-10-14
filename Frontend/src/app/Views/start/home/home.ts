@@ -3,11 +3,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../Services/AuthService';
+import { PublicEvents } from '../../event/public-events/public-events';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, PublicEvents],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })

@@ -1,0 +1,326 @@
+:host {
+  display: block;
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 24px 20px 32px;
+  box-sizing: border-box;
+
+  --event-primary: #635bdb;
+  --event-text: #202236;
+  --event-muted: #777b8e;
+  --event-border: #e9eaf2;
+}
+
+/* Nagłówek */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  margin-bottom: 20px;
+}
+
+.page-title {
+  margin: 0;
+  color: var(--event-text);
+  font-size: clamp(1.35rem, 2.5vw, 1.8rem);
+  font-weight: 750;
+  letter-spacing: -0.7px;
+}
+
+.page-subtitle {
+  margin: 5px 0 0;
+  color: var(--event-muted);
+  font-size: 0.9rem;
+}
+
+.page-subtitle strong {
+  color: var(--event-primary);
+  font-weight: 700;
+}
+
+/* Paginacja */
+mat-paginator {
+  background: transparent;
+  color: var(--event-muted);
+  font-size: 0.8rem;
+}
+
+/* Siatka wydarzeń */
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+/* Karta */
+.event-card {
+  min-width: 0;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--event-border);
+  border-radius: 14px;
+  box-shadow: 0 3px 12px rgb(32 34 54 / 4%);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+}
+
+.event-card:hover {
+  transform: translateY(-3px);
+  border-color: #d8d4ff;
+  box-shadow: 0 9px 24px rgb(32 34 54 / 9%);
+}
+
+/* Zdjęcie */
+.event-image {
+  position: relative;
+  height: 145px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #eeecff, #f5f3ff);
+}
+
+.event-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 250ms ease;
+}
+
+.event-card:hover .event-image img {
+  transform: scale(1.04);
+}
+
+.event-placeholder {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  font-size: 2.5rem;
+}
+
+/* Kategoria wydarzenia */
+.event-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  max-width: calc(100% - 20px);
+  overflow: hidden;
+  padding: 5px 9px;
+  border: 1px solid rgb(255 255 255 / 60%);
+  border-radius: 7px;
+  background: rgb(255 255 255 / 92%);
+  color: var(--event-primary);
+  font-size: 0.7rem;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  backdrop-filter: blur(8px);
+}
+
+/* Zawartość karty */
+.event-body {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 13px 14px 15px;
+}
+
+.event-title {
+  display: -webkit-box;
+  min-height: 2.6em;
+  margin: 0;
+  overflow: hidden;
+  color: var(--event-text);
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.event-date,
+.event-location {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin: 0;
+  color: var(--event-muted);
+  font-size: 0.79rem;
+  line-height: 1.5;
+}
+
+.event-date .icon,
+.event-location .icon {
+  flex-shrink: 0;
+  font-size: 0.9rem;
+}
+
+.event-location strong {
+  color: #45475b;
+  font-weight: 650;
+}
+
+/* Ładowanie i puste wyniki */
+.state-box {
+  display: flex;
+  min-height: 150px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  border: 1px dashed var(--event-border);
+  border-radius: 14px;
+  background: #fafaff;
+  color: var(--event-muted);
+  text-align: center;
+}
+
+.state-box p {
+  margin: 10px 0 0;
+  font-size: 0.9rem;
+}
+
+.state-box h2 {
+  margin: 10px 0 0;
+  color: var(--event-text);
+  font-size: 1.15rem;
+}
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #e4e1ff;
+  border-top-color: var(--event-primary);
+  border-radius: 50%;
+  animation: event-spin 700ms linear infinite;
+}
+
+.empty-icon {
+  font-size: 2rem;
+}
+
+@keyframes event-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsywność */
+@media (max-width: 1000px) {
+  .events-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .event-image {
+    height: 135px;
+  }
+}
+
+@media (max-width: 700px) {
+  :host {
+    padding: 20px 14px 26px;
+  }
+
+  .events-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .event-image {
+    height: 125px;
+  }
+
+  .event-body {
+    padding: 11px;
+    gap: 8px;
+  }
+
+  .event-title {
+    font-size: 0.9rem;
+  }
+
+  .event-date,
+  .event-location {
+    font-size: 0.74rem;
+  }
+
+  .page-header {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 400px) {
+  .events-grid {
+    gap: 9px;
+  }
+
+  .event-image {
+    height: 105px;
+  }
+
+  .event-body {
+    padding: 9px;
+  }
+
+  mat-paginator {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .event-card,
+  .event-image img {
+    transition: none;
+  }
+
+  .spinner {
+    animation-duration: 1.5s;
+  }
+}
+
+/* Paginacja */
+.mat-mdc-paginator {
+  color: white;
+  background-color: var(--event-primary);
+  border-radius: 10px;
+  overflow: hidden;
+  font-size: 0.8rem;
+}
+
+/* Tekst i liczba elementów */
+.mat-mdc-paginator,
+.mat-mdc-paginator .mat-mdc-select-value,
+.mat-mdc-paginator .mat-mdc-select-arrow,
+.mat-mdc-paginator .mat-mdc-paginator-range-label {
+  color: white;
+}
+
+/* Przyciski nawigacji */
+.mat-mdc-paginator .mat-mdc-icon-button {
+  color: white;
+}
+
+/* Nieaktywne przyciski */
+.mat-mdc-paginator .mat-mdc-icon-button:disabled {
+  color: rgb(255 255 255 / 40%);
+}
+
+/* Selektor rozmiaru strony */
+.mat-mdc-paginator .mat-mdc-form-field {
+  color: white;
+}
+
+/* Responsywność */
+@media (max-width: 400px) {
+  .mat-mdc-paginator {
+    width: 100%;
+    font-size: 0.75rem;
+  }
+}

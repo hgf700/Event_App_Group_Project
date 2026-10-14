@@ -1,3 +1,9 @@
+uzycie observer do serwisu z sms i email?
+
+mozna ale raczej ciezko uzyc
+uzycie when.all z tpl (parallel library) jesli 1 rzecz nie jest zalezna od drugiej dzieki temu szybko sie wykona
+akcja
+
 caching np 
 app.UseOutputCache();
 [HttpGet]
@@ -9,30 +15,12 @@ Nie powinieneś natomiast generować nowego OrderId dla każdego biletu w ramach
 Wtedy wszystkie bilety z tego zakupu mają wspólny OrderId.
 OrderId potem dodam
 
-healthcheck
-builder.Services.AddHealthChecks();
-app.MapHealthChecks("/healthz");
-https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-10.0
-Auth Guard — przekierowuje niezalogowanego użytkownika do /login. HTTP Interceptor — reaguje na 401, 
-403 i błędy API. Health Check — sprawdza dostępność backendu i bazy danych. Strony 404 i 500 — 
-wyświetlają odpowiedni komunikat użytkownikowi.
-
 ressiliance np retry,circut breaker dla frontu w angular
 
 zrobic revoked dla refersh token jesli jest expired
 
 dla github actions testy jednostkowe i iplementacyjne back i front dorobic
 
-mozna ale raczej ciezko uzyc
-uzycie when.all z tpl (parallel library) jesli 1 rzecz nie jest zalezna od drugiej dzieki temu szybko sie wykona
-akcja
+bookmark
 
-uzycie observer do serwisu z sms i email?
-
-dodac auth guard
-uzytkownik jak trafi na strone z authorize a nie jest to redirect na login od razu
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-.AddCookie(options => 
-{
-options.LoginPath = "/login";
-});
+public event zrobic bym mogl uzyc     [OutputCache(Duration = 60)]

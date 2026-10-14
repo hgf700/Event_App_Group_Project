@@ -265,6 +265,8 @@ static string GetUserKey(HttpContext context)
 
 builder.Services.AddHttpClient();
 
+builder.Services.AddOutputCache();
+
 var app = builder.Build();
 
 app.MapHealthChecks("/health/live", new HealthCheckOptions
@@ -325,6 +327,8 @@ app.UseCors("Prod");
 app.UseAuthentication();
 app.UseRateLimiter();
 app.UseAuthorization();
+
+app.UseOutputCache();
 
 app.UseSerilogRequestLogging();
 

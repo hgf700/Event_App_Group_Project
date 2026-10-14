@@ -28,4 +28,10 @@ export class EventService {
       `${this.apiUserTicketUrl}/ticket-detail-with-qr/${eventId}`,
     );
   }
+
+  getPublicEvents(page: number, pageSize: number): Observable<paginatedResponse<getEventDto>> {
+    return this.http.get<paginatedResponse<getEventDto>>(
+      `${this.apiUrl}/public-get-events?page=${page}&pageSize=${pageSize}`,
+    );
+  }
 }
