@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, signal } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, signal, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -15,7 +15,10 @@ import { UserNavigationService } from '../../RootingServices/UserNavigationServi
   styleUrl: './login-callback.css',
 })
 export class LoginCallback implements OnInit {
-  userEmailData = signal(localStorage.getItem('email') ?? '');
+  // private authService = inject(AuthService);
+
+  // userEmailData = this.authService.userEmail;
+  userEmailData: typeof this.authService.userEmail;
   userRoleData = signal(localStorage.getItem('userRole') ?? '');
 
   constructor(
@@ -26,7 +29,9 @@ export class LoginCallback implements OnInit {
     private userNavigationService: UserNavigationService,
     private authService: AuthService,
     private cdr: ChangeDetectorRef,
-  ) {}
+  ) {
+    this.userEmailData = this.authService.userEmail;
+  }
 
   ngOnInit(): void {
     this.generateJWT();
