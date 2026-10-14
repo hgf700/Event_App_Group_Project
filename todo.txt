@@ -9,17 +9,13 @@ Nie powinieneś natomiast generować nowego OrderId dla każdego biletu w ramach
 Wtedy wszystkie bilety z tego zakupu mają wspólny OrderId.
 OrderId potem dodam
 
-builder.Services.AddProblemDetails();
-app.UseExceptionHandler("/Error")   //dla 500
-https://learn.microsoft.com/en-us/aspnet/core/fundamentals/error-handling?view=aspnetcore-10.0
-
-app.UseStatusCodePages(async context => {}) // to jest jesli wpisze np https://www.youtube.com/asd i mam 
-not found
-
 healthcheck
 builder.Services.AddHealthChecks();
 app.MapHealthChecks("/healthz");
 https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-10.0
+Auth Guard — przekierowuje niezalogowanego użytkownika do /login. HTTP Interceptor — reaguje na 401, 
+403 i błędy API. Health Check — sprawdza dostępność backendu i bazy danych. Strony 404 i 500 — 
+wyświetlają odpowiedni komunikat użytkownikowi.
 
 ressiliance np retry,circut breaker dla frontu w angular
 
