@@ -16,6 +16,7 @@ import { changeUserPasswordValidator } from '../../Validators/changeUserPassword
 export class EditUserPassword {
   editUserPasswordForm!: FormGroup;
   submitted = false;
+  showPasswordRequirements = false;
 
   constructor(
     private fb: FormBuilder,

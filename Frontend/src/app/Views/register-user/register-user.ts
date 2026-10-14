@@ -16,6 +16,7 @@ import { registerUserValidator } from '../../Validators/registerUserValidator';
 export class RegisterUser {
   registerUserForm!: FormGroup;
   submitted = false;
+  showPasswordRequirements = false;
 
   constructor(
     private fb: FormBuilder,

@@ -34,8 +34,10 @@
           formControlName="password"
           placeholder="••••••••"
           autocomplete="new-password"
+          (focus)="showPasswordRequirements = true"
+          (blur)="showPasswordRequirements = false"
         />
-
+      @if (showPasswordRequirements) {
         <div class="password-requirements">
           <p>Hasło musi zawierać:</p>
 
@@ -59,6 +61,7 @@
             </li>
           </ul>
         </div>
+      }
 
         @if (submitted && registerUserForm.controls['password'].errors?.['required']) {
           <span class="form-error">Hasło jest wymagane</span>
