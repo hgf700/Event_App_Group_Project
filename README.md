@@ -8,7 +8,7 @@ A older version of this project can be found here: https://github.com/hgf700/Old
 
 ## ☁️ Hosting and Deployment
 
-The application is currently hosted on **AWS**:
+The application hosted on **AWS**:
 
 - **EC2 (Amazon Linux)** instance serves as the web server.  
 - The application is fully **Dockerized** and container images are stored in **Amazon ECR**.  
@@ -26,7 +26,7 @@ http://13.217.97.150/
 - Authentication and authorization using **JWT (JSON Web Tokens)**.
 - Secure session management using **JWT access tokens and refresh tokens**.
 - **Role-based** authentication and authorization.
-- User registration and login with **ASP.NET Identity** and **OAuth external providers**.
+- User registration and login with **ASP.NET Identity** and **Google OAuth external providers**.
 - Integration with the **Ticketmaster API** to fetch event data.
 - **Pagination** and **event search functionality** via form or query parameters.
 - Integration with **Stripe Payments** for ticket purchasing.
@@ -36,7 +36,7 @@ http://13.217.97.150/
 
 ### 💳 After successful payment:
 - A **QR code** containing the event URL is generated using **QRCoder**.
-- A **PDF file** with event details is generated using **QuestPDF**.
+- A **PDF file** with event details is generated using **Playwright**.
 - A confirmation **email with PDF attachment** is sent via **SMTP**.
 - An **SMS notification** containing the event URL is sent using **Twilio**.
 
