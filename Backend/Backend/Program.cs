@@ -7,6 +7,7 @@ using EventApp.Services.Services.Interface;
 using EventApp.Services.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -32,10 +33,17 @@ builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//healthcheck
+builder.Services
+    .AddHealthChecks()
+    .AddDbContextCheck<ApplicationDbContext>(
+        tags: new[] { "ready" });
+
 //db
 var connectionString = builder.Configuration.GetConnectionString("Default");
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services
+    .AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString, o =>
         o.EnableRetryOnFailure()));
 
@@ -258,6 +266,17 @@ static string GetUserKey(HttpContext context)
 builder.Services.AddHttpClient();
 
 var app = builder.Build();
+
+app.MapHealthChecks("/health/live", new HealthCheckOptions
+{
+    Predicate = _ => false
+});
+
+// Readiness: czy aplikacja i baza są gotowe?
+app.MapHealthChecks("/health/ready", new HealthCheckOptions
+{
+    Predicate = check => check.Tags.Contains("ready")
+});
 
 using (var scope = app.Services.CreateScope())
 {

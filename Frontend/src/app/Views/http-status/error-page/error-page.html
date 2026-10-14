@@ -1,0 +1,36 @@
+
+<main class="error-page">
+  <section class="error-card">
+    <div class="error-illustration">
+      <span class="error-code">{{ config.code }}</span>
+      <div class="illustration-icon">!</div>
+    </div>
+
+    <div class="error-content">
+      <p class="eyebrow">EVENTAPP · INFORMACJA</p>
+
+      <h1>{{ config.title }}</h1>
+      <p class="message">{{ config.message }}</p>
+
+      <div class="actions">
+        <button
+          class="primary-button"
+          type="button"
+          (click)="navigate(config.primaryRoute)"
+        >
+          {{ config.primaryLabel }}
+        </button>
+
+        @if (config.secondaryLabel && config.secondaryRoute) {
+          <button
+            class="secondary-button"
+            type="button"
+            (click)="navigate(config.secondaryRoute)"
+          >
+            {{ config.secondaryLabel }}
+          </button>
+        }
+      </div>
+    </div>
+  </section>
+</main>

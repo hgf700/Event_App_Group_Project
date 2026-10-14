@@ -77,6 +77,7 @@ http://13.217.97.150/
 - GitHub Actions – CI/CD pipelines
 - Grafana + Loki – logging and visualization
 - Prometheus – metrics monitoring
+- HealthCheck
 
 ### External Services & APIs
 - Ticketmaster API
@@ -91,11 +92,14 @@ http://13.217.97.150/
 
 | Service     | URL |
 |------------|-----|
-| Frontend   | http://localhost:4200 |
-| Backend    | http://localhost:5000/swagger |
+| Swagger    | http://localhost:5000/swagger |
 | Grafana    | http://localhost:3000 |
 | Prometheus | http://localhost:9090 |
 | Loki       | http://localhost:3100 |
+| Frontend   | http://localhost:4200 |
+| Backend    | http://localhost:7051 |
+| Liveness   | https://localhost:7051/health/live |
+| Readiness  | https://localhost:7051/health/ready |
 
 # Future Potential Improvements
 - Improve application security

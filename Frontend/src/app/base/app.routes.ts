@@ -20,6 +20,11 @@ import { SubEventDetails } from '../Views/event/sub-event-details/sub-event-deta
 import { UserTickets } from '../Views/user/user-tickets/user-tickets';
 import { EditUserEmail } from '../Views/user/edit-user-email/edit-user-email';
 import { authGuard } from '../helpers/authGuard';
+import { ErrorPage } from '../Views/http-status/error-page/error-page';
+import { Forbidden } from '../Views/http-status/forbidden/forbidden';
+import { NotFound } from '../Views/http-status/not-found/not-found';
+import { ServerError } from '../Views/http-status/server-error/server-error';
+import { Unauthorised } from '../Views/http-status/unauthorised/unauthorised';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -46,6 +51,11 @@ export const routes: Routes = [
       { path: 'users',canActivate: [authGuard], component: Users },
     ],
   },
+  { path: 'error-page', component: ErrorPage },
+  { path: 'forbidden', component: Forbidden },
+  { path: 'not-found', component: NotFound },
+  { path: 'server-error', component: ServerError },
+  { path: 'unauthorised', component: Unauthorised },
   
 ];
 
