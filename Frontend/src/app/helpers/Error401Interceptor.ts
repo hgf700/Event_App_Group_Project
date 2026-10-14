@@ -8,7 +8,7 @@ export const Error401Interceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  const isRefreshRequest = req.url.includes('/api/v1/authrefresh');
+  const isRefreshRequest = req.url.includes('/api/v1/auth/refresh');
   const isLoginRequest = req.url.includes('/api/v1/auth/login-norm') ||
     req.url.includes('/api/v1/auth/sign-in-google') ||
     req.url.includes('/api/v1/auth/google-response');
