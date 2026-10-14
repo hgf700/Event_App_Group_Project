@@ -1,14 +1,5 @@
 uzycie observer do serwisu z sms i email?
 
-mozna ale raczej ciezko uzyc
-uzycie when.all z tpl (parallel library) jesli 1 rzecz nie jest zalezna od drugiej dzieki temu szybko sie wykona
-akcja
-
-caching np 
-app.UseOutputCache();
-[HttpGet]
-[OutputCache(Duration = 60)]
-
 [HttpGet("admin-bought-tickets")]
 Jeżeli w Twoim systemie jedno UserEvent = jeden bilet, to OrderId jest bardzo przydatny.
 Nie powinieneś natomiast generować nowego OrderId dla każdego biletu w ramach jednego zakupu.
@@ -23,4 +14,4 @@ dla github actions testy jednostkowe i iplementacyjne back i front dorobic
 
 bookmark
 
-public event zrobic bym mogl uzyc     [OutputCache(Duration = 60)]
+docker
