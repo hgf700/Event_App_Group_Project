@@ -74,7 +74,7 @@ export class GetEvents implements OnInit {
   }
 
   loadUserBookmarks(): void {
-    this.bookMarkService.getUserBookmakrs().subscribe({
+    this.bookMarkService.getUserBookmarks().subscribe({
     next: (bookmarks: getBookmarkDto[]) => {
       this.bookmarkedEventIds = new Set(
         bookmarks.map(bookmark => bookmark.eventId)

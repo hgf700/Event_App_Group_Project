@@ -34,6 +34,12 @@
       <h3>Wyszukaj i importuj</h3>
       <p>Znajdź nowe wydarzenia z Ticketmaster</p>
     </button>
+
+    <button class="action-card" (click)="userBookmarkedEvents()">
+      <div class="action-icon">🔖</div>
+      <h3>Obserwowane Eventy</h3>
+      <p>Sprawdź zaobserwowane eventy</p>
+    </button>
   }
   @if (isAdmin()) {
     <button class="action-card" (click)="adminView()">

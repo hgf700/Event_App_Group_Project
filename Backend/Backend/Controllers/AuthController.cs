@@ -303,4 +303,11 @@ public class AuthController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
+
+    [HttpGet("check")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public ActionResult CheckAuth()
+    {
+        return Ok(true);
+    }
 }

@@ -13,7 +13,7 @@ export class BookMarkService {
 
   constructor(private http: HttpClient) {}
 
-    getUserBookmakrs() {
+    getUserBookmarks() {
         return this.http.get<getBookmarkDto[]>(`${this.apiUrl}/user-bookmarks`);
     }
 

@@ -33,16 +33,14 @@
         <thead>
           <tr>
             <th>ID</th>
-            <th>Wydarzenie</th>
-            <th>Data</th>
-            <th>Miasto</th>
-            <th>Klub</th>
-            <th>Akcje</th>
+            <th>userId</th>
+            <th>eventId</th>
+            <th>eventName</th>
           </tr>
         </thead>
 
         <tbody>
-          @for (bookmark of filteredBookmarks; track bookmark.eventId) {
+          @for (bookmark of userBookmark; track bookmark.eventId) {
             <tr>
               <td>{{ bookmark.id }}</td>
 

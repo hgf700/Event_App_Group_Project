@@ -12,4 +12,8 @@ export class UserNavigationService {
   userBoughtTickets(): Promise<boolean> {
     return this.router.navigate(['/user-tickets']);
   }
+
+  userBookmarkedEvents(): Promise<boolean> {
+    return this.router.navigate(['/user-bookmark']);
+  }
 }

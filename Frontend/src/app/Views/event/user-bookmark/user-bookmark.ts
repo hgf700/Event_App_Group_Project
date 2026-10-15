@@ -14,7 +14,6 @@ import { BookMarkService } from '../../../Services/BookMarkService';
 })
 export class UserBookmark implements OnInit {
   userBookmark: getBookmarkDto[] = [];
-  filteredBookmarks: getBookmarkDto[] = [];
 
   loading = false;
   errorMessage = '';
@@ -33,7 +32,7 @@ export class UserBookmark implements OnInit {
     this.loading = true;
     this.errorMessage = '';
 
-    this.bookMarkService.getUserBookmakrs().subscribe({
+    this.bookMarkService.getUserBookmarks().subscribe({
       next: (response: getBookmarkDto[]) => {
         this.userBookmark = response ?? [];
         this.loading = false;

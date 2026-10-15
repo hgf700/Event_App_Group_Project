@@ -1,5 +1,7 @@
 uzycie observer do serwisu z sms i email?
 
+moze poprawienei ui dla bookmark ale to raczej jest jako dodatek i nie chce mi sie
+
 [HttpGet("admin-bought-tickets")]
 Jeżeli w Twoim systemie jedno UserEvent = jeden bilet, to OrderId jest bardzo przydatny.
 Nie powinieneś natomiast generować nowego OrderId dla każdego biletu w ramach jednego zakupu.
@@ -11,5 +13,3 @@ ressiliance np retry,circut breaker dla frontu w angular
 dla github actions testy jednostkowe i iplementacyjne back i front dorobic
 
 docker
-
-bookmark logike poprawic i spr

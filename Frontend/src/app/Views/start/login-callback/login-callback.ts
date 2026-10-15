@@ -76,4 +76,12 @@ export class LoginCallback implements OnInit {
   editCurrentUser() {
     this.userNavigationService.editCurrentUser();
   }
+
+  getUserBookmarks() {
+    this.userNavigationService.editCurrentUser();
+  }
+
+  userBookmarkedEvents(){
+    this.userNavigationService.userBookmarkedEvents();
+  }
 }

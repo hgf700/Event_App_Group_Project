@@ -80,8 +80,7 @@ export class AuthService {
   }
 
   checkAuth() {
-    return this.http.get<boolean>(
-      `${this.apiUrl}/check`,
+    return this.http.get<boolean>(`${this.apiUrl}/check`,
       { withCredentials: true }
     );
   }

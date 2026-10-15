@@ -1,4 +1,3 @@
-
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
@@ -7,15 +6,13 @@ import { catchError, throwError } from 'rxjs';
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
 
-  return next(
-    req.clone({ withCredentials: true })
-  ).pipe(
+  const request = req.clone({
+    withCredentials: true
+  });
+
+  return next(request).pipe(
     catchError(error => {
-      if (error.status === 401) {
-        router.navigate(['/unauthorised'], {
-          queryParams: { returnUrl: router.url }
-        });
-      } else if (error.status === 403) {
+      if (error.status === 403) {
         router.navigate(['/forbidden']);
       } else if (error.status === 404) {
         router.navigate(['/not-found']);

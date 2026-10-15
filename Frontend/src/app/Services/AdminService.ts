@@ -10,8 +10,6 @@ import { getBookmarkDto } from '../Dto/getBookmarkDto';
 @Injectable({ providedIn: 'root' })
 export class AdminService {
   private apiUrl = 'https://localhost:7051/api/v1/admin';
-  private bokkmarkApiUrl = 'https://localhost:7051/api/v1/bookmark';
-
 
   constructor(private http: HttpClient) {}
 
@@ -60,6 +58,6 @@ export class AdminService {
   }
 
   adminGetAllBookmarks() {
-    return this.http.get<getBookmarkDto[]>(`${this.bokkmarkApiUrl}/admin-all-bookmarks`);
+    return this.http.get<getBookmarkDto[]>(`${this.apiUrl}/admin-all-bookmarks`);
   }
 }
