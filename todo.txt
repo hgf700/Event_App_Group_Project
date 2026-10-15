@@ -8,11 +8,8 @@ OrderId potem dodam
 
 ressiliance np retry,circut breaker dla frontu w angular
 
-zrobic revoked dla refersh token jesli jest expired
-
 dla github actions testy jednostkowe i iplementacyjne back i front dorobic
 
-bookmark
-i dal admin
-
 docker
+
+bookmark logike poprawic i spr
