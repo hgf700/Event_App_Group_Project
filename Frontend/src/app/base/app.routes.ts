@@ -26,6 +26,8 @@ import { NotFound } from '../Views/http-status/not-found/not-found';
 import { ServerError } from '../Views/http-status/server-error/server-error';
 import { Unauthorised } from '../Views/http-status/unauthorised/unauthorised';
 import { PublicEvents } from '../Views/event/public-events/public-events';
+import { Bookmarks } from '../Views/admin/bookmarks/bookmarks';
+import { UserBookmark } from '../Views/event/user-bookmark/user-bookmark';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -42,6 +44,7 @@ export const routes: Routes = [
   { path: 'edit-user',canActivate: [authGuard], component: EditUser },
   { path: 'edit-user-email',canActivate: [authGuard], component: EditUserEmail },
   { path: 'edit-user-password',canActivate: [authGuard], component: EditUserPassword },
+  { path: 'user-bookmark',canActivate: [authGuard], component: UserBookmark },
   {
     path: 'admin-panel',
     component: AdminPanel,
@@ -51,6 +54,7 @@ export const routes: Routes = [
       { path: 'blocked-users',canActivate: [authGuard], component: BlockedUsers },
       { path: 'tickets',canActivate: [authGuard], component: Tickets },
       { path: 'users',canActivate: [authGuard], component: Users },
+      { path: 'bookmarks',canActivate: [authGuard], component: Bookmarks },
     ],
   },
   { path: 'error-page', component: ErrorPage },

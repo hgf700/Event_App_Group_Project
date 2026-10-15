@@ -20,7 +20,6 @@ public class BookmarkController : ControllerBase
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ILogger<BookmarkController> _logger;
 
-
     public BookmarkController(
         ApplicationDbContext context, 
         UserManager<ApplicationUser> userManager,
@@ -39,7 +38,7 @@ public class BookmarkController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<getBookmakrDto>> GetBookmark()
+    public async Task<ActionResult<getBookmarkDto>> GetBookmark()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null)
@@ -50,8 +49,9 @@ public class BookmarkController : ControllerBase
             var bookmark = await _context.Bookmarks
                 .AsNoTracking()
                 .Include(b => b.Event)
-                .Select(e => new getBookmakrDto
+                .Select(e => new getBookmarkDto
                 {
+                    id = e.Id,
                     userId = e.UserId,
                     eventId = e.EventId,
                     eventName = e.Event.NameOfEvent,
@@ -70,46 +70,6 @@ public class BookmarkController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
-
-    [HttpGet("admin-all-bookmarks")]
-    [EnableRateLimiting("GetPolicy")]
-    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<getBookmakrDto>> AdminGetAllBookmark()
-    {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId == null)
-            return Unauthorized();
-
-        try
-        {
-            var bookmark = await _context.Bookmarks
-                .AsNoTracking()
-                .Include(b => b.Event)
-                .Select(e => new getBookmakrDto
-                {
-                    userId = e.UserId,
-                    eventId = e.EventId,
-                    eventName = e.Event.NameOfEvent,
-                })
-                .ToArrayAsync();
-
-            if (bookmark == null)
-                return NotFound();
-
-            return Ok(bookmark);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex);
-            _logger.LogError(ex, "Error while getting bookmark details");
-            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
-        }
-    }
-
 
     [HttpPost("bookmark-event/{eventId:int:min(1)}")]
     [EnableRateLimiting("PostPolicy")]

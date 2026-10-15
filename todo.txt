@@ -13,5 +13,6 @@ zrobic revoked dla refersh token jesli jest expired
 dla github actions testy jednostkowe i iplementacyjne back i front dorobic
 
 bookmark
+i dal admin
 
 docker

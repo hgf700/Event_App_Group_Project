@@ -1,0 +1,45 @@
+<div class="search-container">
+  <input
+    type="text"
+    [(ngModel)]="searchText"
+    (input)="filterBookmarks()"
+    placeholder="Szukaj po city lub nameOfClub lub nameOfEvent"
+  />
+
+  <button type="button" (click)="clearSearch()">Wyczyść</button>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>eventName</th>
+      <th>eventId</th>
+      <th>userId</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    @for (bookmark of filteredBookmarks; track bookmark.id) {
+      <tr>
+        <td>{{ bookmark.id }}</td>
+
+        <td class="event-name">
+          {{ bookmark.eventName }}
+        </td>
+
+        <td>{{ bookmark.eventId }}</td>
+
+        <td>{{ bookmark.userId }}</td>
+      </tr>
+    }
+
+    @if (!loading && filteredBookmarks.length === 0) {
+      <tr>
+        <td colspan="4" class="empty">
+          Brak zakładek
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

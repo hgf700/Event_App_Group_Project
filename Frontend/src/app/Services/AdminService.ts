@@ -5,10 +5,13 @@ import { getAppUsageInfoDto } from '../Dto/getAppUsageInfoDto';
 import { getAdminUserDto } from '../Dto/getAdminUserDto';
 import { getBoughtTicketDto } from '../Dto/getBoughtTicketDto';
 import { getEventAdminDto } from '../Dto/getEventAdminDto';
+import { getBookmarkDto } from '../Dto/getBookmarkDto';
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
   private apiUrl = 'https://localhost:7051/api/v1/admin';
+  private bokkmarkApiUrl = 'https://localhost:7051/api/v1/bookmark';
+
 
   constructor(private http: HttpClient) {}
 
@@ -54,5 +57,9 @@ export class AdminService {
 
   getBoughtTickets() {
     return this.http.get<getBoughtTicketDto[]>(`${this.apiUrl}/admin-bought-tickets`);
+  }
+
+  adminGetAllBookmarks() {
+    return this.http.get<getBookmarkDto[]>(`${this.bokkmarkApiUrl}/admin-all-bookmarks`);
   }
 }

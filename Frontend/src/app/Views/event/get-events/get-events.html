@@ -63,7 +63,35 @@
             </p>
           }
 
-          <button class="btn-details" (click)="eventDetails(e.eventId!)">Zobacz szczegóły →</button>
+          <button class="btn-details" (click)="eventDetails(e.eventId!)">
+                Zobacz szczegóły →
+              </button>
+
+              @if (isBookmarked(e.eventId!)) {
+                <button
+                  class="btn-bookmarked"
+                  (click)="removeBookmark(e.eventId!)"
+                  [disabled]="bookmarkLoadingIds.has(e.eventId!)"
+                >
+                  {{
+                    bookmarkLoadingIds.has(e.eventId!)
+                      ? 'Przetwarzanie...'
+                      : '✓ Usuń z zakładek'
+                  }}
+                </button>
+              } @else {
+                <button
+                  class="btn-details"
+                  (click)="bookmarkEvent(e.eventId!)"
+                  [disabled]="bookmarkLoadingIds.has(e.eventId!)"
+                >
+                  {{
+                    bookmarkLoadingIds.has(e.eventId!)
+                      ? 'Zapisywanie...'
+                      : '☆ Zapisz event'
+                  }}
+                </button>
+              }
         </div>
       </article>
     }
