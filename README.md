@@ -33,6 +33,7 @@ http://13.217.97.150/
 - Generation and display of **QR codes for purchased tickets** directly in the application.
 - Interactive **event details view** displayed in a modal subwindow.
 - **Admin Panel** for managing users, events, and tickets. 
+- Caching of data on public view
 
 ### 💳 After successful payment:
 - A **QR code** containing the event URL is generated using **QRCoder**.

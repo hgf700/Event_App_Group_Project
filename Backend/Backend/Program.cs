@@ -131,9 +131,12 @@ builder.Services.AddDataProtection()
     .PersistKeysToFileSystem(new DirectoryInfo("/var/dpkeys"))
     .SetApplicationName("projekt-app");
 
-string googleClientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");
-string googleClientSecret = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET");
-string JWT_SECRET = Environment.GetEnvironmentVariable("JWT_SECRET");
+string googleClientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID")
+    ?? throw new InvalidOperationException("GOOGLE_CLIENT_ID is not set.");
+string googleClientSecret = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET")
+    ?? throw new InvalidOperationException("GOOGLE_CLIENT_SECRET is not set.");
+string JWT_SECRET = Environment.GetEnvironmentVariable("JWT_SECRET")
+    ?? throw new InvalidOperationException("JWT_SECRET is not set.");
 
 builder.Services.AddAuthentication(options =>
 {

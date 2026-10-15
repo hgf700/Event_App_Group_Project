@@ -1,7 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
-
-import { AuthService } from '../../Services/AuthService';
+import { AuthService } from '../../../Services/AuthService';
 
 @Component({
   selector: 'app-layout',

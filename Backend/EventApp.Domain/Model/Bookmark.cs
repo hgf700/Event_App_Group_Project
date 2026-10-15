@@ -7,5 +7,4 @@ public class Bookmark
     public ApplicationUser User { get; set; }
     public int? EventId{ get; set; }
     public Event Event { get; set; }
-
 }
