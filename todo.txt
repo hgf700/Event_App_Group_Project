@@ -1,13 +1,24 @@
 moze poprawienei ui dla bookmark ale to raczej jest jako dodatek i nie chce mi sie
 
+uzycie observer do serwisu z sms i email?
+
+ressiliance np retry,circut breaker dla frontu w angular
+
 [HttpGet("admin-bought-tickets")]
 Jeżeli w Twoim systemie jedno UserEvent = jeden bilet, to OrderId jest bardzo przydatny.
 Nie powinieneś natomiast generować nowego OrderId dla każdego biletu w ramach jednego zakupu.
 Wtedy wszystkie bilety z tego zakupu mają wspólny OrderId.
 OrderId potem dodam
 
-ressiliance np retry,circut breaker dla frontu w angular
 
-dla github actions testy jednostkowe i iplementacyjne back i front dorobic
+
+
+usuniecie niepotrzebnych rzeczy ze zdalnego repo na github np unit testy
+
+czyszcenie projektu
+
+git actions
 
 docker
+
+dla github actions testy jednostkowe i iplementacyjne back i front dorobic

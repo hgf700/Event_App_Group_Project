@@ -314,6 +314,11 @@ else if (!app.Environment.IsEnvironment("IntegrationTest"))
     app.UseExceptionHandler();
     app.UseHsts();
 }
+else
+{
+    app.UseExceptionHandler(); // Teraz zadziała, bo dodano ProblemDetails
+    app.UseHsts();
+}
 
 Console.WriteLine(app.Environment.EnvironmentName);
 

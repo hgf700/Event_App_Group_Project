@@ -24,18 +24,21 @@ http://13.217.97.150/
 ## ✨ Features
 
 - Authentication and authorization using **JWT (JSON Web Tokens)**.
-- Secure session management using **JWT access tokens and refresh tokens**.
-- **Role-based** authentication and authorization.
-- User registration and login with **ASP.NET Identity** and **Google OAuth external providers**.
-- Integration with the **Ticketmaster API** to fetch event data.
+- Secure session management using JWT access tokens and **refresh tokens**.
+- **Role-based (RBAC)** authentication and authorization.
+- User registration and login with **ASP.NET Identity** and **Google OAuth** external providers.
+- Integration with the **Ticketmaster API** to fetch event data using **forms and query parameters**.
 - **Pagination** and **event search functionality** via form or query parameters.
-- Integration with **Stripe Payments** for ticket purchasing.
-- Generation and display of **QR codes for purchased tickets** directly in the application.
+- Integration with **Stripe Payments** for ticket purchase using **Stripe Webhook**.
+- Generation and display of **QR codes** for purchased tickets directly in the application.
+- Email notifications sent via **SMTP**, including QR codes and PDF attachments.
 - Interactive **event details view** displayed in a modal subwindow.
 - **Admin Panel** for managing users, events, and tickets. 
-- Caching of data on public view
+- **Data caching** for public views.
+- **HTTP status codes** returned according to the outcome of API requests.
 
-### 💳 After successful payment:
+### 💳 Post-Payment Workflow:
+After a successful payment, the application automatically performs the following actions:
 - A **QR code** containing the event URL is generated using **QRCoder**.
 - A **PDF file** with event details is generated using **Playwright**.
 - A confirmation **email with PDF attachment** is sent via **SMTP**.
@@ -43,11 +46,14 @@ http://13.217.97.150/
 
 ## 🧠 Backend
 
-- Logging system for diagnostics and error tracking.
+- **ASP.NET Web API** for backend services and RESTful endpoints.
 - Database access and ORM handled using **Entity Framework Core**.
+- **Logging** system for diagnostics and error tracking.
+- **ASP.NET Identity** for user management and authentication.
 - API security with **rate limiting**.
 - Structured logging using **Serilog**.
 - **Role-based** authentication and authorization.
+- **Health checks** to monitor application health and readiness.
 
 ## 📊 Observability
 
@@ -65,10 +71,10 @@ http://13.217.97.150/
 - ASP.NET Web API
 - Entity Framework
 - ASP.NET Identity
-- JWT Authentication
-- Unit Tests
-- Integration Tests
+- JWT Authentication and authorization
+- Unit Tests and Integration Tests
 - Serilog Logging
+- Health checks
 
 ### DevOps / Infrastructure
 - AWS EC2 – application hosting
@@ -78,7 +84,6 @@ http://13.217.97.150/
 - GitHub Actions – CI/CD pipelines
 - Grafana + Loki – logging and visualization
 - Prometheus – metrics monitoring
-- HealthCheck
 
 ### External Services & APIs
 - Ticketmaster API
@@ -99,11 +104,11 @@ http://13.217.97.150/
 | Loki       | http://localhost:3100 |
 | Frontend   | http://localhost:4200 |
 | Backend    | http://localhost:7051 |
-| Liveness   | https://localhost:7051/health/live |
-| Readiness  | https://localhost:7051/health/ready |
+| Liveness Probe | https://localhost:7051/health/live |
+| Readiness Probe | https://localhost:7051/health/ready |
 
-# Future Potential Improvements
-- Improve application security
-- Add unit and integration tests
-- Add Kubernetes deployment
-- Add distributed tracing (OpenTelemetry)
+## 🚀 Future Potential Improvements
+- Strengthen application security.
+- Expand unit and integration test coverage.
+- Introduce Kubernetes for container orchestration and deployment.
+- Implement distributed tracing using OpenTelemetry.
