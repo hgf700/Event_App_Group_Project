@@ -7,11 +7,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
 
   const request = req.clone({
-    withCredentials: true
+    withCredentials: true,
   });
 
   return next(request).pipe(
-    catchError(error => {
+    catchError((error) => {
       if (error.status === 403) {
         router.navigate(['/forbidden']);
       } else if (error.status === 404) {
@@ -21,6 +21,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       }
 
       return throwError(() => error);
-    })
+    }),
   );
 };

@@ -14,30 +14,31 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   registerUserNorm(email: string, password: string) {
-    return this.http.post<authResponseDto>(`${this.apiUrl}/register-norm`, {
-      email,
-      password,
-    },
-    {withCredentials: true}
+    return this.http.post<authResponseDto>(
+      `${this.apiUrl}/register-norm`,
+      {
+        email,
+        password,
+      },
+      { withCredentials: true },
     );
   }
 
   loginUserNorm(email: string, password: string) {
-    return this.http.post<authResponseDto>(`${this.apiUrl}/login-norm`, {
-      email,
-      password,
-    },
-    {withCredentials: true}
+    return this.http.post<authResponseDto>(
+      `${this.apiUrl}/login-norm`,
+      {
+        email,
+        password,
+      },
+      { withCredentials: true },
     );
   }
 
   logout(): void {
-    this.http.post(`${this.apiUrl}/logout`, 
-      {},
-      { withCredentials: true }
-    ).subscribe({
+    this.http.post(`${this.apiUrl}/logout`, {}, { withCredentials: true }).subscribe({
       next: () => this.clearAuthData(),
-      error: () => this.clearAuthData()
+      error: () => this.clearAuthData(),
     });
   }
 
@@ -54,7 +55,7 @@ export class AuthService {
       `${this.apiUrl}/refresh`,
       {},
       { withCredentials: true },
-    )
+    );
   }
 
   loginWithGoogleOauth() {
@@ -80,9 +81,6 @@ export class AuthService {
   }
 
   checkAuth() {
-    return this.http.get<boolean>(`${this.apiUrl}/check`,
-      { withCredentials: true }
-    );
+    return this.http.get<boolean>(`${this.apiUrl}/check`, { withCredentials: true });
   }
-
 }

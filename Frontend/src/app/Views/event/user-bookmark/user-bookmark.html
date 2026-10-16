@@ -5,9 +5,7 @@
       <p>Lista wydarzeń, które zapisałeś na później.</p>
     </div>
 
-    <span class="bookmark-count">
-      {{ userBookmark.length }} zakładek
-    </span>
+    <span class="bookmark-count"> {{ userBookmark.length }} zakładek </span>
   </div>
 
   @if (loading) {
@@ -21,9 +19,7 @@
     <div class="error-message">
       {{ errorMessage }}
 
-      <button type="button" (click)="loadBOokamrks()">
-        Spróbuj ponownie
-      </button>
+      <button type="button" (click)="loadBOokamrks()">Spróbuj ponownie</button>
     </div>
   }
 
@@ -61,19 +57,13 @@
                   [disabled]="removingEventId !== null"
                   (click)="removeBookmark(bookmark.eventId)"
                 >
-                  {{
-                    removingEventId === bookmark.eventId
-                      ? 'Usuwanie...'
-                      : 'Usuń zakładkę'
-                  }}
+                  {{ removingEventId === bookmark.eventId ? 'Usuwanie...' : 'Usuń zakładkę' }}
                 </button>
               </td>
             </tr>
           } @empty {
             <tr>
-              <td colspan="6" class="empty">
-
-              </td>
+              <td colspan="6" class="empty"></td>
             </tr>
           }
         </tbody>

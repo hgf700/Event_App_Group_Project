@@ -1,4 +1,3 @@
-
 :host {
   display: block;
   min-height: 100%;
@@ -9,9 +8,7 @@
   display: grid;
   place-items: center;
   padding: 32px 20px;
-  background:
-    radial-gradient(ellipse at top left, #e4edff 0%, transparent 45%),
-    #f7f9fc;
+  background: radial-gradient(ellipse at top left, #e4edff 0%, transparent 45%), #f7f9fc;
 }
 
 .error-card {
@@ -96,7 +93,9 @@ h1 {
   cursor: pointer;
   font: inherit;
   font-weight: 600;
-  transition: transform 150ms, background 150ms;
+  transition:
+    transform 150ms,
+    background 150ms;
 }
 
 .primary-button {

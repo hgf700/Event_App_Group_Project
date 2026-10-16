@@ -167,7 +167,6 @@
   border-left: 4px solid #c62828;
 }
 
-
 .auth-wrapper {
   min-height: 100vh;
   display: flex;
@@ -253,7 +252,7 @@
 
 .auth-divider::before,
 .auth-divider::after {
-  content: "";
+  content: '';
   height: 1px;
   flex: 1;
   background: #e5e9f2;

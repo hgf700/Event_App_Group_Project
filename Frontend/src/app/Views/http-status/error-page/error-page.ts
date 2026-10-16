@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
   styleUrl: './error-page.css',
 })
 export class ErrorPage {
-
   @Input({ required: true }) config!: ErrorPageConfig;
 
   private router = inject(Router);

@@ -16,33 +16,29 @@ export const RefreshToken401Interceptor: HttpInterceptorFn = (req, next) => {
     req.url.includes('/api/v1/auth/google-response');
 
   return next(req).pipe(
-    catchError(error => {
-      if (
-        error.status !== 401 ||
-        isRefreshRequest ||
-        isLoginRequest
-      ) {
+    catchError((error) => {
+      if (error.status !== 401 || isRefreshRequest || isLoginRequest) {
         return throwError(() => error);
       }
 
       return authService.refreshToken().pipe(
-        switchMap(response => {
+        switchMap((response) => {
           const retryReq = req.clone({
             withCredentials: true,
             setHeaders: {
-              Authorization: `Bearer ${response.accessToken}`
-            }
+              Authorization: `Bearer ${response.accessToken}`,
+            },
           });
 
           return next(retryReq);
         }),
-        catchError(refreshError => {
+        catchError((refreshError) => {
           authService.logout();
           router.navigate(['/login']);
 
           return throwError(() => refreshError);
-        })
+        }),
       );
-    })
+    }),
   );
 };

@@ -75,68 +75,60 @@ export class GetEvents implements OnInit {
 
   loadUserBookmarks(): void {
     this.bookMarkService.getUserBookmarks().subscribe({
-    next: (bookmarks: getBookmarkDto[]) => {
-      this.bookmarkedEventIds = new Set(
-        bookmarks.map(bookmark => bookmark.eventId)
-      );
+      next: (bookmarks: getBookmarkDto[]) => {
+        this.bookmarkedEventIds = new Set(bookmarks.map((bookmark) => bookmark.eventId));
 
-      this.cdr.detectChanges();
-    },
-    error: (error) => {
-      console.error('Błąd pobierania zakładek:', error);
-    }
-  });
-}
-
-isBookmarked(eventId: number): boolean {
-  return this.bookmarkedEventIds.has(eventId);
-}
-
-bookmarkEvent(eventId: number): void {
-  if (
-    this.bookmarkedEventIds.has(eventId) ||
-    this.bookmarkLoadingIds.has(eventId)
-  ) {
-    return;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Błąd pobierania zakładek:', error);
+      },
+    });
   }
 
-  this.bookmarkLoadingIds.add(eventId);
-
-  this.bookMarkService.bookmarkEvent(eventId).subscribe({
-    next: () => {
-      this.bookmarkedEventIds.add(eventId);
-      this.bookmarkLoadingIds.delete(eventId);
-      this.cdr.detectChanges();
-    },
-    error: (error) => {
-      console.error('Błąd zapisywania zakładki:', error);
-      this.bookmarkLoadingIds.delete(eventId);
-      this.cdr.detectChanges();
-    }
-  });
-}
-
-removeBookmark(eventId: number): void {
-  if (
-    !this.bookmarkedEventIds.has(eventId) ||
-    this.bookmarkLoadingIds.has(eventId)
-  ) {
-    return;
+  isBookmarked(eventId: number): boolean {
+    return this.bookmarkedEventIds.has(eventId);
   }
 
-  this.bookmarkLoadingIds.add(eventId);
-
-  this.bookMarkService.unBookmarkEvent(eventId).subscribe({
-    next: () => {
-      this.bookmarkedEventIds.delete(eventId);
-      this.bookmarkLoadingIds.delete(eventId);
-      this.cdr.detectChanges();
-    },
-    error: (error) => {
-      console.error('Błąd usuwania zakładki:', error);
-      this.bookmarkLoadingIds.delete(eventId);
-      this.cdr.detectChanges();
+  bookmarkEvent(eventId: number): void {
+    if (this.bookmarkedEventIds.has(eventId) || this.bookmarkLoadingIds.has(eventId)) {
+      return;
     }
-  });
-}
+
+    this.bookmarkLoadingIds.add(eventId);
+
+    this.bookMarkService.bookmarkEvent(eventId).subscribe({
+      next: () => {
+        this.bookmarkedEventIds.add(eventId);
+        this.bookmarkLoadingIds.delete(eventId);
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Błąd zapisywania zakładki:', error);
+        this.bookmarkLoadingIds.delete(eventId);
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  removeBookmark(eventId: number): void {
+    if (!this.bookmarkedEventIds.has(eventId) || this.bookmarkLoadingIds.has(eventId)) {
+      return;
+    }
+
+    this.bookmarkLoadingIds.add(eventId);
+
+    this.bookMarkService.unBookmarkEvent(eventId).subscribe({
+      next: () => {
+        this.bookmarkedEventIds.delete(eventId);
+        this.bookmarkLoadingIds.delete(eventId);
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Błąd usuwania zakładki:', error);
+        this.bookmarkLoadingIds.delete(eventId);
+        this.cdr.detectChanges();
+      },
+    });
+  }
 }

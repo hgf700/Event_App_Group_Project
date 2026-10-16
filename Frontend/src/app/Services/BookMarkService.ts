@@ -13,15 +13,15 @@ export class BookMarkService {
 
   constructor(private http: HttpClient) {}
 
-    getUserBookmarks() {
-        return this.http.get<getBookmarkDto[]>(`${this.apiUrl}/user-bookmarks`);
-    }
+  getUserBookmarks() {
+    return this.http.get<getBookmarkDto[]>(`${this.apiUrl}/user-bookmarks`);
+  }
 
-    bookmarkEvent(eventId: number) {
-        return this.http.post(`${this.apiUrl}/bookmark-event/${eventId}`, {});
-    }
+  bookmarkEvent(eventId: number) {
+    return this.http.post(`${this.apiUrl}/bookmark-event/${eventId}`, {});
+  }
 
-    unBookmarkEvent(eventId: number) {
-        return this.http.post(`${this.apiUrl}/unbookmark-event/${eventId}`, {});
-    }
+  unBookmarkEvent(eventId: number) {
+    return this.http.post(`${this.apiUrl}/unbookmark-event/${eventId}`, {});
+  }
 }

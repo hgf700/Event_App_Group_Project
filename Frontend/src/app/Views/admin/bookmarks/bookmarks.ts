@@ -30,13 +30,13 @@ export class Bookmarks implements OnInit {
       next: (response) => {
         this.bookmarks = response;
         this.loading = false;
-        this.filteredBookmarks = [...response]; 
+        this.filteredBookmarks = [...response];
         this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading bookmarks:', error);
         this.loading = false;
-      }
+      },
     });
   }
 

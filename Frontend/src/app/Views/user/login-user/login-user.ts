@@ -65,7 +65,7 @@ export class LoginUser {
     });
   }
 
-  loginWithGoogle(){
+  loginWithGoogle() {
     return this.authService.loginWithGoogleOauth();
   }
 }

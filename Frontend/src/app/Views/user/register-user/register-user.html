@@ -37,31 +37,33 @@
           (focus)="showPasswordRequirements = true"
           (blur)="showPasswordRequirements = false"
         />
-      @if (showPasswordRequirements) {
-        <div class="password-requirements">
-          <p>Hasło musi zawierać:</p>
+        @if (showPasswordRequirements) {
+          <div class="password-requirements">
+            <p>Hasło musi zawierać:</p>
 
-          <ul>
-            <li [class.valid]="passwordControl?.value?.length >= 5">Minimum 5 znaków</li>
+            <ul>
+              <li [class.valid]="passwordControl?.value?.length >= 5">Minimum 5 znaków</li>
 
-            <li
-              [class.valid]="
-                passwordControl?.value?.length <= 20 && passwordControl?.value?.length >= 1
-              "
-            >
-              Maksymalnie 20 znaków
-            </li>
+              <li
+                [class.valid]="
+                  passwordControl?.value?.length <= 20 && passwordControl?.value?.length >= 1
+                "
+              >
+                Maksymalnie 20 znaków
+              </li>
 
-            <li [class.valid]="/[a-z]/.test(passwordControl?.value || '')">Małą literę (a–z)</li>
+              <li [class.valid]="/[a-z]/.test(passwordControl?.value || '')">Małą literę (a–z)</li>
 
-            <li [class.valid]="/[A-Z]/.test(passwordControl?.value || '')">Wielką literę (A–Z)</li>
+              <li [class.valid]="/[A-Z]/.test(passwordControl?.value || '')">
+                Wielką literę (A–Z)
+              </li>
 
-            <li [class.valid]="/[!@#$%^&*]/.test(passwordControl?.value || '')">
-              Znak specjalny (!@#$%^&*)
-            </li>
-          </ul>
-        </div>
-      }
+              <li [class.valid]="/[!@#$%^&*]/.test(passwordControl?.value || '')">
+                Znak specjalny (!@#$%^&*)
+              </li>
+            </ul>
+          </div>
+        }
 
         @if (submitted && registerUserForm.controls['password'].errors?.['required']) {
           <span class="form-error">Hasło jest wymagane</span>
@@ -85,17 +87,28 @@
       <button type="submit" class="btn-submit">Załóż konto</button>
     </form>
 
-    <button
-      type="button"
-      class="btn-google"
-      (click)="loginWithGoogle()"
-    >
+    <button type="button" class="btn-google" (click)="loginWithGoogle()">
       <span class="google-logo" aria-hidden="true">
         <svg viewBox="0 0 48 48" width="22" height="22">
-          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 3.07 13.22l7.98 6.19C12.93 13.72 18.03 9.5 24 9.5z" transform="translate(0 4)"/>
-          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.76 7.18l7.73 6C44.42 37.99 46.98 31.8 46.98 24.55z"/>
-          <path fill="#FBBC05" d="M10.05 28.59a14.4 14.4 0 0 1 0-9.18l-7.98-6.19a24 24 0 0 0 0 21.56l7.98-6.19z" transform="translate(0 1)"/>
-          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.91-5.8l-7.73-6c-2.15 1.45-4.92 2.3-8.18 2.3-5.97 0-11.07-4.22-12.95-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" transform="translate(0 -2)"/>
+          <path
+            fill="#EA4335"
+            d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 3.07 13.22l7.98 6.19C12.93 13.72 18.03 9.5 24 9.5z"
+            transform="translate(0 4)"
+          />
+          <path
+            fill="#4285F4"
+            d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.76 7.18l7.73 6C44.42 37.99 46.98 31.8 46.98 24.55z"
+          />
+          <path
+            fill="#FBBC05"
+            d="M10.05 28.59a14.4 14.4 0 0 1 0-9.18l-7.98-6.19a24 24 0 0 0 0 21.56l7.98-6.19z"
+            transform="translate(0 1)"
+          />
+          <path
+            fill="#34A853"
+            d="M24 48c6.48 0 11.93-2.13 15.91-5.8l-7.73-6c-2.15 1.45-4.92 2.3-8.18 2.3-5.97 0-11.07-4.22-12.95-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+            transform="translate(0 -2)"
+          />
         </svg>
       </span>
       <span>Kontynuuj z Google</span>

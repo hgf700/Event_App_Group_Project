@@ -81,8 +81,8 @@ export class RegisterUser {
       error: (err) => alert(err.error),
     });
   }
-  
-  loginWithGoogle(){
+
+  loginWithGoogle() {
     return this.authService.loginWithGoogleOauth();
   }
 }

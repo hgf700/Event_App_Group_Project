@@ -5,14 +5,11 @@ import { ErrorPage, ErrorPageConfig } from '../error-page/error-page';
   selector: 'app-forbidden',
   standalone: true,
   imports: [ErrorPage],
-  template: `
-    <app-error-page [config]="config" />
-  `,
+  template: ` <app-error-page [config]="config" /> `,
   templateUrl: './forbidden.html',
   styleUrl: './forbidden.css',
 })
 export class Forbidden {
-  
   config: ErrorPageConfig = {
     code: '403',
     title: 'Brak uprawnień',
@@ -21,5 +18,4 @@ export class Forbidden {
     primaryLabel: 'Wróć do strony głównej',
     primaryRoute: '/',
   };
-
 }

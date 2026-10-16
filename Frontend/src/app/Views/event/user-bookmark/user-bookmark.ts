@@ -57,7 +57,7 @@ export class UserBookmark implements OnInit {
     this.bookMarkService.unBookmarkEvent(eventId).subscribe({
       next: () => {
         this.userBookmark = this.userBookmark.filter(
-          (bookmark: any) => bookmark.eventId !== eventId
+          (bookmark: any) => bookmark.eventId !== eventId,
         );
 
         this.removingEventId = null;

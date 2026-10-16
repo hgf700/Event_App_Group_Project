@@ -21,7 +21,7 @@ export class PublicEvents implements OnInit {
   constructor(
     private cdr: ChangeDetectorRef,
     private eventService: EventService,
-  ){}
+  ) {}
 
   ngOnInit(): void {
     this.loadEvents();
