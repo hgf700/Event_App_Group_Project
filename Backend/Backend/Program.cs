@@ -296,12 +296,6 @@ app.MapHealthChecks("/health/ready", new HealthCheckOptions
     Predicate = check => check.Tags.Contains("ready")
 });
 
-if (!app.Environment.IsEnvironment("IntegrationTest"))
-{
-    using var scope = app.Services.CreateScope();
-    await IdentitySeeder.SeedAsync(scope.ServiceProvider);
-}
-
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -309,15 +303,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.UseDeveloperExceptionPage();
 }
-else if (!app.Environment.IsEnvironment("IntegrationTest"))
+else if (app.Environment.IsEnvironment("IntegrationTest"))
 {
-    app.UseExceptionHandler();
     app.UseHsts();
 }
 else
 {
-    app.UseExceptionHandler(); // Teraz zadziała, bo dodano ProblemDetails
+    app.UseExceptionHandler();   
     app.UseHsts();
+
+    using var scope = app.Services.CreateScope();
+    await IdentitySeeder.SeedAsync(scope.ServiceProvider);
 }
 
 Console.WriteLine(app.Environment.EnvironmentName);

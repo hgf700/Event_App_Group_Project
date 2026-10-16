@@ -24,9 +24,7 @@ public class EventAppFactory : WebApplicationFactory<Program>
     {
         Environment.SetEnvironmentVariable("GOOGLE_CLIENT_ID", "test-client-id");
         Environment.SetEnvironmentVariable("GOOGLE_CLIENT_SECRET", "test-client-secret");
-        Environment.SetEnvironmentVariable(
-            "JWT_SECRET",
-            "test-jwt-secret-key-at-least-32-chars!!");
+        Environment.SetEnvironmentVariable("JWT_SECRET", "test-jwt-secret-key-at-least-32-chars!!");
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
