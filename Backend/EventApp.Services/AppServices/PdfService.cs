@@ -53,7 +53,19 @@ public class PdfService : IPdfService
         });
     }
 
-    private static string GenerateHtml(
+    private static string GetSafeUrl(string? url)
+{
+    if (Uri.TryCreate(url, UriKind.Absolute, out var uri) &&
+        (uri.Scheme == Uri.UriSchemeHttp ||
+         uri.Scheme == Uri.UriSchemeHttps))
+    {
+        return WebUtility.HtmlEncode(url);
+    }
+
+    return "#";
+}
+
+    public static string GenerateHtml(
         string eventName,
         string eventDate,
         string eventAddress,
@@ -281,7 +293,7 @@ public class PdfService : IPdfService
                     </section>
 
                     <div class="event-link">
-                        <a href="{{eventUrl}}">
+                        <a href="{{safeEventUrl}}">
                             Zobacz stronę wydarzenia
                         </a>
                     </div>

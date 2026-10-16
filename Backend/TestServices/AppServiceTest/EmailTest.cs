@@ -4,10 +4,10 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace TestProject1.TestAppServices;
+namespace TestServices.AppServiceTest;
 
 [TestFixture]
-public class TestEmailService
+public class EmailTest
 {
     private EmailService _service = null!;
     private string _originalUser = null!;

@@ -10,10 +10,10 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestServices.TestJwt;
+namespace TestServices.AppServiceTest;
 
 [TestFixture]
-public class TestJwt
+public class JwtTest
 {
     private Mock<UserManager<ApplicationUser>> _userManagerMock = null!;
     private string? _originalJwtSecret;
