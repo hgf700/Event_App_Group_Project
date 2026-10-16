@@ -21,4 +21,8 @@ export class UserService {
       newPassword,
     });
   }
+
+  currentUserTickets() {
+    return this.http.get<getUserBoughtTicketDto[]>(`${this.apiUrl}/user-tickets`);
+  }
 }

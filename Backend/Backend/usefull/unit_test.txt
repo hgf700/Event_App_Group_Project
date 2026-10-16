@@ -1,0 +1,6 @@
+﻿Co testujesz?	Najlepsze podejście
+Kontroler, HTTP, statusy, JSON - Test integracyjny
+Paginację i zapytania EF Core - Test integracyjny
+Logikę serwisu bez zależności infrastrukturalnych - Unit test + Moq
+Wysyłanie e-maili lub wywołania zewnętrznego API - Unit test + Moq
+Migracje i zachowanie PostgreSQL - Test integracyjny z PostgreSQL

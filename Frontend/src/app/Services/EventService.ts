@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 import { getEventDto } from '../Dto/getEventDto';
 import { paginatedResponse } from '../model/paginatedResponse';
 import { getEventTicketWithQrDto } from '../Dto/getEventQrCodeInfoDto';
+import { postSearchEventDto } from '../Dto/postSearchEventDto';
 
 @Injectable({ providedIn: 'root' })
 export class EventService {
@@ -32,6 +33,20 @@ export class EventService {
   getPublicEvents(page: number, pageSize: number): Observable<paginatedResponse<getEventDto>> {
     return this.http.get<paginatedResponse<getEventDto>>(
       `${this.apiUrl}/public-get-events?page=${page}&pageSize=${pageSize}`,
+    );
+  }
+
+  searchOrDownloadEventForm(city: string) {
+    const dto: postSearchEventDto = {
+      city: city,
+    };
+    return this.http.post<getEventDto[]>(`${this.apiUrl}/search-event-and-download`, dto);
+  }
+
+  searchOrDownloadEventQuery(city: string) {
+    const params = new HttpParams().set('city', city);
+    return this.http.post<getEventDto[]>(`${this.apiUrl}/search-event-and-download`, null, 
+      { params, }
     );
   }
 }

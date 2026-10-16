@@ -4,8 +4,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { getUserBoughtTicketDto } from '../../../Dto/getUserBoughtTicketDto';
-import { UserTicketService } from '../../../Services/UserTicketService';
 import { SubBoughtEventInfo } from '../../event/sub-bought-event-info/sub-bought-event-info';
+import { UserService } from '../../../Services/UserService';
 
 @Component({
   selector: 'app-user-tickets',
@@ -22,7 +22,7 @@ export class UserTickets implements OnInit {
     private router: Router,
     private cdr: ChangeDetectorRef,
     private dialog: MatDialog,
-    private userTicketService: UserTicketService,
+    private userService: UserService,
   ) {}
 
   ngOnInit(): void {
@@ -31,7 +31,7 @@ export class UserTickets implements OnInit {
 
   getUserTickets() {
     this.loading = true;
-    this.userTicketService.currentUserTickets().subscribe({
+    this.userService.currentUserTickets().subscribe({
       next: (data) => {
         this.events = data ?? [];
         this.loading = false;

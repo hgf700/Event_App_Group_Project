@@ -23,14 +23,9 @@ public class EventAppFactory : WebApplicationFactory<Program>
 
     public EventAppFactory()
     {
-        Environment.SetEnvironmentVariable(
-            "GOOGLE_CLIENT_ID", "test-client-id");
-
-        Environment.SetEnvironmentVariable(
-            "GOOGLE_CLIENT_SECRET", "test-client-secret");
-
-        Environment.SetEnvironmentVariable(
-            "JWT_SECRET", "test-jwt-secret-key-at-least-32-chars!!");
+        Environment.SetEnvironmentVariable("GOOGLE_CLIENT_ID", "test-client-id");
+        Environment.SetEnvironmentVariable("GOOGLE_CLIENT_SECRET", "test-client-secret");
+        Environment.SetEnvironmentVariable("JWT_SECRET", "test-jwt-secret-key-at-least-32-chars!!");
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -50,8 +45,7 @@ public class EventAppFactory : WebApplicationFactory<Program>
         {
             services.RemoveAll<ApplicationDbContext>();
             services.RemoveAll<DbContextOptions<ApplicationDbContext>>();
-            services.RemoveAll<
-                IDbContextOptionsConfiguration<ApplicationDbContext>>();
+            services.RemoveAll<IDbContextOptionsConfiguration<ApplicationDbContext>>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseInMemoryDatabase(_databaseName));
@@ -59,20 +53,12 @@ public class EventAppFactory : WebApplicationFactory<Program>
             services
                 .AddAuthentication(options =>
                 {
-                    options.DefaultAuthenticateScheme =
-                        TestAuthHandler.SchemeName;
-
-                    options.DefaultChallengeScheme =
-                        TestAuthHandler.SchemeName;
-
-                    options.DefaultScheme =
-                        TestAuthHandler.SchemeName;
+                    options.DefaultAuthenticateScheme = TestAuthHandler.SchemeName;
+                    options.DefaultChallengeScheme = TestAuthHandler.SchemeName;
+                    options.DefaultScheme = TestAuthHandler.SchemeName;
                 })
                 .AddScheme<
-                    AuthenticationSchemeOptions,
-                    TestAuthHandler>(
-                    TestAuthHandler.SchemeName,
-                    _ => { });
+                    AuthenticationSchemeOptions, TestAuthHandler>(TestAuthHandler.SchemeName, _ => { });
         });
     }
 
@@ -80,8 +66,7 @@ public class EventAppFactory : WebApplicationFactory<Program>
     {
         using var scope = Services.CreateScope();
 
-        var db = scope.ServiceProvider
-            .GetRequiredService<ApplicationDbContext>();
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         await db.Database.EnsureDeletedAsync();
         await db.Database.EnsureCreatedAsync();
@@ -94,23 +79,18 @@ public class EventAppFactory : WebApplicationFactory<Program>
 
         using var scope = Services.CreateScope();
 
-        var db = scope.ServiceProvider
-            .GetRequiredService<ApplicationDbContext>();
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         db.Events.AddRange(events);
         await db.SaveChangesAsync();
     }
 
-    public async Task<ApplicationUser> CreateTestUserAsync(
-        string email,
-        string password,
-        string? role = null)
+    public async Task<ApplicationUser> CreateTestUserAsync(string email, string password, string? role = null)
     {
         using var scope = Services.CreateScope();
 
         var userManager = scope.ServiceProvider
-            .GetRequiredService<
-                Microsoft.AspNetCore.Identity.UserManager<ApplicationUser>>();
+            .GetRequiredService<Microsoft.AspNetCore.Identity.UserManager<ApplicationUser>>();
 
         var user = new ApplicationUser
         {
@@ -124,30 +104,22 @@ public class EventAppFactory : WebApplicationFactory<Program>
 
         if (!result.Succeeded)
         {
-            throw new InvalidOperationException(
-                "Nie udało się utworzyć użytkownika testowego: " +
-                string.Join("; ",
-                    result.Errors.Select(e => e.Description)));
+            throw new InvalidOperationException("Nie udało się utworzyć użytkownika testowego: " +
+                string.Join("; ", result.Errors.Select(e => e.Description)));
         }
 
         if (!string.IsNullOrWhiteSpace(role))
         {
             var roleManager = scope.ServiceProvider
-                .GetRequiredService<
-                    Microsoft.AspNetCore.Identity.RoleManager<
-                        Microsoft.AspNetCore.Identity.IdentityRole>>();
+                .GetRequiredService<Microsoft.AspNetCore.Identity.RoleManager<Microsoft.AspNetCore.Identity.IdentityRole>>();
 
             if (!await roleManager.RoleExistsAsync(role))
             {
-                var roleResult = await roleManager.CreateAsync(
-                    new Microsoft.AspNetCore.Identity.IdentityRole(role));
+                var roleResult = await roleManager.CreateAsync(new Microsoft.AspNetCore.Identity.IdentityRole(role));
 
                 if (!roleResult.Succeeded)
                 {
-                    throw new InvalidOperationException(
-                        "Nie udało się utworzyć roli testowej: " +
-                        string.Join("; ",
-                            roleResult.Errors.Select(e => e.Description)));
+                    throw new InvalidOperationException("Nie udało się utworzyć roli testowej: " + string.Join("; ", roleResult.Errors.Select(e => e.Description)));
                 }
             }
 
@@ -167,8 +139,7 @@ public class EventAppFactory : WebApplicationFactory<Program>
     }
 }
 
-public class TestAuthHandler
-    : AuthenticationHandler<AuthenticationSchemeOptions>
+public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
     public const string SchemeName = "TestScheme";
 
@@ -184,17 +155,14 @@ public class TestAuthHandler
     {
         if (!Request.Headers.TryGetValue("Authorization", out var header))
         {
-            return Task.FromResult(
-                AuthenticateResult.Fail("Missing Authorization header"));
+            return Task.FromResult(AuthenticateResult.Fail("Missing Authorization header"));
         }
 
         var value = header.ToString();
 
-        if (!value.StartsWith(
-                "Test ", StringComparison.OrdinalIgnoreCase))
+        if (!value.StartsWith("Test ", StringComparison.OrdinalIgnoreCase))
         {
-            return Task.FromResult(
-                AuthenticateResult.Fail("Invalid scheme"));
+            return Task.FromResult(AuthenticateResult.Fail("Invalid scheme"));
         }
 
         var payload = value["Test ".Length..].Trim();
@@ -206,8 +174,7 @@ public class TestAuthHandler
         var claims = new[]
         {
             new Claim(ClaimTypes.NameIdentifier, userId),
-            new Claim(ClaimTypes.Name, userId),
-            new Claim(ClaimTypes.Email, $"{userId}@test.com"),
+            new Claim(ClaimTypes.Email, userId),
             new Claim(ClaimTypes.Role, role)
         };
 

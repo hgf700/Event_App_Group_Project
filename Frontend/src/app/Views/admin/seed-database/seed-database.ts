@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { EventService } from '../../../Services/EventService';
-import { SearchOrDownloadEventService } from '../../../Services/SearchOrDownloadEventService';
 import { AdminService } from '../../../Services/AdminService';
 
 @Component({
@@ -17,7 +16,6 @@ export class SeedDatabase implements OnInit {
 
   constructor(
     private eventService: EventService,
-    private searchOrDownloadEventService: SearchOrDownloadEventService,
     private adminService: AdminService,
     private cdr: ChangeDetectorRef,
   ) {}

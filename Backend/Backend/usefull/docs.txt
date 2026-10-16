@@ -1,25 +1,16 @@
 qr
 https://github.com/codebude/QRCoder/wiki/Advanced-usage---QR-Code-renderers
 
-sms i inne
+sms 
 https://www.twilio.com/docs
 
-platnosci stripe
+stripe
 https://docs.stripe.com/api?lang=dotnet
 https://docs.stripe.com/testing
 https://docs.stripe.com/api/checkout/sessions/object?lang=dotnet  //platnosc opcje
 
-pdf
-https://www.questpdf.com/getting-started.html
-
 http status code
 https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status
-return Ok();
-return Unauthorized();
-return Forbid();
-return NotFound();
-return Conflict();
-return NoContent();
 
 builded in retry, circuit breaker, ...
 https://learn.microsoft.com/en-us/dotnet/core/resilience/?tabs=dotnet-cli

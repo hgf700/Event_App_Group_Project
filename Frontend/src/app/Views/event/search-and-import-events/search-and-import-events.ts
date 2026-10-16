@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { getEventDto } from '../../../Dto/getEventDto';
 import { postCitySearchDto } from '../../../Dto/postCitySearchDto';
-import { SearchOrDownloadEventService } from '../../../Services/SearchOrDownloadEventService';
 import { EventService } from '../../../Services/EventService';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { SubEventDetails } from '../sub-event-details/sub-event-details';
@@ -28,8 +27,8 @@ export class SearchAndImportEvents implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
-    private searchOrDownloadEventService: SearchOrDownloadEventService,
     private dialog: MatDialog,
+    private eventService: EventService, 
   ) {
     this.searchAndImportEventsForm = this.fb.group({
       city: [
@@ -73,7 +72,7 @@ export class SearchAndImportEvents implements OnInit {
   }
 
   search(city: string) {
-    this.searchOrDownloadEventService.searchOrDownloadEventQuery(city).subscribe({
+    this.eventService.searchOrDownloadEventQuery(city).subscribe({
       next: (res) => {
         this.events = res ?? [];
         this.cdr.detectChanges();
@@ -94,7 +93,7 @@ export class SearchAndImportEvents implements OnInit {
 
     const city = this.searchAndImportEventsForm.value.city;
 
-    this.searchOrDownloadEventService.searchOrDownloadEventForm(city).subscribe({
+    this.eventService.searchOrDownloadEventForm(city).subscribe({
       next: (res) => {
         this.events = res ?? [];
         this.loading = false;
