@@ -2,7 +2,6 @@
 using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
-using Twilio.TwiML.Messaging;
 
 namespace EventApp.Services.Services;
 
@@ -10,14 +9,18 @@ public class EmailService : IEmailService
 {
     public async Task SendEmail(string toEmail, string url, int userEventId, string email)
     {
+        ArgumentNullException.ThrowIfNull(toEmail);
+        ArgumentNullException.ThrowIfNull(url);
+        ArgumentNullException.ThrowIfNull(email);   
+
         try
         {
             // Mailtrap SMTP dane z ENV
-            string smtpUser = Environment.GetEnvironmentVariable("MAILTRAP_SENDER_USER");
-            string smtpPass = Environment.GetEnvironmentVariable("MAILTRAP_SENDER_PASS");
+            string smtpUser = Environment.GetEnvironmentVariable("MAILTRAP_SENDER_USER")
+                ?? throw new InvalidOperationException("MAILTRAP_SENDER_USER is not set.");
 
-            if (string.IsNullOrEmpty(smtpUser) || string.IsNullOrEmpty(smtpPass))
-                throw new Exception("Brakuje zmiennych środowiskowych: MAILTRAP_USER lub MAILTRAP_PASS");
+            string smtpPass = Environment.GetEnvironmentVariable("MAILTRAP_SENDER_PASS") 
+                ?? throw new InvalidOperationException("MAILTRAP_SENDER_PASS is not set.");
 
             var fromAddress = new MailAddress("test@example.com", "Mailtrap Test", System.Text.Encoding.UTF8);
             var toAddress = new MailAddress($"{toEmail}", "test email");

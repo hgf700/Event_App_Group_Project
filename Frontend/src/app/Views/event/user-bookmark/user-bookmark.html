@@ -1,0 +1,73 @@
+<div class="bookmarks-page">
+  <div class="page-header">
+    <div>
+      <h2>Moje zakładki</h2>
+      <p>Lista wydarzeń, które zapisałeś na później.</p>
+    </div>
+
+    <span class="bookmark-count"> {{ userBookmark.length }} zakładek </span>
+  </div>
+
+  @if (loading) {
+    <div class="state-message">
+      <div class="spinner"></div>
+      <p>Ładowanie zakładek...</p>
+    </div>
+  }
+
+  @if (!loading && errorMessage) {
+    <div class="error-message">
+      {{ errorMessage }}
+
+      <button type="button" (click)="loadBOokamrks()">Spróbuj ponownie</button>
+    </div>
+  }
+
+  @if (!loading && !errorMessage) {
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>userId</th>
+            <th>eventId</th>
+            <th>eventName</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (bookmark of userBookmark; track bookmark.eventId) {
+            <tr>
+              <td>{{ bookmark.id }}</td>
+
+              <td class="event-name">
+                {{ bookmark.userId }}
+              </td>
+
+              <td>
+                {{ bookmark.eventId }}
+              </td>
+
+              <td>{{ bookmark.eventName }}</td>
+
+              <td>
+                <button
+                  type="button"
+                  class="remove-button"
+                  [disabled]="removingEventId !== null"
+                  (click)="removeBookmark(bookmark.eventId)"
+                >
+                  {{ removingEventId === bookmark.eventId ? 'Usuwanie...' : 'Usuń zakładkę' }}
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="empty"></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

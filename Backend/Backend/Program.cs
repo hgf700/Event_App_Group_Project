@@ -2,56 +2,51 @@ using EventApp.Domain.Model;
 using EventApp.Infrastructure.Db;
 using EventApp.Infrastructure.ExtraTools;
 using EventApp.Services.Interfaces;
-using EventApp.Services.Model;
 using EventApp.Services.Services;
 using EventApp.Services.Services.Interface;
 using EventApp.Services.Services.Interfaces;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Http.Resilience;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Polly;
 using Prometheus;
-using QuestPDF.Infrastructure;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.Grafana.Loki;
-using Stripe;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.RateLimiting;
-QuestPDF.Settings.License = LicenseType.Community;
+
+SameSiteMode cookiesSettings = SameSiteMode.None;
 
 var builder = WebApplication.CreateBuilder(args);
 
-DotNetEnv.Env.Load();
+if (builder.Environment.IsDevelopment())
+{
+    DotNetEnv.Env.Load();
+}
 
 builder.Services.AddControllers();
-// cykle przy relacjach chyba w db
-    //.AddJsonOptions(options =>
-    //{
-    //    options.JsonSerializerOptions.ReferenceHandler =
-    //        System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
-    //});
 
 //swager
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//healthcheck
+builder.Services
+    .AddHealthChecks()
+    .AddDbContextCheck<ApplicationDbContext>(tags: new[] { "ready" });
+
 //db
-var connectionString = builder.Configuration.GetConnectionString("Default");
+var connectionString = builder.Configuration.GetConnectionString("Default")
+    ?? throw new InvalidOperationException("Connection string 'Default' is not set.");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString, o =>
-        o.EnableRetryOnFailure()));
+    options.UseNpgsql(connectionString, o => o.EnableRetryOnFailure()));
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -63,6 +58,7 @@ Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
     .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
     .Enrich.FromLogContext()
+    .WriteTo.Console()
     .WriteTo.File(
         "Logs/log.txt",
         rollingInterval: RollingInterval.Day,
@@ -77,11 +73,11 @@ builder.Host.UseSerilog();
 builder.Services.AddScoped<IQrCodeService, QrCodeService>();
 builder.Services.AddScoped<ISmsService, SmsService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
-builder.Services.AddScoped<IOauthRefreshService, OauthRefreshService>();
 builder.Services.AddSingleton<IRefreshTokenEncryptionService, RefreshTokenEncryptionService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<ISeedDbService, SeedDbService>();
 builder.Services.AddScoped<ISendOrDownloadFromApiService, SendOrDownloadFromApiService>();
+builder.Services.AddScoped<IPdfService, PdfService>();
 
 //controller services
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -91,43 +87,44 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddAuthorization();
 
 //dev identity
-//builder.Services.Configure<IdentityOptions>(options =>
-//{
-//    options.Password.RequireDigit = false;
-//    options.Password.RequireLowercase = false;
-//    options.Password.RequiredLength = 1;
-//    options.Password.RequireNonAlphanumeric = false;
-//    options.Password.RequireUppercase = false;
-
-//    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(1);
-//    options.Lockout.MaxFailedAccessAttempts = 20;
-//    options.Lockout.AllowedForNewUsers = false;
-
-//    options.User.RequireUniqueEmail = false;
-//});
-
 builder.Services.Configure<IdentityOptions>(options =>
 {
-    options.Password.RequiredLength = 8;
-    options.Password.RequireDigit = true;
-    options.Password.RequireLowercase = true;
-    options.Password.RequireUppercase = false;
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequiredLength = 1;
     options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
 
-    options.Lockout.DefaultLockoutTimeSpan =
-        TimeSpan.FromMinutes(15);
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(1);
+    options.Lockout.MaxFailedAccessAttempts = 20;
+    options.Lockout.AllowedForNewUsers = false;
 
-    options.Lockout.MaxFailedAccessAttempts = 5;
-    options.Lockout.AllowedForNewUsers = true;
-
-    options.User.RequireUniqueEmail = true;
+    options.User.RequireUniqueEmail = false;
 });
+
+//prod identity
+//builder.Services.Configure<IdentityOptions>(options =>
+//{
+//    options.Password.RequiredLength = 5;
+//    options.Password.RequireDigit = true;
+//    options.Password.RequireLowercase = true;
+//    options.Password.RequireUppercase = false;
+//    options.Password.RequireNonAlphanumeric = false;
+
+//    options.Lockout.DefaultLockoutTimeSpan =
+//        TimeSpan.FromMinutes(15);
+
+//    options.Lockout.MaxFailedAccessAttempts = 5;
+//    options.Lockout.AllowedForNewUsers = true;
+
+//    options.User.RequireUniqueEmail = true;
+//});
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
     //options.Cookie.HttpOnly = true;
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-    options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.SameSite = cookiesSettings;
 });
 
 //chyba wazne cos z cookies
@@ -135,9 +132,31 @@ builder.Services.AddDataProtection()
     .PersistKeysToFileSystem(new DirectoryInfo("/var/dpkeys"))
     .SetApplicationName("projekt-app");
 
-string googleClientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");
-string googleClientSecret = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET");
-string JWT_SECRET = Environment.GetEnvironmentVariable("JWT_SECRET");
+// DataProtection – ścieżka z konfiguracji (nie hardcoduj /var w kodzie)
+//var dpKeysPath = builder.Configuration["DataProtection:KeysPath"];
+//var dpBuilder = builder.Services.AddDataProtection()
+//    .SetApplicationName("projekt-app");
+//if (!string.IsNullOrWhiteSpace(dpKeysPath))
+//{
+//    Directory.CreateDirectory(dpKeysPath);
+//    dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(dpKeysPath));
+//}
+
+// Secrets z ENV / konfiguracji (bez if Testing)
+string Require(string name)
+{
+    var value = Environment.GetEnvironmentVariable(name)
+        ?? builder.Configuration[name];
+
+    if (string.IsNullOrWhiteSpace(value))
+        throw new InvalidOperationException($"{name} is not set.");
+
+    return value;
+}
+
+var googleClientId = Require("GOOGLE_CLIENT_ID");
+var googleClientSecret = Require("GOOGLE_CLIENT_SECRET");
+var JWT_SECRET = Require("JWT_SECRET");
 
 builder.Services.AddAuthentication(options =>
 {
@@ -149,15 +168,26 @@ builder.Services.AddAuthentication(options =>
 {
     options.RequireHttpsMetadata = false;
     options.SaveToken = false;
+
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(JWT_SECRET)
-        ),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWT_SECRET)),
         ValidateIssuer = false,
         ValidateAudience = false,
+        ValidateLifetime = true,
         ClockSkew = TimeSpan.Zero
+    };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var token = context.Request.Cookies["jwt"];
+            //Console.WriteLine($"JWT cookie received: {!string.IsNullOrEmpty(token)}");
+            context.Token = token;
+            return Task.CompletedTask;
+        }
     };
 })
 .AddGoogle(options =>
@@ -168,28 +198,12 @@ builder.Services.AddAuthentication(options =>
     options.SaveTokens = true;
 });
 
-//bez oauth
-//.AddJwtBearer(options =>
-//{
-//    options.TokenValidationParameters = new TokenValidationParameters
-//    {
-//        ValidateIssuer = false,
-//        ValidateAudience = false,
-//        ValidateLifetime = true,
-//        ValidateIssuerSigningKey = true,
-//        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWT_SECRET)
-//        ),
-//        ClockSkew = TimeSpan.Zero
-//    };
-//});
-
-//credentials jesli korzystam z cookie
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Prod", policy => policy
             .WithOrigins("http://localhost:4200")
-            .AllowAnyMethod()
             .AllowAnyHeader()
+            .AllowAnyMethod()
             .AllowCredentials());
 });
 
@@ -255,28 +269,32 @@ static string GetUserKey(HttpContext context)
     // Identyfikator z uwierzytelnionego JWT.
     if (context.User.Identity?.IsAuthenticated == true)
     {
-        var userId = context.User.FindFirstValue(
-            ClaimTypes.NameIdentifier);
-
+        var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (!string.IsNullOrWhiteSpace(userId))
             return $"user:{userId}";
     }
 
     // Fallback dla niezalogowanych użytkowników.
-    var ip = context.Connection.RemoteIpAddress?.ToString()
-             ?? "unknown-ip";
-
+    var ip = context.Connection.RemoteIpAddress?.ToString() ?? "unknown-ip";
     return $"ip:{ip}";
 }
 
 builder.Services.AddHttpClient();
 
+builder.Services.AddOutputCache();
+
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
+app.MapHealthChecks("/health/live", new HealthCheckOptions
 {
-    await IdentitySeeder.SeedAsync(scope.ServiceProvider);
-}
+    Predicate = _ => false
+});
+
+// Readiness: czy aplikacja i baza są gotowe?
+app.MapHealthChecks("/health/ready", new HealthCheckOptions
+{
+    Predicate = check => check.Tags.Contains("ready")
+});
 
 if (app.Environment.IsDevelopment())
 {
@@ -285,10 +303,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.UseDeveloperExceptionPage();
 }
+else if (app.Environment.IsEnvironment("IntegrationTest"))
+{
+    app.UseHsts();
+}
 else
 {
-    app.UseExceptionHandler();
+    app.UseExceptionHandler();   
     app.UseHsts();
+
+    using var scope = app.Services.CreateScope();
+    await IdentitySeeder.SeedAsync(scope.ServiceProvider);
 }
 
 Console.WriteLine(app.Environment.EnvironmentName);
@@ -303,7 +328,7 @@ app.Use(async (context, next) =>
         context.Response.Headers["X-Content-Type-Options"] = "nosniff";
         context.Response.Headers["X-Frame-Options"] = "DENY";
 
-        // Dla API zwracającego dane wrażliwe.
+        //Dla API zwracającego dane wrażliwe.
         context.Response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate";
 
         context.Response.Headers["Pragma"] = "no-cache";
@@ -320,6 +345,8 @@ app.UseCors("Prod");
 app.UseAuthentication();
 app.UseRateLimiter();
 app.UseAuthorization();
+
+app.UseOutputCache();
 
 app.UseSerilogRequestLogging();
 

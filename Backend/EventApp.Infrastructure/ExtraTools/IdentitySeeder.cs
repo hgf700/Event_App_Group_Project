@@ -1,9 +1,6 @@
 ﻿using EventApp.Domain.Model;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace EventApp.Infrastructure.ExtraTools;
 
@@ -23,9 +20,7 @@ public static class IdentitySeeder
         var userManager =
             services.GetRequiredService<UserManager<ApplicationUser>>();
 
-        // =========================
         // ROLES
-        // =========================
 
         string[] roles =
         [
@@ -52,9 +47,7 @@ public static class IdentitySeeder
             }
         }
 
-        // =========================
         // ADMIN USER
-        // =========================
 
         var admin = await userManager.FindByEmailAsync(adminEmail);
 
@@ -82,9 +75,7 @@ public static class IdentitySeeder
             Console.WriteLine($"Utworzono administratora: {adminEmail}");
         }
 
-        // =========================
         // ADMIN ROLE
-        // =========================
 
         if (!await userManager.IsInRoleAsync(admin, adminName))
         {

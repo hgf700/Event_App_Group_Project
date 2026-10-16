@@ -1,6 +1,7 @@
 ﻿using EventApp.Domain.Model;
 using EventApp.Infrastructure.Db;
 using EventApp.Services.Dto.RelAuth;
+using EventApp.Services.Dto.RelBookmark;
 using EventApp.Services.Dto.RelEvent;
 using EventApp.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +9,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
-using QuestPDF.Helpers;
 using System.Security.Claims;
 
 namespace Backend.Controllers;
@@ -533,7 +533,46 @@ public class AdminController : ControllerBase
         }
     }
 
-    
+    [HttpGet("admin-all-bookmarks")]
+    [EnableRateLimiting("GetPolicy")]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<getBookmarkDto>> AdminGetAllBookmark()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+            return Unauthorized();
+
+        try
+        {
+            var bookmark = await _context.Bookmarks
+                .AsNoTracking()
+                .Include(b => b.Event)
+                .Select(e => new getBookmarkDto
+                {
+                    id = e.Id,
+                    userId = e.UserId,
+                    eventId = e.EventId,
+                    eventName = e.Event.NameOfEvent,
+                })
+                .ToArrayAsync();
+
+            if (bookmark == null)
+                return NotFound();
+
+            return Ok(bookmark);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            _logger.LogError(ex, "Error while getting bookmark details");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+        }
+    }
+
 
 
 }

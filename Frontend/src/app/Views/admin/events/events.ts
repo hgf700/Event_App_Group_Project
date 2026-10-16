@@ -46,10 +46,11 @@ export class Events implements OnInit {
   filterUsers(): void {
     const search = this.searchText.toLowerCase().trim();
 
-    this.filteredEvents = this.events.filter(event =>
-      (event.city ?? '').toLowerCase().includes(search) ||
-      (event.nameOfClub ?? '').toLowerCase().includes(search) ||
-      (event.nameOfEvent ?? '').toLowerCase().includes(search)
+    this.filteredEvents = this.events.filter(
+      (event) =>
+        (event.city ?? '').toLowerCase().includes(search) ||
+        (event.nameOfClub ?? '').toLowerCase().includes(search) ||
+        (event.nameOfEvent ?? '').toLowerCase().includes(search),
     );
   }
 

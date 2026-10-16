@@ -1,6 +1,5 @@
 ﻿using EventApp.Services.Model;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using EventApp.Domain.Model;
 
@@ -26,7 +25,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<UserEvent>()
-            .HasKey(ue => new { ue.UserId, ue.EventId });
+            .HasKey(ue => ue.Id);
 
         modelBuilder.Entity<UserEvent>()
             .HasOne(ue => ue.User)

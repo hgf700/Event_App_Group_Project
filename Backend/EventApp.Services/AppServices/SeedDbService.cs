@@ -1,7 +1,6 @@
 ﻿using EventApp.Domain.Model;
 using EventApp.Infrastructure.Db;
 using EventApp.Services.Interfaces;
-using EventApp.Services.Model;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;

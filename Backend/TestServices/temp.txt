@@ -1,0 +1,116 @@
+﻿//using Microsoft.AspNetCore.Identity;
+//using Microsoft.Extensions.Logging;
+//using Microsoft.Extensions.Options;
+//using Moq;
+//using System;
+//using System.Collections.Generic;
+//using System.Threading.Tasks;
+//using System.Text;
+//using EventApp.Services.Model;
+//using EventApp.Domain.Model;
+
+//namespace TestProject1.TestHelper;
+
+//public static class IdentityMockHelper
+//{
+//    public static Mock<UserManager<ApplicationUser>> MockUserManager()
+//    {
+//        var store = new Mock<IUserStore<ApplicationUser>>();
+
+//        var options = new Mock<IOptions<IdentityOptions>>();
+//        var idOptions = new IdentityOptions();
+
+//        options.Setup(o => o.Value).Returns(idOptions);
+
+//        var userValidators = new List<IUserValidator<ApplicationUser>>();
+//        var passwordValidators = new List<IPasswordValidator<ApplicationUser>>();
+
+//        var userManagerMock = new Mock<UserManager<ApplicationUser>>(
+//            store.Object,
+//            options.Object,
+//            new PasswordHasher<ApplicationUser>(),
+//            userValidators,
+//            passwordValidators,
+//            new UpperInvariantLookupNormalizer(),
+//            new IdentityErrorDescriber(),
+//            null,
+//            new Mock<ILogger<UserManager<ApplicationUser>>>().Object
+//        );
+
+//        return userManagerMock;
+//    }
+//}
+
+
+
+
+
+
+
+
+
+
+
+
+
+//using Backend.Controllers;
+//using Microsoft.AspNetCore.Identity;
+//using Microsoft.AspNetCore.Mvc;
+//using Microsoft.Extensions.Logging;
+//using Moq;
+//using TestProject1.TestHelper;
+//using System;
+//using System.Collections.Generic;
+//using System.Text;
+//using EventApp.Services.Dto.RelAuth;
+//using EventApp.Services.Model;
+//using EventApp.Services.Interfaces;
+//using EventApp.Domain.Model;
+
+//namespace TestProject1.TestControllers;
+
+//public class TestRegisterNorm
+//{
+//    [Fact]
+//    public async Task RegisterUserNormal_ShouldReturnOk_WhenUserIsCreated_200()
+//    {
+//        // Arrange
+//        var dto = new postCreateUserNormDto
+//        {
+//            email = "test@test.pl",
+//            password = "Password123!"
+//        };
+
+//        var userManagerMock = IdentityMockHelper.MockUserManager();
+
+//        userManagerMock
+//            .Setup(x => x.FindByEmailAsync(dto.email))
+//            .ReturnsAsync((ApplicationUser)null);
+
+//        userManagerMock
+//            .Setup(x => x.CreateAsync(It.IsAny<ApplicationUser>(), dto.password))
+//            .ReturnsAsync(IdentityResult.Success);
+
+//        var jwtServiceMock = new Mock<IJwtService>();
+//        jwtServiceMock
+//            .Setup(x => x.GenerateToken(It.IsAny<ApplicationUser>()))
+//            .Returns("fake-jwt-token");
+
+//        var loggerMock = new Mock<ILogger<AuthController>>();
+
+//        var controller = new AuthController(
+//            userManagerMock.Object,
+//            jwtServiceMock.Object,
+//            loggerMock.Object);
+
+//        // Act
+//        var result = await controller.RegisterUserNormal(dto);
+
+//        // Assert
+//        var okResult = Assert.IsType<OkObjectResult>(result.Result);
+
+//        var value = Assert.IsType<authResponseDto>(okResult.Value);
+
+//        Assert.Equal("fake-jwt-token", value.jwt);
+//    }
+//}

@@ -10,6 +10,7 @@
 //using EventApp.Services.Dto.RelAuth;
 //using EventApp.Services.Model;
 //using EventApp.Services.Interfaces;
+//using EventApp.Domain.Model;
 
 //namespace TestProject1.TestControllers;
 
@@ -53,7 +54,7 @@
 //        // Assert
 //        var okResult = Assert.IsType<OkObjectResult>(result.Result);
 
-//        var value = Assert.IsType<AuthResponseDto>(okResult.Value);
+//        var value = Assert.IsType<authResponseDto>(okResult.Value);
 
 //        Assert.Equal("fake-jwt-token", value.jwt);
 //    }

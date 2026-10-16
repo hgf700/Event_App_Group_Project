@@ -2,10 +2,8 @@
 using EventApp.Infrastructure.Db;
 using EventApp.Services.Dto.RelEvent;
 using EventApp.Services.Interfaces;
-using EventApp.Services.Model;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
-using Superpower.Model;
 using System.Text.Json;
 
 namespace EventApp.Services.Services;
@@ -30,7 +28,8 @@ public class SendOrDownloadFromApiService : ISendOrDownloadFromApiService
             throw new ArgumentException("City is required");
         }
 
-        string apiKey = Environment.GetEnvironmentVariable("TICKETMASTER_API_KEY");
+        string apiKey = Environment.GetEnvironmentVariable("TICKETMASTER_API_KEY")
+            ?? throw new InvalidOperationException("TICKETMASTER_API_KEY is not set.");
 
         string baseUrl = "https://app.ticketmaster.com/discovery/v2/events.json";
 

@@ -1,0 +1,32 @@
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../Services/AuthService';
+import { PublicEvents } from '../../event/public-events/public-events';
+
+@Component({
+  selector: 'app-home',
+  standalone: true,
+  imports: [CommonModule, RouterModule, PublicEvents],
+  templateUrl: './home.html',
+  styleUrl: './home.css',
+})
+export class Home {
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+  ) {}
+
+  loginWithGoogle() {
+    this.authService.loginWithGoogleOauth();
+  }
+
+  registerUserView() {
+    this.router.navigate(['/register-user']);
+  }
+
+  loginUserView() {
+    this.router.navigate(['/login-user']);
+  }
+}

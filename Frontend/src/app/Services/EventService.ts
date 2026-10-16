@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RetryHelper } from '../helpers/ResilianceHelpers';
 import { getEventDto } from '../Dto/getEventDto';
 import { paginatedResponse } from '../model/paginatedResponse';
 import { getEventTicketWithQrDto } from '../Dto/getEventQrCodeInfoDto';
@@ -27,6 +26,12 @@ export class EventService {
   getTicketsWithQr(eventId: number): Observable<getEventTicketWithQrDto> {
     return this.http.get<getEventTicketWithQrDto>(
       `${this.apiUserTicketUrl}/ticket-detail-with-qr/${eventId}`,
+    );
+  }
+
+  getPublicEvents(page: number, pageSize: number): Observable<paginatedResponse<getEventDto>> {
+    return this.http.get<paginatedResponse<getEventDto>>(
+      `${this.apiUrl}/public-get-events?page=${page}&pageSize=${pageSize}`,
     );
   }
 }

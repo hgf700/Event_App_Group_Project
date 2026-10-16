@@ -1,9 +1,8 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export const registerUserValidator: ValidatorFn = (
-  control: AbstractControl
+  control: AbstractControl,
 ): ValidationErrors | null => {
-
   const password = control.get('password')?.value;
   const confirmPassword = control.get('confirmPassword')?.value;
 
@@ -13,7 +12,7 @@ export const registerUserValidator: ValidatorFn = (
 
   if (password !== confirmPassword) {
     return {
-      passwordMismatch: true
+      passwordMismatch: true,
     };
   }
 

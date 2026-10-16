@@ -33,7 +33,7 @@ export class Tickets implements OnInit {
       next: (response) => {
         this.boughtTickets = response;
         this.loading = false;
-        this.filteredTickets = [...response]; 
+        this.filteredTickets = [...response];
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -46,11 +46,12 @@ export class Tickets implements OnInit {
   filterTickets() {
     const search = this.searchText.toLowerCase().trim();
 
-    this.filteredTickets = this.boughtTickets.filter(ticket =>
-      (ticket.eventName ?? '').toLowerCase().includes(search) ||
-      (ticket.userEmail ?? '').toLowerCase().includes(search) ||
-      this.getPaymentStateName(ticket.paymentState).toLowerCase().includes(search) ||
-      this.getTicketStateName(ticket.ticketState).toLowerCase().includes(search)
+    this.filteredTickets = this.boughtTickets.filter(
+      (ticket) =>
+        (ticket.eventName ?? '').toLowerCase().includes(search) ||
+        (ticket.userEmail ?? '').toLowerCase().includes(search) ||
+        this.getPaymentStateName(ticket.paymentState).toLowerCase().includes(search) ||
+        this.getTicketStateName(ticket.ticketState).toLowerCase().includes(search),
     );
   }
 

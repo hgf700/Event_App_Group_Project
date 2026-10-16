@@ -1,0 +1,139 @@
+:host {
+  display: block;
+  min-height: 100%;
+}
+
+.error-page {
+  min-height: calc(100vh - 64px);
+  display: grid;
+  place-items: center;
+  padding: 32px 20px;
+  background: radial-gradient(ellipse at top left, #e4edff 0%, transparent 45%), #f7f9fc;
+}
+
+.error-card {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  align-items: center;
+  gap: 48px;
+  width: min(900px, 100%);
+  padding: clamp(24px, 5vw, 64px);
+  background: #fff;
+  border: 1px solid #e8edf5;
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgb(26 45 75 / 8%);
+}
+
+.error-illustration {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 230px;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #edf3ff, #f8faff);
+}
+
+.error-code {
+  font-size: clamp(64px, 9vw, 100px);
+  font-weight: 800;
+  letter-spacing: -6px;
+  color: #315fbd;
+}
+
+.illustration-icon {
+  position: absolute;
+  right: 24px;
+  bottom: 20px;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: #fff;
+  color: #315fbd;
+  font-size: 28px;
+  font-weight: 800;
+  box-shadow: 0 8px 24px rgb(26 45 75 / 12%);
+}
+
+.eyebrow {
+  color: #5275b9;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+h1 {
+  margin: 12px 0;
+  color: #17263c;
+  font-size: clamp(28px, 4vw, 38px);
+  letter-spacing: -1px;
+}
+
+.message {
+  max-width: 420px;
+  color: #64748b;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.primary-button,
+.secondary-button {
+  min-height: 46px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  transition:
+    transform 150ms,
+    background 150ms;
+}
+
+.primary-button {
+  background: #17263c;
+  color: #fff;
+}
+
+.primary-button:hover {
+  background: #29476e;
+  transform: translateY(-1px);
+}
+
+.secondary-button {
+  background: #eef3fb;
+  color: #29476e;
+}
+
+.secondary-button:hover {
+  background: #e0e9f8;
+}
+
+button:focus-visible {
+  outline: 3px solid #78a5ff;
+  outline-offset: 3px;
+}
+
+@media (max-width: 650px) {
+  .error-card {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 24px;
+  }
+
+  .error-illustration {
+    min-height: 150px;
+  }
+
+  .error-code {
+    font-size: 64px;
+  }
+}

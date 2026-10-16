@@ -1,7 +1,8 @@
-caching np 
-app.UseOutputCache();
-[HttpGet]
-[OutputCache(Duration = 60)]
+moze poprawienei ui dla bookmark ale to raczej jest jako dodatek i nie chce mi sie
+
+uzycie observer do serwisu z sms i email?
+
+ressiliance np retry,circut breaker dla frontu w angular
 
 [HttpGet("admin-bought-tickets")]
 Jeżeli w Twoim systemie jedno UserEvent = jeden bilet, to OrderId jest bardzo przydatny.
@@ -9,39 +10,15 @@ Nie powinieneś natomiast generować nowego OrderId dla każdego biletu w ramach
 Wtedy wszystkie bilety z tego zakupu mają wspólny OrderId.
 OrderId potem dodam
 
-uzytkownik jak trafi na strone z authorize a nie jest to redirect na login od razu
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-.AddCookie(options => 
-{
-options.LoginPath = "/login";
-}); 
 
-builder.Services.AddProblemDetails();
-app.UseExceptionHandler("/Error")   //dla 500
-https://learn.microsoft.com/en-us/aspnet/core/fundamentals/error-handling?view=aspnetcore-10.0
 
-app.UseStatusCodePages(async context => {}) // to jest jesli wpisze np https://www.youtube.com/asd i mam 
-not found
 
-healthcheck
-builder.Services.AddHealthChecks();
-app.MapHealthChecks("/healthz");
-https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-10.0
+usuniecie niepotrzebnych rzeczy ze zdalnego repo na github np unit testy
 
-uzycie notification model dla sledzenia stanu wyslania email 
-i/lub do potwierdzenia rejestracji bardziej przez email i dla emaili co najwyzej 2 stany
-wyslane, i wysylany, i nie wyslany tylko nie wiem czy jest to mozliwy stan?
+czyszcenie projektu
 
-ressiliance np retry,circut breaker dla frontu w angular
+git actions
 
-zamiast local storage to lepiej http cookies i same site strict ale to potem
-
-zrobic revoked dla refersh token jesli jest expired
+docker
 
 dla github actions testy jednostkowe i iplementacyjne back i front dorobic
-
-mozna ale raczej ciezko uzyc
-uzycie when.all z tpl (parallel library) jesli 1 rzecz nie jest zalezna od drugiej dzieki temu szybko sie wykona
-akcja
-
-uzycie observer do serwisu z sms i email?

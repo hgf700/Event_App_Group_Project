@@ -2,18 +2,16 @@
 using EventApp.Infrastructure.Db;
 using EventApp.Services.Dto.RelAuth;
 using EventApp.Services.Interfaces;
-using EventApp.Services.Model;
 using EventApp.Services.Services.Interface;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
-using Stripe;
+using Superpower.Model;
 using System.Security.Claims;
-using Twilio.TwiML.Messaging;
 
 namespace Backend.Controllers;
 
@@ -24,15 +22,55 @@ public class AuthController : ControllerBase
 {
     private readonly ILogger<AuthController> _logger;
     private readonly IAuthService _authService;
+    private readonly ApplicationDbContext _context;
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IJwtService _jwtService;
+
+
     private readonly string YOUR_DOMAIN = "http://localhost:4200";
+    private readonly string RefreshTokenPath = "/api/v1/auth/refresh";
+    private readonly string JwtPath = "/";
+    private readonly SameSiteMode cookiesSettings = SameSiteMode.None;
+
 
     public AuthController(
         ILogger<AuthController> logger,
-        IAuthService authService
+        IAuthService authService,
+        ApplicationDbContext context,
+        UserManager<ApplicationUser> userManager,
+        IJwtService jwtService
         )
     {
         _logger= logger;
         _authService = authService;
+        _context= context;
+        _userManager = userManager;
+        _jwtService = jwtService;
+    }
+
+    private void SetJwtCookie(string jwt)
+    {
+        Response.Cookies.Append("jwt", jwt, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = cookiesSettings,
+            Path = JwtPath,
+            Expires = DateTimeOffset.UtcNow.AddDays(7),
+            IsEssential = true
+        });
+    }
+
+    private void SetRefreshTOkenCookie(string refershToken)
+    {
+        Response.Cookies.Append("refreshToken", refershToken, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = cookiesSettings,
+            Expires = DateTimeOffset.UtcNow.AddDays(30),
+            Path = RefreshTokenPath
+        });
     }
 
     [HttpPost("register-norm")]
@@ -51,6 +89,9 @@ public class AuthController : ControllerBase
 
             if (result.Errors != null)
                 return BadRequest(result.Errors);
+
+            SetJwtCookie(result.Response!.jwt);
+            SetRefreshTOkenCookie(result.Response!.refreshToken);
 
             return StatusCode(
                 StatusCodes.Status201Created,
@@ -78,6 +119,9 @@ public class AuthController : ControllerBase
 
             if(result.IncorrectUserCredentials)
                 return Unauthorized("Invalid email or password");
+
+            SetJwtCookie(result.Response!.jwt);
+            SetRefreshTOkenCookie(result.Response!.refreshToken);
 
             return Ok(result.Response);
         }
@@ -110,7 +154,7 @@ public class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> GoogleResponse()
+    public async Task<ActionResult<authResponseDto>> GoogleResponse()
     {
         try
         {
@@ -148,11 +192,13 @@ public class AuthController : ControllerBase
                 return BadRequest("Google login failed");
             }
 
+            SetJwtCookie(result.Response!.jwt);
+            SetRefreshTOkenCookie(result.Response!.refreshToken);
+
             return Redirect(
                 $"{YOUR_DOMAIN}/login-callback" +
-                $"?token={Uri.EscapeDataString(result.Response!.jwt)}" +
                 $"&email={Uri.EscapeDataString(result.Response!.email)}" +
-                $"&role={Uri.EscapeDataString(result.Response!.userRole)}"
+                $"&userRole={Uri.EscapeDataString(result.Response!.userRole)}"
                 );
         }
         catch (Exception ex)
@@ -165,5 +211,103 @@ public class AuthController : ControllerBase
                 StatusCodes.Status500InternalServerError,
                 "Internal server error");
         }
+    }
+
+    [AllowAnonymous]
+    [HttpPost("refresh")]
+    [EnableRateLimiting("PostPolicy")]
+    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<postRefreshTokenResponse>> Refresh()
+    {
+        if (!Request.Cookies.TryGetValue("refreshToken", out var refreshToken)
+            || string.IsNullOrWhiteSpace(refreshToken))
+        {
+            return Unauthorized();
+        }
+
+        var storedToken = await _context.RefreshTokens
+            .FirstOrDefaultAsync(x =>
+                x.Token == refreshToken &&
+                x.Expires >= DateTime.UtcNow &&
+                x.Revoked == null);
+
+        if (storedToken == null)
+            return Unauthorized();
+
+        var user = await _userManager.FindByIdAsync(storedToken.UserId);
+
+        if (user == null)
+            return Unauthorized();
+
+        var newAccessToken = await _jwtService.GenerateToken(user);
+
+        SetJwtCookie(newAccessToken);
+
+        return Ok();
+    }
+
+    [HttpPost("logout")]
+    [EnableRateLimiting("PostPolicy")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult> LogoutUser()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+            return Unauthorized();
+
+        try
+        {
+            var refreshToken = Request.Cookies["refreshToken"];
+
+            if (!string.IsNullOrEmpty(refreshToken))
+            {
+                var tokenEntity = await _context.RefreshTokens
+                    .FirstOrDefaultAsync(t =>
+                        t.Token == refreshToken &&
+                        t.Revoked == null);
+
+                if (tokenEntity != null)
+                {
+                    tokenEntity.Revoked = DateTime.UtcNow;
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            Response.Cookies.Delete("refreshToken", new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = cookiesSettings,
+                Path = RefreshTokenPath
+            });
+
+            Response.Cookies.Delete("jwt", new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = cookiesSettings,
+                Path = JwtPath
+            });
+
+            return Ok();
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex);
+            _logger.LogError(ex, "Error while seeding db");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+        }
+    }
+
+    [HttpGet("check")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public ActionResult CheckAuth()
+    {
+        return Ok(true);
     }
 }
