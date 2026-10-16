@@ -11,24 +11,19 @@ namespace TestServices.IntegrationTest;
 [TestFixture]
 public class EventControllerIntegrationTests
 {
-    private EventAppFactory _factory = null!;
-    private HttpClient _client = null!;
-
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNameCaseInsensitive = true
     };
-
-    [OneTimeSetUp]
-    public void OneTimeSetUp()
-    {
-        _factory = new EventAppFactory();
-    }
+    private EventAppFactory _factory = null!;
+    private HttpClient _client = null!;
 
     [SetUp]
     public async Task SetUp()
     {
+        _factory = new EventAppFactory();
         _client = _factory.CreateClient();
+
         await _factory.ResetDbAsync();
     }
 
@@ -36,11 +31,6 @@ public class EventControllerIntegrationTests
     public void TearDown()
     {
         _client.Dispose();
-    }
-
-    [OneTimeTearDown]
-    public void OneTimeTearDown()
-    {
         _factory.Dispose();
     }
 

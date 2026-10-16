@@ -44,6 +44,7 @@ public class EventController : ControllerBase
 
             var events = await _context.Events
                 .AsNoTracking()
+                .OrderBy(e => e.Id)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .Select(e => new getEventsDto
@@ -101,6 +102,7 @@ public class EventController : ControllerBase
 
             var events = await _context.Events
                 .AsNoTracking()
+                .OrderBy(e => e.Id)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .Select(e => new getEventsDto

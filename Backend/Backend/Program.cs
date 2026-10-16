@@ -285,16 +285,10 @@ builder.Services.AddOutputCache();
 
 var app = builder.Build();
 
-app.MapHealthChecks("/health/live", new HealthCheckOptions
-{
-    Predicate = _ => false
-});
+app.MapHealthChecks("/health/live", new HealthCheckOptions { Predicate = _ => false });
 
 // Readiness: czy aplikacja i baza są gotowe?
-app.MapHealthChecks("/health/ready", new HealthCheckOptions
-{
-    Predicate = check => check.Tags.Contains("ready")
-});
+app.MapHealthChecks("/health/ready", new HealthCheckOptions { Predicate = check => check.Tags.Contains("ready")});
 
 if (app.Environment.IsDevelopment())
 {

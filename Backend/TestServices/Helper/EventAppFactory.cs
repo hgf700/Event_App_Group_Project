@@ -18,13 +18,19 @@ namespace TestServices.Helper;
 
 public class EventAppFactory : WebApplicationFactory<Program>
 {
-    private const string DatabaseName = "EventIntegrationTests";
+    private readonly string _databaseName =
+        $"EventIntegrationTests_{Guid.NewGuid():N}";
 
     public EventAppFactory()
     {
-        Environment.SetEnvironmentVariable("GOOGLE_CLIENT_ID", "test-client-id");
-        Environment.SetEnvironmentVariable("GOOGLE_CLIENT_SECRET", "test-client-secret");
-        Environment.SetEnvironmentVariable("JWT_SECRET", "test-jwt-secret-key-at-least-32-chars!!");
+        Environment.SetEnvironmentVariable(
+            "GOOGLE_CLIENT_ID", "test-client-id");
+
+        Environment.SetEnvironmentVariable(
+            "GOOGLE_CLIENT_SECRET", "test-client-secret");
+
+        Environment.SetEnvironmentVariable(
+            "JWT_SECRET", "test-jwt-secret-key-at-least-32-chars!!");
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -42,24 +48,29 @@ public class EventAppFactory : WebApplicationFactory<Program>
 
         builder.ConfigureTestServices(services =>
         {
-            // Usuwamy wyłącznie rejestracje dotyczące ApplicationDbContext.
             services.RemoveAll<ApplicationDbContext>();
             services.RemoveAll<DbContextOptions<ApplicationDbContext>>();
-            services.RemoveAll<IDbContextOptionsConfiguration<ApplicationDbContext>>();
+            services.RemoveAll<
+                IDbContextOptionsConfiguration<ApplicationDbContext>>();
 
-            // Testowa baza InMemory.
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseInMemoryDatabase(DatabaseName));
+                options.UseInMemoryDatabase(_databaseName));
 
-            // Testowy schemat uwierzytelniania.
             services
                 .AddAuthentication(options =>
                 {
-                    options.DefaultAuthenticateScheme = TestAuthHandler.SchemeName;
-                    options.DefaultChallengeScheme = TestAuthHandler.SchemeName;
-                    options.DefaultScheme = TestAuthHandler.SchemeName;
+                    options.DefaultAuthenticateScheme =
+                        TestAuthHandler.SchemeName;
+
+                    options.DefaultChallengeScheme =
+                        TestAuthHandler.SchemeName;
+
+                    options.DefaultScheme =
+                        TestAuthHandler.SchemeName;
                 })
-                .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
+                .AddScheme<
+                    AuthenticationSchemeOptions,
+                    TestAuthHandler>(
                     TestAuthHandler.SchemeName,
                     _ => { });
         });
@@ -72,29 +83,22 @@ public class EventAppFactory : WebApplicationFactory<Program>
         var db = scope.ServiceProvider
             .GetRequiredService<ApplicationDbContext>();
 
+        await db.Database.EnsureDeletedAsync();
         await db.Database.EnsureCreatedAsync();
-
-        db.Events.RemoveRange(db.Events);
-        await db.SaveChangesAsync();
     }
 
     public async Task SeedAsync(params Event[] events)
     {
+        if (events.Length == 0)
+            return;
+
         using var scope = Services.CreateScope();
 
         var db = scope.ServiceProvider
             .GetRequiredService<ApplicationDbContext>();
 
-        await db.Database.EnsureCreatedAsync();
-
-        db.Events.RemoveRange(db.Events);
+        db.Events.AddRange(events);
         await db.SaveChangesAsync();
-
-        if (events.Length > 0)
-        {
-            db.Events.AddRange(events);
-            await db.SaveChangesAsync();
-        }
     }
 
     public async Task<ApplicationUser> CreateTestUserAsync(
@@ -105,7 +109,8 @@ public class EventAppFactory : WebApplicationFactory<Program>
         using var scope = Services.CreateScope();
 
         var userManager = scope.ServiceProvider
-            .GetRequiredService<Microsoft.AspNetCore.Identity.UserManager<ApplicationUser>>();
+            .GetRequiredService<
+                Microsoft.AspNetCore.Identity.UserManager<ApplicationUser>>();
 
         var user = new ApplicationUser
         {
@@ -121,13 +126,16 @@ public class EventAppFactory : WebApplicationFactory<Program>
         {
             throw new InvalidOperationException(
                 "Nie udało się utworzyć użytkownika testowego: " +
-                string.Join("; ", result.Errors.Select(e => e.Description)));
+                string.Join("; ",
+                    result.Errors.Select(e => e.Description)));
         }
 
         if (!string.IsNullOrWhiteSpace(role))
         {
             var roleManager = scope.ServiceProvider
-                .GetRequiredService<Microsoft.AspNetCore.Identity.RoleManager<Microsoft.AspNetCore.Identity.IdentityRole>>();
+                .GetRequiredService<
+                    Microsoft.AspNetCore.Identity.RoleManager<
+                        Microsoft.AspNetCore.Identity.IdentityRole>>();
 
             if (!await roleManager.RoleExistsAsync(role))
             {
@@ -143,7 +151,8 @@ public class EventAppFactory : WebApplicationFactory<Program>
                 }
             }
 
-            var addRoleResult = await userManager.AddToRoleAsync(user, role);
+            var addRoleResult =
+                await userManager.AddToRoleAsync(user, role);
 
             if (!addRoleResult.Succeeded)
             {
@@ -158,7 +167,8 @@ public class EventAppFactory : WebApplicationFactory<Program>
     }
 }
 
-public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+public class TestAuthHandler
+    : AuthenticationHandler<AuthenticationSchemeOptions>
 {
     public const string SchemeName = "TestScheme";
 
@@ -180,7 +190,8 @@ public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions
 
         var value = header.ToString();
 
-        if (!value.StartsWith("Test ", StringComparison.OrdinalIgnoreCase))
+        if (!value.StartsWith(
+                "Test ", StringComparison.OrdinalIgnoreCase))
         {
             return Task.FromResult(
                 AuthenticateResult.Fail("Invalid scheme"));
