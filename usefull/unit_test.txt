@@ -1,0 +1,4 @@
+Rodzaj testu	Co sprawdzasz?	Baza danych
+Unit test	Logika metody, walidacja, reakcja na błędy	Mock repozytorium
+Test integracyjny	Czy zapis i odczyt danych faktycznie działają	Prawdziwa testowa baza
+Test kontrolera HTTP	Status odpowiedzi, np. 200, 404, 400	Zależnie od testu

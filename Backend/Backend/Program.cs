@@ -71,7 +71,6 @@ builder.Host.UseSerilog();
 builder.Services.AddScoped<IQrCodeService, QrCodeService>();
 builder.Services.AddScoped<ISmsService, SmsService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
-builder.Services.AddScoped<IOauthRefreshService, OauthRefreshService>();
 builder.Services.AddSingleton<IRefreshTokenEncryptionService, RefreshTokenEncryptionService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<ISeedDbService, SeedDbService>();

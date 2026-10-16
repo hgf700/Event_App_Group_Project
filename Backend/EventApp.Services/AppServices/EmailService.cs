@@ -9,6 +9,10 @@ public class EmailService : IEmailService
 {
     public async Task SendEmail(string toEmail, string url, int userEventId, string email)
     {
+        ArgumentNullException.ThrowIfNull(toEmail);
+        ArgumentNullException.ThrowIfNull(url);
+        ArgumentNullException.ThrowIfNull(email);   
+
         try
         {
             // Mailtrap SMTP dane z ENV

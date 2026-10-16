@@ -14,7 +14,7 @@ public class UserEvent
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    public string? UserId { get; set; } 
+    public string UserId { get; set; } 
     public ApplicationUser User { get; set; } 
 
     public int? EventId { get; set; }
@@ -22,11 +22,11 @@ public class UserEvent
 
     public DateTime CreatedAt { get; set; }
 
-    public DateTime? PaymentStateAt { get; set; }
+    public DateTime PaymentStateAt { get; set; }
 
     public StatesOfTicket PaymentState { get; set; }
 
-    public DateTime? TicketStateAt { get; set; }
+    public DateTime TicketStateAt { get; set; }
 
     public TicketState TicketState { get; set; }
 
