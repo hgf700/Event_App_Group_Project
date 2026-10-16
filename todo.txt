@@ -1,5 +1,3 @@
-uzycie observer do serwisu z sms i email?
-
 moze poprawienei ui dla bookmark ale to raczej jest jako dodatek i nie chce mi sie
 
 [HttpGet("admin-bought-tickets")]

@@ -25,7 +25,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<UserEvent>()
-            .HasKey(ue => new { ue.UserId, ue.EventId });
+            .HasKey(ue => ue.Id);
 
         modelBuilder.Entity<UserEvent>()
             .HasOne(ue => ue.User)

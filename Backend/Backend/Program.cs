@@ -24,7 +24,10 @@ SameSiteMode cookiesSettings = SameSiteMode.None;
 
 var builder = WebApplication.CreateBuilder(args);
 
-DotNetEnv.Env.Load();
+if (builder.Environment.IsDevelopment())
+{
+    DotNetEnv.Env.Load();
+}
 
 builder.Services.AddControllers();
 
@@ -36,16 +39,14 @@ builder.Services.AddSwaggerGen();
 //healthcheck
 builder.Services
     .AddHealthChecks()
-    .AddDbContextCheck<ApplicationDbContext>(
-        tags: new[] { "ready" });
+    .AddDbContextCheck<ApplicationDbContext>(tags: new[] { "ready" });
 
 //db
-var connectionString = builder.Configuration.GetConnectionString("Default");
+var connectionString = builder.Configuration.GetConnectionString("Default")
+    ?? throw new InvalidOperationException("Connection string 'Default' is not set.");
 
-builder.Services
-    .AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString, o =>
-        o.EnableRetryOnFailure()));
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(connectionString, o => o.EnableRetryOnFailure()));
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -57,6 +58,7 @@ Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
     .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
     .Enrich.FromLogContext()
+    .WriteTo.Console()
     .WriteTo.File(
         "Logs/log.txt",
         rollingInterval: RollingInterval.Day,
@@ -130,12 +132,31 @@ builder.Services.AddDataProtection()
     .PersistKeysToFileSystem(new DirectoryInfo("/var/dpkeys"))
     .SetApplicationName("projekt-app");
 
-string googleClientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID")
-    ?? throw new InvalidOperationException("GOOGLE_CLIENT_ID is not set.");
-string googleClientSecret = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET")
-    ?? throw new InvalidOperationException("GOOGLE_CLIENT_SECRET is not set.");
-string JWT_SECRET = Environment.GetEnvironmentVariable("JWT_SECRET")
-    ?? throw new InvalidOperationException("JWT_SECRET is not set.");
+// DataProtection – ścieżka z konfiguracji (nie hardcoduj /var w kodzie)
+//var dpKeysPath = builder.Configuration["DataProtection:KeysPath"];
+//var dpBuilder = builder.Services.AddDataProtection()
+//    .SetApplicationName("projekt-app");
+//if (!string.IsNullOrWhiteSpace(dpKeysPath))
+//{
+//    Directory.CreateDirectory(dpKeysPath);
+//    dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(dpKeysPath));
+//}
+
+// Secrets z ENV / konfiguracji (bez if Testing)
+string Require(string name)
+{
+    var value = Environment.GetEnvironmentVariable(name)
+        ?? builder.Configuration[name];
+
+    if (string.IsNullOrWhiteSpace(value))
+        throw new InvalidOperationException($"{name} is not set.");
+
+    return value;
+}
+
+var googleClientId = Require("GOOGLE_CLIENT_ID");
+var googleClientSecret = Require("GOOGLE_CLIENT_SECRET");
+var JWT_SECRET = Require("JWT_SECRET");
 
 builder.Services.AddAuthentication(options =>
 {
@@ -163,11 +184,8 @@ builder.Services.AddAuthentication(options =>
         OnMessageReceived = context =>
         {
             var token = context.Request.Cookies["jwt"];
-
             //Console.WriteLine($"JWT cookie received: {!string.IsNullOrEmpty(token)}");
-
             context.Token = token;
-
             return Task.CompletedTask;
         }
     };
@@ -251,17 +269,13 @@ static string GetUserKey(HttpContext context)
     // Identyfikator z uwierzytelnionego JWT.
     if (context.User.Identity?.IsAuthenticated == true)
     {
-        var userId = context.User.FindFirstValue(
-            ClaimTypes.NameIdentifier);
-
+        var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (!string.IsNullOrWhiteSpace(userId))
             return $"user:{userId}";
     }
 
     // Fallback dla niezalogowanych użytkowników.
-    var ip = context.Connection.RemoteIpAddress?.ToString()
-             ?? "unknown-ip";
-
+    var ip = context.Connection.RemoteIpAddress?.ToString() ?? "unknown-ip";
     return $"ip:{ip}";
 }
 
