@@ -1,5 +1,7 @@
 moze poprawienei ui dla bookmark ale to raczej jest jako dodatek i nie chce mi sie
 
+kiedys dla admina integracyjne
+
 uzycie observer do serwisu z sms i email?
 
 ressiliance np retry,circut breaker dla frontu w angular
@@ -22,3 +24,4 @@ git actions
 docker
 
 dla github actions testy jednostkowe i iplementacyjne back i front dorobic
+dodac integracyjne dla search-event-and-download

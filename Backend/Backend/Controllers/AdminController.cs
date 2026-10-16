@@ -20,14 +20,14 @@ public class AdminController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly ILogger<UserController> _logger;
+    private readonly ILogger<AdminController> _logger;
     private readonly ISeedDbService _seedDbService;
     private readonly string UserRole = "user";
     private readonly string AdminRole = "admin";
 
     public AdminController(ApplicationDbContext context,
         UserManager<ApplicationUser> userManager,
-        ILogger<UserController> logger,
+        ILogger<AdminController> logger,
         ISeedDbService seedDbService
         )
     {
