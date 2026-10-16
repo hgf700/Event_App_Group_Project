@@ -296,8 +296,9 @@ app.MapHealthChecks("/health/ready", new HealthCheckOptions
     Predicate = check => check.Tags.Contains("ready")
 });
 
-using (var scope = app.Services.CreateScope())
+if (!app.Environment.IsEnvironment("IntegrationTest"))
 {
+    using var scope = app.Services.CreateScope();
     await IdentitySeeder.SeedAsync(scope.ServiceProvider);
 }
 
@@ -308,7 +309,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.UseDeveloperExceptionPage();
 }
-else
+else if (!app.Environment.IsEnvironment("IntegrationTest"))
 {
     app.UseExceptionHandler();
     app.UseHsts();
