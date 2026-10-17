@@ -240,63 +240,6 @@ public class AdminController : ControllerBase
         }
     }
 
-    [HttpGet("admin-search-user/{userEmailOrId}")]
-    [EnableRateLimiting("GetPolicy")]
-    [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<getAdminUserDto>> AdminSearchUsers(string userEmailOrId)
-    {
-        var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        if (currentUserId == null)
-            return Unauthorized();
-
-        if (string.IsNullOrWhiteSpace(userEmailOrId))
-            return BadRequest();
-
-        try
-        {
-            var users = await _userManager.Users
-                .AsNoTracking()
-                .Where(u => u.IsActive &&
-                    (u.Email == userEmailOrId ||
-                     u.Id == userEmailOrId))
-                .ToListAsync();
-
-            if (users.Count == 0)
-                return NotFound();
-
-            var result = new List<getAdminUserDto>();
-
-            foreach (var user in users)
-            {
-                var roles = await _userManager.GetRolesAsync(user);
-
-                result.Add(new getAdminUserDto
-                {
-                    id = user.Id,
-                    email = user.Email,
-                    userName = user.UserName,
-                    roles = roles
-                });
-            }
-
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error while searching for an admin user");
-
-            return StatusCode(
-                StatusCodes.Status500InternalServerError,
-                "Internal server error");
-        }
-    }
-
     [HttpPost("admin-delete-user/{userId}")]
     [EnableRateLimiting("PostPolicy")]
     [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
@@ -572,7 +515,5 @@ public class AdminController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
-
-
 
 }

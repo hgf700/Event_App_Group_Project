@@ -33,10 +33,6 @@ export class AdminService {
     return this.http.get<getAdminUserDto[]>(`${this.apiUrl}/admin-users`);
   }
 
-  searchUser(id: string) {
-    return this.http.get<getAdminUserDto>(`${this.apiUrl}/admin-search-user/${id}`);
-  }
-
   deleteUser(id: string) {
     return this.http.post<void>(`${this.apiUrl}/admin-delete-user/${id}`, {});
   }

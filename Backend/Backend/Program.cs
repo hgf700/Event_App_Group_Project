@@ -86,39 +86,26 @@ builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddAuthorization();
 
-//dev identity
+//prod identity
 builder.Services.Configure<IdentityOptions>(options =>
 {
-    options.Password.RequireDigit = false;
-    options.Password.RequireLowercase = false;
     options.Password.RequiredLength = 1;
-    options.Password.RequireNonAlphanumeric = false;
+    //options.Password.RequiredLength = 5;
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
 
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(1);
-    options.Lockout.MaxFailedAccessAttempts = 20;
-    options.Lockout.AllowedForNewUsers = false;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+    //options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(1);
 
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.AllowedForNewUsers = true;
+
+    // in unit test i use the same emails without it erros
+    //options.User.RequireUniqueEmail = true;
     options.User.RequireUniqueEmail = false;
 });
-
-//prod identity
-//builder.Services.Configure<IdentityOptions>(options =>
-//{
-//    options.Password.RequiredLength = 5;
-//    options.Password.RequireDigit = true;
-//    options.Password.RequireLowercase = true;
-//    options.Password.RequireUppercase = false;
-//    options.Password.RequireNonAlphanumeric = false;
-
-//    options.Lockout.DefaultLockoutTimeSpan =
-//        TimeSpan.FromMinutes(15);
-
-//    options.Lockout.MaxFailedAccessAttempts = 5;
-//    options.Lockout.AllowedForNewUsers = true;
-
-//    options.User.RequireUniqueEmail = true;
-//});
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -131,16 +118,6 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddDataProtection()
     .PersistKeysToFileSystem(new DirectoryInfo("/var/dpkeys"))
     .SetApplicationName("projekt-app");
-
-// DataProtection – ścieżka z konfiguracji (nie hardcoduj /var w kodzie)
-//var dpKeysPath = builder.Configuration["DataProtection:KeysPath"];
-//var dpBuilder = builder.Services.AddDataProtection()
-//    .SetApplicationName("projekt-app");
-//if (!string.IsNullOrWhiteSpace(dpKeysPath))
-//{
-//    Directory.CreateDirectory(dpKeysPath);
-//    dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(dpKeysPath));
-//}
 
 // Secrets z ENV / konfiguracji (bez if Testing)
 string Require(string name)
@@ -163,7 +140,6 @@ builder.Services.AddAuthentication(options =>
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-//oauth
 .AddJwtBearer(options =>
 {
     options.RequireHttpsMetadata = false;

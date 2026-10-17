@@ -48,3 +48,10 @@ resiliance
 //   }
 // }
 
+
+
+
+
+  // searchUser(id: string) {
+  //   return this.http.get<getAdminUserDto>(`${this.apiUrl}/admin-search-user/${id}`);
+  // }
