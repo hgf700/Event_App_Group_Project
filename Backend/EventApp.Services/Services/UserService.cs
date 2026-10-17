@@ -82,7 +82,7 @@ public class UserService : IUserService
 
         var emailExists = await _userManager.FindByEmailAsync(newEmail);
 
-        if (emailExists == null)
+        if (emailExists != null && emailExists.Id != user.Id)
         {
             return new EditUserEmailResult
             {

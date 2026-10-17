@@ -71,7 +71,7 @@ public class BookmarkController : ControllerBase
         }
     }
 
-    [HttpPost("bookmark-event/{eventId:int:min(1)}")]
+    [HttpPost("bookmark-event/{eventId:int:min(0)}")]
     [EnableRateLimiting("PostPolicy")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -120,7 +120,7 @@ public class BookmarkController : ControllerBase
         }
     }
 
-    [HttpPost("unbookmark-event/{eventId:int:min(1)}")]
+    [HttpPost("unbookmark-event/{eventId:int:min(0)}")]
     [EnableRateLimiting("PostPolicy")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

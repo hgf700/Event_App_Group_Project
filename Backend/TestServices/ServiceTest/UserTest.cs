@@ -211,10 +211,9 @@ public class UserTest
     }
 
     [Test]
-    public async Task EditUserEmailAsync_WhenNewEmailNotFoundInSystem_ReturnsIncorrectEmail()
+    public async Task EditUserEmailAsync_WhenNewEmailNotFoundInSystem_UpdatesEmailAndReturnsJwt()
     {
-        // Obecna logika: FindByEmailAsync == null → IncorrectEmail
-        var user = CreateUser();
+        var user = CreateUser(id: "user-1", email: "old@example.com");
 
         _userManagerMock
             .Setup(x => x.FindByIdAsync(user.Id))
@@ -224,93 +223,112 @@ public class UserTest
             .Setup(x => x.FindByEmailAsync("brand-new@example.com"))
             .ReturnsAsync((ApplicationUser?)null);
 
-        var result = await _service.EditUserEmailAsync(user.Id, "brand-new@example.com");
-
-        Assert.That(result.IncorrectEmail, Is.True);
-        Assert.That(result.UserNotFound, Is.False);
-        Assert.That(result.Response, Is.Null);
-
-        _userManagerMock.Verify(x => x.UpdateAsync(It.IsAny<ApplicationUser>()), Times.Never);
-    }
-
-    [Test]
-    public async Task EditUserEmailAsync_WhenEmailExistsAndUpdateFails_ReturnsErrors()
-    {
-        var user = CreateUser(id: "user-1", email: "old@example.com");
-        var otherUserWithEmail = CreateUser(id: "user-2", email: "taken@example.com");
-
-        _userManagerMock
-            .Setup(x => x.FindByIdAsync(user.Id))
-            .ReturnsAsync(user);
-
-        // Według obecnego kodu: email MUSI istnieć, żeby pójść dalej
-        _userManagerMock
-            .Setup(x => x.FindByEmailAsync("taken@example.com"))
-            .ReturnsAsync(otherUserWithEmail);
-
-        var identityErrors = new[]
-        {
-            new IdentityError
-            {
-                Code = "DuplicateUserName",
-                Description = "Username already taken."
-            }
-        };
-
-        _userManagerMock
-            .Setup(x => x.UpdateAsync(It.IsAny<ApplicationUser>()))
-            .ReturnsAsync(IdentityResult.Failed(identityErrors));
-
-        var result = await _service.EditUserEmailAsync(user.Id, "taken@example.com");
-
-        Assert.That(result.Errors, Is.Not.Null);
-        Assert.That(result.Errors!.Any(e => e.Code == "DuplicateUserName"), Is.True);
-        Assert.That(result.Response, Is.Null);
-    }
-
-    [Test]
-    public async Task EditUserEmailAsync_WhenEmailExistsAndUpdateSucceeds_ReturnsJwt()
-    {
-        var user = CreateUser(id: "user-1", email: "old@example.com");
-        // Obecna logika wymaga, żeby newEmail już istniał w systemie
-        var emailOwner = CreateUser(id: "user-2", email: "existing@example.com");
-
-        _userManagerMock
-            .Setup(x => x.FindByIdAsync(user.Id))
-            .ReturnsAsync(user);
-
-        _userManagerMock
-            .Setup(x => x.FindByEmailAsync("existing@example.com"))
-            .ReturnsAsync(emailOwner);
-
         _userManagerMock
             .Setup(x => x.UpdateAsync(It.Is<ApplicationUser>(u =>
                 u.Id == user.Id &&
-                u.Email == "existing@example.com" &&
-                u.UserName == "existing@example.com")))
+                u.Email == "brand-new@example.com" &&
+                u.UserName == "brand-new@example.com")))
             .ReturnsAsync(IdentityResult.Success);
 
         _jwtServiceMock
             .Setup(x => x.GenerateToken(It.IsAny<ApplicationUser>()))
             .ReturnsAsync("new-jwt-token");
 
-        var result = await _service.EditUserEmailAsync(user.Id, "existing@example.com");
+        var result = await _service.EditUserEmailAsync(
+            user.Id,
+            "brand-new@example.com");
 
         Assert.That(result.UserNotFound, Is.False);
         Assert.That(result.IncorrectEmail, Is.False);
         Assert.That(result.Errors, Is.Null);
         Assert.That(result.Response, Is.Not.Null);
         Assert.That(result.Response!.jwt, Is.EqualTo("new-jwt-token"));
-        Assert.That(result.Response.email, Is.EqualTo("existing@example.com"));
+        Assert.That(result.Response.email, Is.EqualTo("brand-new@example.com"));
 
         _userManagerMock.Verify(
             x => x.UpdateAsync(It.Is<ApplicationUser>(u =>
-                u.Email == "existing@example.com" &&
-                u.UserName == "existing@example.com")),
+                u.Id == user.Id &&
+                u.Email == "brand-new@example.com" &&
+                u.UserName == "brand-new@example.com")),
             Times.Once);
 
         _jwtServiceMock.Verify(
             x => x.GenerateToken(It.IsAny<ApplicationUser>()),
             Times.Once);
+    }
+
+    [Test]
+    public async Task EditUserEmailAsync_WhenEmailBelongsToAnotherUser_ReturnsIncorrectEmail()
+    {
+        var user = CreateUser(id: "user-1", email: "old@example.com");
+        var otherUser = CreateUser(id: "user-2", email: "taken@example.com");
+
+        _userManagerMock
+            .Setup(x => x.FindByIdAsync(user.Id))
+            .ReturnsAsync(user);
+
+        _userManagerMock
+            .Setup(x => x.FindByEmailAsync("taken@example.com"))
+            .ReturnsAsync(otherUser);
+
+        var result = await _service.EditUserEmailAsync(
+            user.Id,
+            "taken@example.com");
+
+        Assert.That(result.IncorrectEmail, Is.True);
+        Assert.That(result.UserNotFound, Is.False);
+        Assert.That(result.Response, Is.Null);
+
+        _userManagerMock.Verify(
+            x => x.UpdateAsync(It.IsAny<ApplicationUser>()),
+            Times.Never);
+
+        _jwtServiceMock.Verify(
+            x => x.GenerateToken(It.IsAny<ApplicationUser>()),
+            Times.Never);
+    }
+
+    [Test]
+    public async Task EditUserEmailAsync_WhenNewEmailNotFoundAndUpdateFails_ReturnsErrors()
+    {
+        var user = CreateUser(id: "user-1", email: "old@example.com");
+
+        _userManagerMock
+            .Setup(x => x.FindByIdAsync(user.Id))
+            .ReturnsAsync(user);
+
+        _userManagerMock
+            .Setup(x => x.FindByEmailAsync("brand-new@example.com"))
+            .ReturnsAsync((ApplicationUser?)null);
+
+        var identityErrors = new[]
+        {
+        new IdentityError
+        {
+            Code = "DuplicateUserName",
+            Description = "Username already taken."
+        }
+    };
+
+        _userManagerMock
+            .Setup(x => x.UpdateAsync(It.Is<ApplicationUser>(u =>
+                u.Id == user.Id &&
+                u.Email == "brand-new@example.com" &&
+                u.UserName == "brand-new@example.com")))
+            .ReturnsAsync(IdentityResult.Failed(identityErrors));
+
+        var result = await _service.EditUserEmailAsync(
+            user.Id,
+            "brand-new@example.com");
+
+        Assert.That(result.Errors, Is.Not.Null);
+        Assert.That(
+            result.Errors!.Any(e => e.Code == "DuplicateUserName"),
+            Is.True);
+        Assert.That(result.Response, Is.Null);
+
+        _jwtServiceMock.Verify(
+            x => x.GenerateToken(It.IsAny<ApplicationUser>()),
+            Times.Never);
     }
 }

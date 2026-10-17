@@ -18,8 +18,7 @@ namespace TestServices.Helper;
 
 public class EventAppFactory : WebApplicationFactory<Program>
 {
-    private readonly string _databaseName =
-        $"EventIntegrationTests_{Guid.NewGuid():N}";
+    private readonly string _databaseName = $"EventIntegrationTests_{Guid.NewGuid():N}";
 
     public EventAppFactory()
     {
@@ -72,20 +71,18 @@ public class EventAppFactory : WebApplicationFactory<Program>
         await db.Database.EnsureCreatedAsync();
     }
 
-    public async Task SeedAsync(params Event[] events)
+    public async Task SeedAsync(params object[] entities)
     {
-        if (events.Length == 0)
-            return;
-
         using var scope = Services.CreateScope();
-
         var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-        db.Events.AddRange(events);
+        foreach (var entity in entities)
+            db.Add(entity);
+
         await db.SaveChangesAsync();
     }
 
-    public async Task<ApplicationUser> CreateTestUserAsync(string email, string password, string? role = null)
+    public async Task<ApplicationUser> CreateTestUserAsync(string email = "user-1", string password = "OldPassword1!", string? role = null)
     {
         using var scope = Services.CreateScope();
 

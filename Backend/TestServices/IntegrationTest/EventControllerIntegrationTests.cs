@@ -17,12 +17,16 @@ public class EventControllerIntegrationTests
     };
     private EventAppFactory _factory = null!;
     private HttpClient _client = null!;
+    private CreateDbObjectHelper _helper = null!;
 
     [SetUp]
     public async Task SetUp()
     {
         _factory = new EventAppFactory();
+
         _client = _factory.CreateClient();
+        
+        _helper = new CreateDbObjectHelper(_client);
 
         await _factory.ResetDbAsync();
     }
@@ -32,34 +36,6 @@ public class EventControllerIntegrationTests
     {
         _client.Dispose();
         _factory.Dispose();
-    }
-
-    private static Event CreateEvent(
-        int id,
-        string name = "Event",
-        string? city = "Warszawa",
-        DateTime? start = null)
-    {
-        return new Event
-        {
-            Id = id,
-            ExternalEventId = $"ext-{id}",
-            NameOfEvent = name,
-            TypeOfEvent = "music",
-            UrlOfEvent = $"https://example.com/{id}",
-            PhotoUrl = $"https://img.example.com/{id}.jpg",
-            StartOfEvent = start ?? DateTime.UtcNow.AddDays(id),
-            Address = $"ul. Test {id}",
-            City = city,
-            Country = "Poland",
-            NameOfClub = $"Club {id}"
-        };
-    }
-
-    private void AuthenticateAs(string role = "user", string userId = "user-1")
-    {
-        _client.DefaultRequestHeaders.Remove("Authorization");
-        _client.DefaultRequestHeaders.Add("Authorization", $"Test {role}|{userId}");
     }
 
     // ============================================================
@@ -85,9 +61,9 @@ public class EventControllerIntegrationTests
     public async Task PublicGetEvents_WithData_ReturnsPaginatedEvents()
     {
         await _factory.SeedAsync(
-            CreateEvent(1, "Koncert A"),
-            CreateEvent(2, "Koncert B"),
-            CreateEvent(3, "Mecz C"));
+            _helper.CreateEvent(1, "Koncert A"),
+            _helper.CreateEvent(2, "Koncert B"),
+            _helper.CreateEvent(3, "Mecz C"));
 
         var response = await _client.GetAsync("/api/v1/event/public-get-events?page=1&pageSize=2");
 
@@ -111,9 +87,9 @@ public class EventControllerIntegrationTests
     public async Task PublicGetEvents_Page2_ReturnsRemainingItems()
     {
         await _factory.SeedAsync(
-            CreateEvent(1),
-            CreateEvent(2),
-            CreateEvent(3));
+            _helper.CreateEvent(1),
+            _helper.CreateEvent(2),
+            _helper.CreateEvent(3));
 
         var response = await _client.GetAsync("/api/v1/event/public-get-events?page=2&pageSize=2");
 
@@ -130,7 +106,7 @@ public class EventControllerIntegrationTests
     public async Task PublicGetEvents_DefaultPagination_UsesPage1Size20()
     {
         var events = Enumerable.Range(1, 25)
-            .Select(i => CreateEvent(i, $"Event {i}"))
+            .Select(i => _helper.CreateEvent(i, $"Event {i}"))
             .ToArray();
         await _factory.SeedAsync(events);
 
@@ -160,8 +136,8 @@ public class EventControllerIntegrationTests
     [Test]
     public async Task GetEvents_WithUserAuth_Returns200()
     {
-        await _factory.SeedAsync(CreateEvent(1, "Auth Event"));
-        AuthenticateAs("user", "user-1");
+        await _factory.SeedAsync(_helper.CreateEvent(1, "Auth Event"));
+        _helper.AuthenticateAs("user", "user-1");
 
         var response = await _client.GetAsync("/api/v1/event/get-events");
 
@@ -175,8 +151,8 @@ public class EventControllerIntegrationTests
     [Test]
     public async Task GetEvents_WithAdminAuth_Returns200()
     {
-        await _factory.SeedAsync(CreateEvent(1));
-        AuthenticateAs("admin", "admin-1");
+        await _factory.SeedAsync(_helper.CreateEvent(1));
+        _helper.AuthenticateAs("admin", "admin-1");
 
         var response = await _client.GetAsync("/api/v1/event/get-events?page=1&pageSize=10");
 
@@ -187,11 +163,11 @@ public class EventControllerIntegrationTests
     public async Task GetEvents_Pagination_Works()
     {
         await _factory.SeedAsync(
-            CreateEvent(1),
-            CreateEvent(2),
-            CreateEvent(3),
-            CreateEvent(4));
-        AuthenticateAs();
+            _helper.CreateEvent(1),
+            _helper.CreateEvent(2),
+            _helper.CreateEvent(3),
+            _helper.CreateEvent(4));
+        _helper.AuthenticateAs();
 
         var response = await _client.GetAsync("/api/v1/event/get-events?page=2&pageSize=2");
 
@@ -219,7 +195,7 @@ public class EventControllerIntegrationTests
     [Test]
     public async Task EventDetails_WhenNotFound_Returns404()
     {
-        AuthenticateAs();
+        _helper.AuthenticateAs();
 
         var response = await _client.GetAsync("/api/v1/event/event-details/999");
 
@@ -229,11 +205,11 @@ public class EventControllerIntegrationTests
     [Test]
     public async Task EventDetails_WhenExists_Returns200WithDto()
     {
-        await _factory.SeedAsync(CreateEvent(
+        await _factory.SeedAsync(_helper.CreateEvent(
             id: 5,
             name: "Szczegóły Eventu",
             city: "Kraków"));
-        AuthenticateAs("user", "user-42");
+        _helper.AuthenticateAs("user", "user-42");
 
         var response = await _client.GetAsync("/api/v1/event/event-details/5");
 
@@ -255,8 +231,8 @@ public class EventControllerIntegrationTests
     [Test]
     public async Task EventDetails_WithAdmin_Returns200()
     {
-        await _factory.SeedAsync(CreateEvent(8, "Admin View"));
-        AuthenticateAs("admin", "admin-1");
+        await _factory.SeedAsync(_helper.CreateEvent(8, "Admin View"));
+        _helper.AuthenticateAs("admin", "admin-1");
 
         var response = await _client.GetAsync("/api/v1/event/event-details/8");
 
@@ -267,7 +243,7 @@ public class EventControllerIntegrationTests
     [Test]
     public async Task EventDetails_NegativeId_Returns404()
     {
-        AuthenticateAs();
+        _helper.AuthenticateAs();
 
         var response = await _client.GetAsync("/api/v1/event/event-details/-1");
 

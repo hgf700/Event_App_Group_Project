@@ -297,22 +297,22 @@ public class AdminController : ControllerBase
         }
     }
 
-    [HttpPost("admin-delete-user/{id}")]
+    [HttpPost("admin-delete-user/{userId}")]
     [EnableRateLimiting("PostPolicy")]
     [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> AdminDeleteUser(string id)
+    public async Task<ActionResult> AdminDeleteUser(string userId)
     {
         try
         {
-            var user = await _userManager.FindByIdAsync(id);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
                 return NotFound();
 
-            if (string.IsNullOrWhiteSpace(id))
+            if (string.IsNullOrWhiteSpace(userId))
                 return BadRequest();
 
             var result = await _userManager.DeleteAsync(user);
@@ -324,7 +324,7 @@ public class AdminController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error while deleting user {UserId}", id);
+            _logger.LogError(ex, "Error while deleting user {UserId}", userId);
 
             return StatusCode(
                 StatusCodes.Status500InternalServerError,
@@ -332,22 +332,22 @@ public class AdminController : ControllerBase
         }
     }
 
-    [HttpPost("admin-block-user/{id}")]
+    [HttpPost("admin-block-user/{userId}")]
     [EnableRateLimiting("PostPolicy")]
     [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> AdminBlockUser(string id)
+    public async Task<ActionResult> AdminBlockUser(string userId)
     {
         try
         {
-            var user = await _userManager.FindByIdAsync(id);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
                 return NotFound();
 
-            if (string.IsNullOrWhiteSpace(id))
+            if (string.IsNullOrWhiteSpace(userId))
                 return BadRequest();
 
             if(user.IsActive == true)
@@ -365,7 +365,7 @@ public class AdminController : ControllerBase
             {
                 _logger.LogError(
                     "Failed to block user {UserId}: {Errors}",
-                    id,
+                    userId,
                     string.Join(", ", result.Errors.Select(e => e.Description)));
 
                 return StatusCode(
@@ -380,7 +380,7 @@ public class AdminController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error while blocked user {UserId}", id);
+            _logger.LogError(ex, "Error while blocked user {UserId}", userId);
 
             return StatusCode(
                 StatusCodes.Status500InternalServerError,
@@ -434,18 +434,18 @@ public class AdminController : ControllerBase
         }
     }
 
-    [HttpPost("admin-unblock-user/{id}")]
+    [HttpPost("admin-unblock-user/{userId}")]
     [EnableRateLimiting("PostPolicy")]
     [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> AdminUnblockUser(string id)
+    public async Task<ActionResult> AdminUnblockUser(string userId)
     {
         try
         {
-            var user = await _userManager.FindByIdAsync(id);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
                 return NotFound();
 
@@ -464,7 +464,7 @@ public class AdminController : ControllerBase
             {
                 _logger.LogError(
                     "Failed to unblock user {UserId}: {Errors}",
-                    id,
+                    userId,
                     string.Join(", ", result.Errors.Select(e => e.Description)));
 
                 return StatusCode(
@@ -479,7 +479,7 @@ public class AdminController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error while unblock user {UserId}", id);
+            _logger.LogError(ex, "Error while unblock user {UserId}", userId);
 
             return StatusCode(
                 StatusCodes.Status500InternalServerError,
