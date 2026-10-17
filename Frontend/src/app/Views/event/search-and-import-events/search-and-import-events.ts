@@ -28,7 +28,7 @@ export class SearchAndImportEvents implements OnInit {
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     private dialog: MatDialog,
-    private eventService: EventService, 
+    private eventService: EventService,
   ) {
     this.searchAndImportEventsForm = this.fb.group({
       city: [
