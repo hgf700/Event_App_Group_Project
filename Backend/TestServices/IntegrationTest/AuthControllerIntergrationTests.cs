@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TestServices.IntegrationTest
+namespace TestServices.IntegrationTest;
+
+public class AuthControllerIntergrationTests
 {
-    internal class AuthControllerIntergrationTests
-    {
-    }
 }
