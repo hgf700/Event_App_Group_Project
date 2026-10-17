@@ -1,4 +1,12 @@
+# uzywam vitest uruchamia testy w ui
 ng test
+#uruchamia testy jednorazowo, np. w pipeline CI.
+ng test --no-watch
+#generuje raport pokrycia kodu.
+ng test --no-watch --coverage
+
+npm install
+npm uninstall
 
 npm start
 
