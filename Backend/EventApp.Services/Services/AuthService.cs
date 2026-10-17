@@ -64,6 +64,13 @@ public class AuthService : IAuthService
         }
 
         var role = await _userManager.AddToRoleAsync(user, UserRole);
+        if (!role.Succeeded)
+        {
+            return new NormalRegisterResult
+            {
+                Errors = role.Errors
+            };
+        }
 
         var roles = await _userManager.GetRolesAsync(user);
 

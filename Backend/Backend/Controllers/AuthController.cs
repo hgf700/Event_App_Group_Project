@@ -32,7 +32,6 @@ public class AuthController : ControllerBase
     private readonly string JwtPath = "/";
     private readonly SameSiteMode cookiesSettings = SameSiteMode.None;
 
-
     public AuthController(
         ILogger<AuthController> logger,
         IAuthService authService,
