@@ -8,8 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "test:watch": "ng test",
-    "test:ci": "ng test --no-watch",
-    "test:coverage": "ng test --no-watch --coverage"
+    "test:ci": "ng test --no-watch --browsers=ChromeHeadless",
+    "test:coverage": "ng test --no-watch --coverage --browsers=ChromeHeadless"
   },
   "private": true,
   "packageManager": "npm@11.13.0",
