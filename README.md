@@ -65,14 +65,14 @@ After a successful payment, the application automatically performs the following
 
 ### Frontend
 - Angular
-- Unit Tests
+- Unit Tests Vitest
 
 ### Backend
 - ASP.NET Web API
 - Entity Framework
 - ASP.NET Identity
 - JWT Authentication and authorization
-- Unit Tests and Integration Tests
+- Unit Tests and Integration Tests NUnit 
 - Serilog Logging
 - Health checks
 
@@ -106,6 +106,16 @@ After a successful payment, the application automatically performs the following
 | Backend    | http://localhost:7051 |
 | Liveness Probe | https://localhost:7051/health/live |
 | Readiness Probe | https://localhost:7051/health/ready |
+
+## 🐳 Docker Commands (not work yet)
+- Build the Docker image:
+```bash
+docker build -t event-app .
+```
+- Run the container:
+```bash
+docker run -d -p 8080:8080 --name event-app event-app
+```
 
 ## 🚀 Future Potential Improvements
 - Strengthen application security.
