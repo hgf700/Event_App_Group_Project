@@ -58,6 +58,8 @@ var googleClientSecret = Require("GOOGLE_CLIENT_SECRET");
 var JWT_SECRET = Require("JWT_SECRET");
 
 //db
+//var connectionString = builder.Configuration.GetConnectionString("Default")
+//    ?? throw new InvalidOperationException("Connection string 'Default' is not set.");
 var connectionString = new Npgsql.NpgsqlConnectionStringBuilder
 {
     Host = Require("POSTGRES_HOST"),
@@ -66,9 +68,6 @@ var connectionString = new Npgsql.NpgsqlConnectionStringBuilder
     Username = Require("POSTGRES_USER"),
     Password = Require("POSTGRES_PASSWORD")
 }.ConnectionString;
-
-//var connectionString = builder.Configuration.GetConnectionString("Default")
-//    ?? throw new InvalidOperationException("Connection string 'Default' is not set.");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString, o => o.EnableRetryOnFailure()));
