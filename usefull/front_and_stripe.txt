@@ -5,6 +5,9 @@ ng test --no-watch
 #generuje raport pokrycia kodu.
 ng test --no-watch --coverage
 
+# test dokladnie pliku
+npx ng test --no-watch --include="src/app/ServicesUnitTest/AuthService.spec.ts"
+
 npm install
 npm uninstall
 
