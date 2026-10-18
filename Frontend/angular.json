@@ -65,7 +65,7 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "runner": "vitest",
-            "ui": true
+            "ui": false
           }
         }
       }

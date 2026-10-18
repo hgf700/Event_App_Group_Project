@@ -1,4 +1,4 @@
-# uzywam vitest uruchamia testy w ui
+# uzywam vitest uruchamia testy w ui by wlaczyc ui w angular json @angular/build:unit-test" ustawic "ui": true
 ng test
 #uruchamia testy jednorazowo, np. w pipeline CI.
 ng test --no-watch
