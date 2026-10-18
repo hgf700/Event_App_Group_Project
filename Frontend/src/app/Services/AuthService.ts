@@ -3,10 +3,11 @@ import { computed, Injectable, signal } from '@angular/core';
 import { authResponseDto } from '../Dto/authResponseDto';
 import { Observable } from 'rxjs';
 import { postRefreshTokenResponse } from '../Dto/postRefreshTokenResponse';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private apiUrl = 'https://localhost:7051/api/v1/auth';
+  private apiUrl = `${environment.apiUrl}/api/v1/auth`;
 
   userEmail = signal<string | null>(localStorage.getItem('email'));
   userRole = signal<string | null>(localStorage.getItem('userRole'));

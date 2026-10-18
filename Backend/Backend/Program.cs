@@ -41,9 +41,34 @@ builder.Services
     .AddHealthChecks()
     .AddDbContextCheck<ApplicationDbContext>(tags: new[] { "ready" });
 
+string Require(string name)
+{
+    var value = Environment.GetEnvironmentVariable(name)
+        ?? builder.Configuration[name];
+
+    if (string.IsNullOrWhiteSpace(value))
+        throw new InvalidOperationException($"{name} is not set.");
+
+    return value;
+}
+
+//auth
+var googleClientId = Require("GOOGLE_CLIENT_ID");
+var googleClientSecret = Require("GOOGLE_CLIENT_SECRET");
+var JWT_SECRET = Require("JWT_SECRET");
+
 //db
-var connectionString = builder.Configuration.GetConnectionString("Default")
-    ?? throw new InvalidOperationException("Connection string 'Default' is not set.");
+var connectionString = new Npgsql.NpgsqlConnectionStringBuilder
+{
+    Host = Require("POSTGRES_HOST"),
+    Port = int.Parse(Require("POSTGRES_PORT")),
+    Database = Require("POSTGRES_DB"),
+    Username = Require("POSTGRES_USER"),
+    Password = Require("POSTGRES_PASSWORD")
+}.ConnectionString;
+
+//var connectionString = builder.Configuration.GetConnectionString("Default")
+//    ?? throw new InvalidOperationException("Connection string 'Default' is not set.");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString, o => o.EnableRetryOnFailure()));
@@ -136,22 +161,6 @@ else
         .PersistKeysToFileSystem(new DirectoryInfo(keysPath))
         .SetApplicationName("EventApp");
 }
-
-// Secrets z ENV / konfiguracji (bez if Testing)
-string Require(string name)
-{
-    var value = Environment.GetEnvironmentVariable(name)
-        ?? builder.Configuration[name];
-
-    if (string.IsNullOrWhiteSpace(value))
-        throw new InvalidOperationException($"{name} is not set.");
-
-    return value;
-}
-
-var googleClientId = Require("GOOGLE_CLIENT_ID");
-var googleClientSecret = Require("GOOGLE_CLIENT_SECRET");
-var JWT_SECRET = Require("JWT_SECRET");
 
 builder.Services.AddAuthentication(options =>
 {

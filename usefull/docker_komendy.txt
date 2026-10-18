@@ -1,3 +1,6 @@
+#sprawdzenie czy wszystkie .env i inne sa ustawione
+docker compose config -q
+
 #tworz docker
 docker compose watch
 docker compose up --build

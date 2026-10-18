@@ -11,8 +11,7 @@
 **/node_modules/
 **/.angular/
 
-# logs & env
-**/logs/
+# env
 **/.env
 
 # git (clean)
@@ -34,3 +33,8 @@
 **/test/
 **/usefull/
 **/opinia/
+
+**/Generated/
+**/Logs/
+**/temp.txt
+**/todo.txt

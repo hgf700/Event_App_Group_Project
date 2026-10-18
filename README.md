@@ -116,6 +116,15 @@ docker build -t event-app .
 ```bash
 docker run -d -p 8080:8080 --name event-app event-app
 ```
+- Work without monitoring: (grafana + prometheus + loki)
+```bash
+docker compose up -d 
+```
+- Work with monitoring
+```bash
+docker compose --profile monitoring up -d
+```
+
 
 ## 🚀 Future Potential Improvements
 - Strengthen application security.

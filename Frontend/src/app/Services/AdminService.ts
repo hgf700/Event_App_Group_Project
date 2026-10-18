@@ -6,10 +6,11 @@ import { getAdminUserDto } from '../Dto/getAdminUserDto';
 import { getBoughtTicketDto } from '../Dto/getBoughtTicketDto';
 import { getEventAdminDto } from '../Dto/getEventAdminDto';
 import { getBookmarkDto } from '../Dto/getBookmarkDto';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
-  private apiUrl = 'https://localhost:7051/api/v1/admin';
+  private apiUrl = `${environment.apiUrl}/api/v1/admin`;
 
   constructor(private http: HttpClient) {}
 

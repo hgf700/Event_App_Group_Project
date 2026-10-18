@@ -6,10 +6,11 @@ import { getEventDto } from '../Dto/getEventDto';
 import { paginatedResponse } from '../model/paginatedResponse';
 import { getEventTicketWithQrDto } from '../Dto/getEventQrCodeInfoDto';
 import { getBookmarkDto } from '../Dto/getBookmarkDto';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class BookMarkService {
-  private apiUrl = 'https://localhost:7051/api/v1/bookmark';
+  private apiUrl = `${environment.apiUrl}/api/v1/bookmark`;
 
   constructor(private http: HttpClient) {}
 

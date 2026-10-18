@@ -1,5 +1,4 @@
 services:
-
   postgres:
     image: postgres:16
     environment:
@@ -15,9 +14,40 @@ services:
 
   backend:
     build:
-      context: ./Backend/Backend
+      context: ./Backend
+      dockerfile: Dockerfile
     ports:
       - "5000:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: 8080
+
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+      JWT_SECRET: ${JWT_SECRET}
+      
+      MAILTRAP_SENDER_USER: ${MAILTRAP_SENDER_USER}
+      MAILTRAP_SENDER_PASS: ${MAILTRAP_SENDER_PASS}
+      TARGET_EMAIL: ${TARGET_EMAIL}
+      TICKETMASTER_API_KEY: ${TICKETMASTER_API_KEY}
+
+      TWILIO_SMS_SEND_STATE: ${TWILIO_SMS_SEND_STATE}
+      TWILIO_SID: ${TWILIO_SID}
+      TWILIO_TOKEN: ${TWILIO_TOKEN}
+      TWILIO_NUMBER: ${TWILIO_NUMBER}
+      SMS_RECEIVER: ${SMS_RECEIVER}
+
+      STRIP_PUB_KEY: ${STRIP_PUB_KEY}
+      STRIP_SEC_KEY: ${STRIP_SEC_KEY}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+
     depends_on:
       - postgres
     networks:
@@ -26,6 +56,7 @@ services:
   frontend:
     build:
       context: ./Frontend
+      dockerfile: Dockerfile
     ports:
       - "4200:80"
     depends_on:
@@ -40,6 +71,8 @@ services:
       - "3100:3100"
     networks:
       - app
+    profiles:
+      - monitoring
 
   grafana:
     image: grafana/grafana:latest
@@ -49,16 +82,19 @@ services:
       - loki
     networks:
       - app
+    profiles:
+      - monitoring
 
   prometheus:
     image: prom/prometheus:latest
-    container_name: prometheus
     ports:
       - "9090:9090"
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
     networks:
       - app
+    profiles:
+      - monitoring
 
 volumes:
   pgdata:

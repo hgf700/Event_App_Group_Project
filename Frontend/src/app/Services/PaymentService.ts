@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { postBuyTicketResponseDto } from '../Dto/postBuyTicketResponseDto';
+import { environment } from '../../environments/environment';
 
 export interface PaymentStatusResponse {
   id: number;
@@ -12,7 +13,7 @@ export interface PaymentStatusResponse {
 
 @Injectable({ providedIn: 'root' })
 export class PaymentService {
-  private readonly apiUrl = 'https://localhost:7051/api/v1/payments';
+  private readonly apiUrl = `${environment.apiUrl}/api/v1/payments`;
 
   constructor(private http: HttpClient) {}
 

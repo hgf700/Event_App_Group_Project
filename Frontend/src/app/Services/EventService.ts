@@ -6,11 +6,12 @@ import { getEventDto } from '../Dto/getEventDto';
 import { paginatedResponse } from '../model/paginatedResponse';
 import { getEventTicketWithQrDto } from '../Dto/getEventQrCodeInfoDto';
 import { postSearchEventDto } from '../Dto/postSearchEventDto';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class EventService {
-  private apiUrl = 'https://localhost:7051/api/v1/event';
-  private apiUserTicketUrl = 'https://localhost:7051/api/v1/user-ticket';
+  private apiUrl = `${environment.apiUrl}/api/v1/event`;
+  private apiUserTicketUrl = `${environment.apiUrl}/api/v1/user-ticket`;
 
   constructor(private http: HttpClient) {}
 

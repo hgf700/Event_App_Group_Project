@@ -14,8 +14,6 @@ OrderId potem dodam
 
 usuniecie Notifaction model i ExternalGoogleOAuthTokens?
 
-usuniecie niepotrzebnych rzeczy ze zdalnego repo na github np unit testy
-
 czyszcenie projektu
 
 docker

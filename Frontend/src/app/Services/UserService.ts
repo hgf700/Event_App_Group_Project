@@ -4,10 +4,11 @@ import { postEditUserDto } from '../Dto/postEditUserDto';
 import { getEventDto } from '../Dto/getEventDto';
 import { postEditUserPassword } from '../Dto/postEditUserPassword';
 import { getUserBoughtTicketDto } from '../Dto/getUserBoughtTicketDto';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private apiUrl = 'https://localhost:7051/api/v1/user';
+  private apiUrl = `${environment.apiUrl}/api/v1/user`;
 
   constructor(private http: HttpClient) {}
 
