@@ -114,10 +114,28 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.SameSite = cookiesSettings;
 });
 
-//chyba wazne cos z cookies
-builder.Services.AddDataProtection()
-    .PersistKeysToFileSystem(new DirectoryInfo("/var/dpkeys"))
-    .SetApplicationName("projekt-app");
+// Data Protection – różne zachowanie dla testów i produkcji
+if (builder.Environment.IsEnvironment("IntegrationTest") ||
+    builder.Environment.IsEnvironment("UnitTest"))
+{
+    // Na CI / testach – klucze tymczasowe, zero problemów z uprawnieniami
+    builder.Services.AddDataProtection()
+        .PersistKeysToFileSystem(new DirectoryInfo(Path.GetTempPath()))
+        .SetApplicationName("EventAppTests");
+}
+else
+{
+    // Produkcja / Development
+    var keysPath = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "EventApp", "dpkeys");
+
+    Directory.CreateDirectory(keysPath);
+
+    builder.Services.AddDataProtection()
+        .PersistKeysToFileSystem(new DirectoryInfo(keysPath))
+        .SetApplicationName("EventApp");
+}
 
 // Secrets z ENV / konfiguracji (bez if Testing)
 string Require(string name)

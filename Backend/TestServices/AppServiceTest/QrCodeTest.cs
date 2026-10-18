@@ -1,10 +1,7 @@
 ﻿using EventApp.Services.Services;
 using NUnit.Framework;
+using SkiaSharp;
 using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
 
 namespace TestServices.AppServiceTest;
 
@@ -155,8 +152,7 @@ public class QrCodeTest
     {
         EnsureLogoExists();
 
-        // QRCodeGenerator.CreateQrCode(null, ...) rzuca ArgumentNullException
-        Assert.Throws<NullReferenceException>(() =>
+        Assert.Throws<ArgumentNullException>(() =>
             _service.GenerateQrCode(null!, 1, "user@example.com"));
     }
 
@@ -165,7 +161,7 @@ public class QrCodeTest
     {
         EnsureLogoExists();
 
-        string longContent = new string('A', 500); // sporo danych, ECC Level Q powinien ogarnąć
+        string longContent = new string('A', 500);
 
         byte[] result = _service.GenerateQrCode(longContent, 5, "long@test.com");
 
@@ -197,7 +193,6 @@ public class QrCodeTest
 
         Assert.That(File.Exists(path), Is.True);
         Assert.That(secondWriteTime, Is.GreaterThanOrEqualTo(firstWriteTime));
-        // treść QR się zmieniła → bajty raczej inne
         Assert.That(second, Is.Not.EqualTo(first));
     }
 
@@ -210,13 +205,15 @@ public class QrCodeTest
         if (File.Exists(_logoPath))
             return;
 
-        // Tworzymy minimalne poprawne logo PNG (np. 32x32 czerwony kwadrat)
-        using var bmp = new Bitmap(32, 32);
-        using (var g = Graphics.FromImage(bmp))
-        {
-            g.Clear(Color.Red);
-        }
-        bmp.Save(_logoPath, ImageFormat.Png);
+        // Tworzymy minimalne poprawne logo PNG (32x32 czerwony kwadrat) – bez System.Drawing
+        using var bitmap = new SKBitmap(32, 32);
+        using var canvas = new SKCanvas(bitmap);
+        canvas.Clear(SKColors.Red);
+
+        using var image = SKImage.FromBitmap(bitmap);
+        using var data = image.Encode(SKEncodedImageFormat.Png, 100);
+
+        File.WriteAllBytes(_logoPath, data.ToArray());
     }
 
     private static bool IsPng(byte[] data)
