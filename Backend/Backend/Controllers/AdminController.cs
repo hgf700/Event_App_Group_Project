@@ -22,8 +22,8 @@ public class AdminController : ControllerBase
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ILogger<AdminController> _logger;
     private readonly ISeedDbService _seedDbService;
-    private readonly string UserRole = "user";
-    private readonly string AdminRole = "admin";
+    //private readonly string UserRole = "user";
+    //private readonly string AdminRole = "admin";
 
     public AdminController(ApplicationDbContext context,
         UserManager<ApplicationUser> userManager,

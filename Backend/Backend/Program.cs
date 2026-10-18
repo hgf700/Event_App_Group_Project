@@ -57,16 +57,22 @@ var googleClientId = Require("GOOGLE_CLIENT_ID");
 var googleClientSecret = Require("GOOGLE_CLIENT_SECRET");
 var JWT_SECRET = Require("JWT_SECRET");
 
+var host = Require("POSTGRES_HOST");
+var port = Require("POSTGRES_PORT");
+var db = Require("POSTGRES_DB");
+var user = Require("POSTGRES_USER");
+var password = Require("POSTGRES_PASSWORD");
+
 //db
 //var connectionString = builder.Configuration.GetConnectionString("Default")
 //    ?? throw new InvalidOperationException("Connection string 'Default' is not set.");
 var connectionString = new Npgsql.NpgsqlConnectionStringBuilder
 {
-    Host = Require("POSTGRES_HOST"),
-    Port = int.Parse(Require("POSTGRES_PORT")),
-    Database = Require("POSTGRES_DB"),
-    Username = Require("POSTGRES_USER"),
-    Password = Require("POSTGRES_PASSWORD")
+    Host = host,
+    Port = int.Parse(port),
+    Database = db,
+    Username = user,
+    Password = password
 }.ConnectionString;
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
