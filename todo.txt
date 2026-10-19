@@ -17,3 +17,41 @@ usuniecie Notifaction model i ExternalGoogleOAuthTokens?
 czyszcenie projektu
 
 docker
+
+usunac kilka nugetow by szybciej dzialalo actions bo 40 s build
+
+observer daje mi przewage jesli po wpisaniu tekstu od razu wyszukuje np
+kkokonkoncert możesz wykonać cztery niepotrzebne żądania.
+z observable daje
+debounceTime(300) ogranicza liczbę zapytań podczas pisania.
+distinctUntilChanged() nie wykonuje ponownie zapytania, gdy wartość się nie zmieniła.
+switchMap() przełącza subskrypcję na najnowsze wyszukiwanie.
+
+kryterium	subscribe()	async pipe
+Wyświetlanie danych w HTML	Działa	Zwykle lepszy wybór
+Automatyczne odsubskrybowanie	Nie zawsze	Tak, przy zniszczeniu widoku
+Dodatkowe operacje po odpowiedzi	Bardzo wygodne	Wymaga innego podejścia
+Kod komponentu	Zwykle więcej kodu	Zwykle mniej kodu
+Obsługa błędów	W subscribe lub przez operatory	Najczęściej przez operatory i stan w HTML
+
+event$ = this.eventService.getEventDetails(15);
+@if (event$ | async; as event) 
+
+zmien porty by nie byly w zakresie
+Protocol tcp Port Exclusion Ranges
+
+Start Port    End Port
+----------    --------
+      3867        3966
+      3967        4066
+      4067        4166
+      4167        4266
+      4617        4716
+     28385       28385
+     28390       28390
+     50000       50059     
+     57743       57842
+     57843       57942
+     57943       58042
+     58043       58142
+     58143       58242

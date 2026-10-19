@@ -25,9 +25,10 @@ public class AuthController : ControllerBase
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IJwtService _jwtService;
+    private readonly string _frontendUrl;
 
-
-    private readonly string YOUR_DOMAIN = "http://localhost:4200";
+    //private readonly string YOUR_DOMAIN = "http://localhost:4200";
+    //private readonly string YOUR_DOMAIN = Environment.GetEnvironmentVariable("Frontend__BaseUrl") ?? "http://localhost:4200";
     private readonly string RefreshTokenPath = "/api/v1/auth/refresh";
     private readonly string JwtPath = "/";
     private readonly SameSiteMode cookiesSettings = SameSiteMode.None;
@@ -37,7 +38,8 @@ public class AuthController : ControllerBase
         IAuthService authService,
         ApplicationDbContext context,
         UserManager<ApplicationUser> userManager,
-        IJwtService jwtService
+        IJwtService jwtService,
+        IConfiguration configuration
         )
     {
         _logger= logger;
@@ -45,6 +47,8 @@ public class AuthController : ControllerBase
         _context= context;
         _userManager = userManager;
         _jwtService = jwtService;
+
+        _frontendUrl = configuration["Frontend:BaseUrl"]!;
     }
 
     private void SetJwtCookie(string jwt)
@@ -195,7 +199,7 @@ public class AuthController : ControllerBase
             SetRefreshTOkenCookie(result.Response!.refreshToken);
 
             return Redirect(
-                $"{YOUR_DOMAIN}/login-callback" +
+                $"{_frontendUrl}/login-callback" +
                 $"&email={Uri.EscapeDataString(result.Response!.email)}" +
                 $"&userRole={Uri.EscapeDataString(result.Response!.userRole)}"
                 );

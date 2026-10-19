@@ -1,0 +1,48 @@
+# IDE
+**/.vs/
+**/.vscode/
+
+# .NET
+**/bin/
+**/obj/
+**/Migrations/
+
+# Node / Angular
+**/node_modules/
+**/.angular/
+
+# env
+**/.env
+
+# git (clean)
+**/.git
+**/.github
+**/.github/
+
+# docker / ci
+**/docker-compose*
+**/Dockerfile*
+
+# misc
+**/README.md
+**/LICENSE
+
+#Infrastructure
+**/Infrastructure/
+
+#mine
+**/test/
+**/usefull/
+**/opinia/
+
+#generated
+**/Generated/
+**/Logs/
+**/temp.txt
+**/todo.txt
+**/Migrations/
+
+#unit test
+**/TestServices/
+**/TestProject1/
+**/app/ServicesUnitTest/

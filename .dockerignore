@@ -17,6 +17,7 @@
 # git (clean)
 **/.git
 **/.github
+**/.github/
 
 # docker / ci
 **/docker-compose*
@@ -34,7 +35,14 @@
 **/usefull/
 **/opinia/
 
+#generated
 **/Generated/
 **/Logs/
 **/temp.txt
 **/todo.txt
+**/Migrations/
+
+#unit test
+**/TestServices/
+**/TestProject1/
+**/app/ServicesUnitTest/

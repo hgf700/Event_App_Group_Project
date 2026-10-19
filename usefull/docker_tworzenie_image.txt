@@ -4,15 +4,20 @@ docker compose config -q
 # pobieranie image i tworzeneie
 docker compose up -d --build
 
+#tworzeneie + monitoring
+docker compose --profile monitoring up --build -d
+
 #status
 docker compose ps
 
 #test
-http://localhost:4200
 http://localhost:5000
-localhost:3000
-localhost:9090
-localhost:3100/ready
+http://localhost:8080
+
+
+http://localhost:3000
+http://localhost:9090
+http://localhost:3100/ready
 
 
 #usuwanie komendy jesli nie zadziala to zamknac dockera
