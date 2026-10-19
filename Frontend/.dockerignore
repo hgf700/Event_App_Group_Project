@@ -5,7 +5,6 @@
 # .NET
 **/bin/
 **/obj/
-**/Migrations/
 
 # Node / Angular
 **/node_modules/
@@ -27,9 +26,6 @@
 **/README.md
 **/LICENSE
 
-#Infrastructure
-**/Infrastructure/
-
 #mine
 **/test/
 **/usefull/
@@ -40,7 +36,6 @@
 **/Logs/
 **/temp.txt
 **/todo.txt
-**/Migrations/
 
 #unit test
 **/TestServices/

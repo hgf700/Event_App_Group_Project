@@ -31,6 +31,8 @@ if (builder.Environment.IsDevelopment())
 
 builder.Services.AddControllers();
 
+builder.Services.AddProblemDetails();
+
 //swager
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
@@ -121,7 +123,8 @@ builder.Services.Configure<IdentityOptions>(options =>
 {
     options.Password.RequiredLength = 1;
     //options.Password.RequiredLength = 5;
-    options.Password.RequireDigit = true;
+    //options.Password.RequireDigit = true;
+    options.Password.RequireDigit = false;
     options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = false;
     options.Password.RequireNonAlphanumeric = false;
@@ -209,7 +212,10 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Prod", policy => policy
-            .WithOrigins("http://localhost:4200")
+            .WithOrigins(
+                "http://localhost:4200",
+                "http://localhost:8080"
+            )
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials());
@@ -293,11 +299,46 @@ builder.Services.AddOutputCache();
 
 var app = builder.Build();
 
+// 1. Migracje (poza testami)
+if (!app.Environment.IsEnvironment("IntegrationTest") && !app.Environment.IsEnvironment("UnitTest"))
+{
+    using var scope = app.Services.CreateScope();
+    var services = scope.ServiceProvider;
+
+    try
+    {
+        var context = services.GetRequiredService<ApplicationDbContext>();
+
+        Console.WriteLine(">>> Applying EF Core migrations...");
+        context.Database.Migrate();
+        Console.WriteLine(">>> Migrations applied successfully.");
+
+        // Seed tylko gdy NIE jesteśmy w Development (albo zmień warunek jak chcesz)
+        if (!app.Environment.IsDevelopment())
+        {
+            Console.WriteLine(">>> Running IdentitySeeder...");
+            await IdentitySeeder.SeedAsync(services);
+            Console.WriteLine(">>> Seeder finished.");
+        }
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Database migration/seed failed.");
+        throw; // nie pozwalaj aplikacji startować ze złą bazą
+    }
+}
+
+if (!app.Environment.IsEnvironment("Docker"))
+{
+    app.UseHttpsRedirection();
+}
+
+// 2. Health checks
 app.MapHealthChecks("/health/live", new HealthCheckOptions { Predicate = _ => false });
+app.MapHealthChecks("/health/ready", new HealthCheckOptions { Predicate = check => check.Tags.Contains("ready") });
 
-// Readiness: czy aplikacja i baza są gotowe?
-app.MapHealthChecks("/health/ready", new HealthCheckOptions { Predicate = check => check.Tags.Contains("ready")});
-
+// 3. Środowisko + seed
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -311,9 +352,10 @@ else if (app.Environment.IsEnvironment("IntegrationTest"))
 }
 else
 {
-    app.UseExceptionHandler();   
+    app.UseExceptionHandler();
     app.UseHsts();
 
+    // Seed tylko po migracjach (produkcja / Docker)
     using var scope = app.Services.CreateScope();
     await IdentitySeeder.SeedAsync(scope.ServiceProvider);
 }
@@ -329,13 +371,9 @@ app.Use(async (context, next) =>
     {
         context.Response.Headers["X-Content-Type-Options"] = "nosniff";
         context.Response.Headers["X-Frame-Options"] = "DENY";
-
-        //Dla API zwracającego dane wrażliwe.
         context.Response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate";
-
         context.Response.Headers["Pragma"] = "no-cache";
         context.Response.Headers["Expires"] = "0";
-
         return Task.CompletedTask;
     });
 
@@ -352,29 +390,11 @@ app.UseOutputCache();
 
 app.UseSerilogRequestLogging();
 
-//prometheus
+// Prometheus
 app.UseHttpMetrics();
 app.MapMetrics();
 
 app.MapControllers();
-
-// MIGRATIONS (tylko DEV/PROD, NIE TESTY)
-//if (!app.Environment.IsEnvironment("UnitTest") &&
-//    !app.Environment.IsEnvironment("IntegrationTest"))
-//{
-//    using var scope = app.Services.CreateScope();
-//    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-//    try
-//    {
-//        db.Database.Migrate();
-//    }
-//    catch (Exception ex)
-//    {
-//        Console.WriteLine($"Migration failed: {ex.Message}");
-//        throw;
-//    }
-//}
 
 app.Run();
 

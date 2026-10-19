@@ -1,0 +1,177 @@
+do dzialania db potrzebuje migrations
+
+
+logika dziala
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - app
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+      ASPNETCORE_HTTP_PORTS: 8080
+
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+      JWT_SECRET: ${JWT_SECRET}
+      
+      MAILTRAP_SENDER_USER: ${MAILTRAP_SENDER_USER}
+      MAILTRAP_SENDER_PASS: ${MAILTRAP_SENDER_PASS}
+      TARGET_EMAIL: ${TARGET_EMAIL}
+      TICKETMASTER_API_KEY: ${TICKETMASTER_API_KEY}
+
+      TWILIO_SMS_SEND_STATE: ${TWILIO_SMS_SEND_STATE}
+      TWILIO_SID: ${TWILIO_SID}
+      TWILIO_TOKEN: ${TWILIO_TOKEN}
+      TWILIO_NUMBER: ${TWILIO_NUMBER}
+      SMS_RECEIVER: ${SMS_RECEIVER}
+
+      STRIP_PUB_KEY: ${STRIP_PUB_KEY}
+      STRIP_SEC_KEY: ${STRIP_SEC_KEY}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+    
+    depends_on:
+      postgres: 
+        condition: service_healthy
+
+    networks:
+      - app
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - app
+    restart: unless-stopped
+
+  loki:
+    image: grafana/loki:2.9.0
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "3100:3100"
+    networks:
+      - app
+    profiles:
+      - monitoring
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - loki
+    networks:
+      - app
+    profiles:
+      - monitoring
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - app
+    profiles:
+      - monitoring
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  grafana-data:
+
+networks:
+  app:
+
+
+
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+WORKDIR /src
+
+# 1. Kopiujemy tylko pliki .csproj (lepsze cache'owanie)
+COPY Backend/Backend.csproj Backend/
+COPY EventApp.Domain/EventApp.Domain.csproj EventApp.Domain/
+COPY EventApp.Infrastructure/EventApp.Infrastructure.csproj EventApp.Infrastructure/
+COPY EventApp.Services/EventApp.Services.csproj EventApp.Services/
+
+# 2. Restore tylko głównego projektu (pociągnie resztę)
+RUN dotnet restore Backend/Backend.csproj
+
+# 3. Kopiujemy resztę kodu
+COPY . .
+
+# 4. Publish
+RUN dotnet publish Backend/Backend.csproj \
+    -c Release \
+    -o /app/publish \
+    --no-restore
+
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
+WORKDIR /app
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libgssapi-krb5-2 \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=build /app/publish .
+
+EXPOSE 8080
+ENTRYPOINT ["dotnet", "Backend.dll"]
+
+
+
+FROM node:20 AS build
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci
+
+COPY . .
+RUN npm run build -- --configuration production
+
+FROM nginx:alpine
+
+COPY --from=build /app/dist/Frontend/browser /usr/share/nginx/html
+
+EXPOSE 80

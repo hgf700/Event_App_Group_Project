@@ -2,7 +2,10 @@
 docker compose config -q
 
 # pobieranie image i tworzeneie
-docker compose up -d --build
+docker compose up --build
+
+#przebudowa calkowita istniejacego
+docker compose up --build --force-recreate
 
 #tworzeneie + monitoring
 docker compose --profile monitoring up --build -d
