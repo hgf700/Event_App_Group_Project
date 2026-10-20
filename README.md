@@ -36,6 +36,7 @@ http://13.217.97.150/
 - **Admin Panel** for managing users, events, and tickets. 
 - **Data caching** for public views.
 - **HTTP status codes** returned according to the outcome of API requests.
+- **Request Resilience** such as the Circuit Breaker, request timeouts, automatic retries and error handling using **RxJS**.
 
 ### 💳 Post-Payment Workflow:
 After a successful payment, the application automatically performs the following actions:
@@ -65,14 +66,15 @@ After a successful payment, the application automatically performs the following
 
 ### Frontend
 - Angular
-- Unit Tests Vitest
+- RxJS (Reactive Extensions for JavaScript) - Resiliance methods
+- Vitest - Unit Tests 
 
 ### Backend
 - ASP.NET Web API
 - Entity Framework
 - ASP.NET Identity
 - JWT Authentication and authorization
-- Unit Tests and Integration Tests NUnit 
+- NUnit - Unit Tests and Integration Tests  
 - Serilog Logging
 - Health checks
 
@@ -132,6 +134,6 @@ docker compose --profile monitoring up -d --build
 | Loki       | http://localhost:3100 |
 
 ## 🚀 Future Potential Improvements
-- Strengthen application security.
+- Complete Backend resiliance
 - Introduce Kubernetes for container orchestration and deployment.
 - Implement distributed tracing using OpenTelemetry.
