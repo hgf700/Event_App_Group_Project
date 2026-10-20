@@ -15,8 +15,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<ApplicationUser> Users { get; set; }
     public DbSet<Event> Events { get; set; }
     public DbSet<UserEvent> UserEvents { get; set; }
-    public DbSet<NotificationLog> NotificationLogs { get; set; }
-    public DbSet<ExternalGoogleOAuthToken> ExternalGoogleOAuthTokens { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<Bookmark> Bookmarks { get; set; }
 
@@ -36,20 +34,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasOne(ue => ue.Event)
             .WithMany(e => e.UserEvents)
             .HasForeignKey(ue => ue.EventId);
-
-        modelBuilder.Entity<ExternalGoogleOAuthToken>()
-            .HasIndex(x => new { x.UserId, x.Provider })
-            .IsUnique();
-
-        modelBuilder.Entity<NotificationLog>()
-            .HasOne(u => u.User)
-            .WithMany()
-            .HasForeignKey(u => u.UserId);
-
-        modelBuilder.Entity<NotificationLog>()
-            .HasOne(e => e.Event)
-            .WithMany()
-            .HasForeignKey(e => e.EventId);
 
         modelBuilder.Entity<RefreshToken>()
             .HasOne(rt => rt.User)

@@ -1,0 +1,23 @@
+// resiliance glownie dla get dla post trzeba uwazac
+seedDataBase() {
+    return this.http
+      .post<boolean>(`${this.apiUrl}/admin-seed-database`, {})
+      .pipe(resiliencePipe());
+  }
+
+  .pipe(resiliencePipe({ timeoutMs: 10000, maxRetries: 2 }));
+
+
+
+//circiut breaker glownie dla jesli korzystam z zewnetrznego api i mozna dla get i post ale get ma juz 
+//resiliance wiec glownie dla post poza rejestracja posty
+
+private circuitBreaker = new CircuitBreaker(5, 15000);
+
+getAppUsageInfo() {
+  return this.circuitBreaker.execute(
+    this.http
+      .get<getAppUsageInfoDto>(`${this.apiUrl}/admin-app-usage-info`)
+      .pipe(resiliencePipe()),
+  );
+}

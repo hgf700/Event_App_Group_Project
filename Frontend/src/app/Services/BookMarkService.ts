@@ -7,6 +7,7 @@ import { paginatedResponse } from '../model/paginatedResponse';
 import { getEventTicketWithQrDto } from '../Dto/getEventQrCodeInfoDto';
 import { getBookmarkDto } from '../Dto/getBookmarkDto';
 import { environment } from '../../environments/environment';
+import { resiliencePipe } from '../helpers/ResilianceHelpers';
 
 @Injectable({ providedIn: 'root' })
 export class BookMarkService {
@@ -15,7 +16,8 @@ export class BookMarkService {
   constructor(private http: HttpClient) {}
 
   getUserBookmarks() {
-    return this.http.get<getBookmarkDto[]>(`${this.apiUrl}/user-bookmarks`);
+    return this.http.get<getBookmarkDto[]>(`${this.apiUrl}/user-bookmarks`)
+    .pipe(resiliencePipe());
   }
 
   bookmarkEvent(eventId: number) {

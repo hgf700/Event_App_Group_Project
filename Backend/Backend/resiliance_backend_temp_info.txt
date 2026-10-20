@@ -1,0 +1,67 @@
+﻿public class SendOrDownloadFromApiService
+    : ISendOrDownloadFromApiService
+{
+    private readonly HttpClient _httpClient;
+
+    public SendOrDownloadFromApiService(
+        IHttpClientFactory httpClientFactory)
+    {
+        _httpClient = httpClientFactory.CreateClient("Unipluss");
+    }
+
+    // Zostaw tutaj swoją istniejącą metodę
+    // FetchAndSaveEventsAsync(...)
+}
+
+
+
+//potem w serwisie korzystaj z
+using var response = await _httpClient.GetAsync(
+    "TU_WSTAW_WLASCIWY_ENDPOINT_API");
+
+response.EnsureSuccessStatusCode();
+
+var json = await response.Content.ReadAsStringAsync();
+
+
+
+
+
+
+
+
+//inne dla search or download
+builder.Services
+    .AddHttpClient("Ticketmaster")
+    .AddStandardResilienceHandler(options =>
+    {
+        options.Retry.MaxRetryAttempts = 3;
+        options.Retry.Delay = TimeSpan.FromSeconds(1);
+        options.Retry.BackoffType = DelayBackoffType.Exponential;
+        options.Retry.UseJitter = true;
+
+        options.CircuitBreaker.SamplingDuration =
+            TimeSpan.FromSeconds(30);
+        options.CircuitBreaker.FailureRatio = 0.5;
+        options.CircuitBreaker.MinimumThroughput = 10;
+        options.CircuitBreaker.BreakDuration =
+            TimeSpan.FromSeconds(15);
+
+        options.AttemptTimeout.Timeout = TimeSpan.FromSeconds(8);
+        options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(25);
+    });
+
+builder.Services.AddScoped<
+    ISendOrDownloadFromApiService,
+    SendOrDownloadFromApiService>();
+
+    public SendOrDownloadFromApiService(
+    IHttpClientFactory httpClientFactory,
+    ApplicationDbContext context)
+{
+    _httpClient = httpClientFactory.CreateClient("Ticketmaster");
+    _context = context;
+}
+
+// i uzywac
+using var response = await _httpClient.GetAsync(url);

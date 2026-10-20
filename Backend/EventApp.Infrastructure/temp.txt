@@ -1,0 +1,25 @@
+﻿    //public DbSet<ExternalGoogleOAuthToken> ExternalGoogleOAuthTokens { get; set; }
+
+            //modelBuilder.Entity<ExternalGoogleOAuthToken>()
+        //    .HasIndex(x => new { x.UserId, x.Provider })
+        //    .IsUnique();
+
+
+
+
+
+
+
+
+
+    //public DbSet<NotificationLog> NotificationLogs { get; set; }
+
+            //modelBuilder.Entity<NotificationLog>()
+        //    .HasOne(u => u.User)
+        //    .WithMany()
+        //    .HasForeignKey(u => u.UserId);
+
+        //modelBuilder.Entity<NotificationLog>()
+        //    .HasOne(e => e.Event)
+        //    .WithMany()
+        //    .HasForeignKey(e => e.EventId);

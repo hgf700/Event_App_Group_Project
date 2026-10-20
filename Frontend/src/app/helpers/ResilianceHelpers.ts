@@ -1,72 +1,83 @@
-// import { retry, timeout, catchError, throwError, Observable, timer } from 'rxjs';
+import {
+  Observable,
+  throwError,
+  timer,
+  TimeoutError,
+} from 'rxjs';
+import {
+  retry,
+  timeout,
+  catchError,
+  tap,
+} from 'rxjs/operators';
 
-// export function RetryHelper<T>() {
-//   return (source: any) => source.pipe(retry(3));
-// }
+export interface ResilienceOptions {
+  /** Timeout pojedynczego requestu (ms) */
+  timeoutMs?: number;
+  /** Maksymalna liczba ponowień (nie licząc pierwszego requestu) */
+  maxRetries?: number;
+  /** Bazowy delay między retry (ms) – będzie rosnął */
+  baseDelayMs?: number;
+  /** Maksymalny delay między retry (ms) */
+  maxDelayMs?: number;
+  /** Czy logować błędy */
+  logErrors?: boolean;
+}
 
-// export function TimeoutHelper<T>() {
-//   return (source: any) => source.pipe(timeout(5000));
-// }
+const DEFAULT_OPTIONS: Required<ResilienceOptions> = {
+  timeoutMs: 3000,
+  maxRetries: 3,
+  baseDelayMs: 1000,
+  maxDelayMs: 10000,
+  logErrors: true,
+};
 
-// export function TotalTimeoutHelper<T>() {
-//   return (source: any) => source.pipe(timeout(10000));
-// }
+/**
+ * Resilience pipe z:
+ * - timeoutem
+ * - retry z exponential backoff + jitter
+ * - sensownym catchError
+ */
+export function resiliencePipe<T>(options: ResilienceOptions = {}) {
+  const opts = { ...DEFAULT_OPTIONS, ...options };
 
-// export function resiliencePipe<T>() {
-//   return (source: any) =>
-//     source.pipe(
-//       // timeout(5000),
+  return (source: Observable<T>) =>
+    source.pipe(
+      timeout(opts.timeoutMs),
 
-//       retry({
-//         count: 3,
-//         delay: (error, retryCount) => timer(retryCount * 1000),
-//       }),
+      retry({
+        count: opts.maxRetries,
+        delay: (error, retryCount) => {
+          // Exponential backoff + jitter
+          const exponentialDelay = Math.min(
+            opts.baseDelayMs * Math.pow(2, retryCount - 1),
+            opts.maxDelayMs,
+          );
+          const jitter = Math.random() * 300; // 0–300ms
+          const delay = exponentialDelay + jitter;
 
-//       catchError((err) => {
-//         console.error('Request failed:', err);
-//         return throwError(() => err);
-//       }),
-//     );
-// }
+          if (opts.logErrors) {
+            console.warn(
+              `[Resilience] Retry ${retryCount}/${opts.maxRetries} za ${Math.round(delay)}ms`,
+              error,
+            );
+          }
 
-// class CircuitBreaker {
-//   private failures = 0;
-//   private lastFailTime = 0;
-//   private state: 'CLOSED' | 'OPEN' = 'CLOSED';
+          return timer(delay);
+        },
+        // Retryujemy tylko wybrane błędy (opcjonalnie)
+        // resetOnSuccess: true, // domyślnie true
+      }),
 
-//   constructor(
-//     private threshold = 5,
-//     private cooldown = 10000,
-//   ) {}
-
-//   execute<T>(source: Observable<T>) {
-//     if (this.state === 'OPEN') {
-//       if (Date.now() - this.lastFailTime > this.cooldown) {
-//         this.state = 'CLOSED';
-//         this.failures = 0;
-//       } else {
-//         return throwError(() => new Error('Circuit breaker OPEN'));
-//       }
-//     }
-
-//     return new Observable<T>((observer) => {
-//       source.subscribe({
-//         next: (v) => {
-//           this.failures = 0;
-//           observer.next(v);
-//         },
-//         error: (err) => {
-//           this.failures++;
-//           this.lastFailTime = Date.now();
-
-//           if (this.failures >= this.threshold) {
-//             this.state = 'OPEN';
-//           }
-
-//           observer.error(err);
-//         },
-//         complete: () => observer.complete(),
-//       });
-//     });
-//   }
-// }
+      catchError((err) => {
+        if (opts.logErrors) {
+          if (err instanceof TimeoutError) {
+            console.error('[Resilience] Request timed out');
+          } else {
+            console.error('[Resilience] Request failed after retries:', err);
+          }
+        }
+        return throwError(() => err);
+      }),
+    );
+}

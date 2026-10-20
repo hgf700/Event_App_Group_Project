@@ -5,6 +5,7 @@ import { getEventDto } from '../Dto/getEventDto';
 import { postEditUserPassword } from '../Dto/postEditUserPassword';
 import { getUserBoughtTicketDto } from '../Dto/getUserBoughtTicketDto';
 import { environment } from '../../environments/environment';
+import { resiliencePipe } from '../helpers/ResilianceHelpers';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -24,6 +25,7 @@ export class UserService {
   }
 
   currentUserTickets() {
-    return this.http.get<getUserBoughtTicketDto[]>(`${this.apiUrl}/user-tickets`);
+    return this.http.get<getUserBoughtTicketDto[]>(`${this.apiUrl}/user-tickets`)
+    .pipe(resiliencePipe());
   }
 }

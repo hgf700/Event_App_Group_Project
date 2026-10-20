@@ -7,6 +7,7 @@ import { paginatedResponse } from '../model/paginatedResponse';
 import { getEventTicketWithQrDto } from '../Dto/getEventQrCodeInfoDto';
 import { postSearchEventDto } from '../Dto/postSearchEventDto';
 import { environment } from '../../environments/environment';
+import { resiliencePipe } from '../helpers/ResilianceHelpers';
 
 @Injectable({ providedIn: 'root' })
 export class EventService {
@@ -18,23 +19,27 @@ export class EventService {
   getEvents(page: number, pageSize: number): Observable<paginatedResponse<getEventDto>> {
     return this.http.get<paginatedResponse<getEventDto>>(
       `${this.apiUrl}/get-events?page=${page}&pageSize=${pageSize}`,
-    );
+    )
+    .pipe(resiliencePipe());
   }
 
   eventDetails(eventId: number) {
-    return this.http.get<getEventDto>(`${this.apiUrl}/event-details/${eventId}`);
+    return this.http.get<getEventDto>(`${this.apiUrl}/event-details/${eventId}`)
+    .pipe(resiliencePipe());
   }
 
   getTicketsWithQr(eventId: number): Observable<getEventTicketWithQrDto> {
     return this.http.get<getEventTicketWithQrDto>(
       `${this.apiUserTicketUrl}/ticket-detail-with-qr/${eventId}`,
-    );
+    )
+    .pipe(resiliencePipe());
   }
 
   getPublicEvents(page: number, pageSize: number): Observable<paginatedResponse<getEventDto>> {
     return this.http.get<paginatedResponse<getEventDto>>(
       `${this.apiUrl}/public-get-events?page=${page}&pageSize=${pageSize}`,
-    );
+    )
+    .pipe(resiliencePipe());
   }
 
   searchOrDownloadEventForm(city: string) {

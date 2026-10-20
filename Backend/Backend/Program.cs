@@ -19,6 +19,7 @@ using Serilog.Sinks.Grafana.Loki;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.RateLimiting;
+using Unipluss.Sign.ExternalContract.Interfaces;
 
 SameSiteMode cookiesSettings = SameSiteMode.None;
 
@@ -117,6 +118,24 @@ builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddAuthorization();
+
+//resiliance trzeba dorobic
+//builder.Services.AddHttpClient("Unipluss")
+//    .AddStandardResilienceHandler(options =>
+//    {
+//        options.Retry.MaxRetryAttempts = 3;
+//        options.Retry.Delay = TimeSpan.FromSeconds(1);
+//        options.Retry.BackoffType = DelayBackoffType.Exponential;
+//        options.Retry.UseJitter = true;
+
+//        options.CircuitBreaker.SamplingDuration = TimeSpan.FromSeconds(30);
+//        options.CircuitBreaker.FailureRatio = 0.5;
+//        options.CircuitBreaker.MinimumThroughput = 10;
+//        options.CircuitBreaker.BreakDuration = TimeSpan.FromSeconds(15);
+
+//        options.AttemptTimeout.Timeout = TimeSpan.FromSeconds(8);
+//        options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(25);
+//    });
 
 //prod identity
 builder.Services.Configure<IdentityOptions>(options =>

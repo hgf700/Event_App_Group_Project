@@ -7,6 +7,7 @@ import { getBoughtTicketDto } from '../Dto/getBoughtTicketDto';
 import { getEventAdminDto } from '../Dto/getEventAdminDto';
 import { getBookmarkDto } from '../Dto/getBookmarkDto';
 import { environment } from '../../environments/environment';
+import { resiliencePipe } from '../helpers/ResilianceHelpers';
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
@@ -19,11 +20,13 @@ export class AdminService {
   }
 
   getAppUsageInfo() {
-    return this.http.get<getAppUsageInfoDto>(`${this.apiUrl}/admin-app-usage-info`);
+    return this.http.get<getAppUsageInfoDto>(`${this.apiUrl}/admin-app-usage-info`)
+    .pipe(resiliencePipe());
   }
 
   getEvents() {
-    return this.http.get<getEventAdminDto[]>(`${this.apiUrl}/admin-events`);
+    return this.http.get<getEventAdminDto[]>(`${this.apiUrl}/admin-events`)
+    .pipe(resiliencePipe());
   }
 
   deleteEvent(id: number) {
@@ -31,7 +34,8 @@ export class AdminService {
   }
 
   getUsers() {
-    return this.http.get<getAdminUserDto[]>(`${this.apiUrl}/admin-users`);
+    return this.http.get<getAdminUserDto[]>(`${this.apiUrl}/admin-users`)
+    .pipe(resiliencePipe());
   }
 
   deleteUser(id: string) {
@@ -43,7 +47,8 @@ export class AdminService {
   }
 
   getBlockedUsers() {
-    return this.http.get<getAdminUserDto[]>(`${this.apiUrl}/admin-blocked-users`);
+    return this.http.get<getAdminUserDto[]>(`${this.apiUrl}/admin-blocked-users`)
+    .pipe(resiliencePipe());
   }
 
   unblockUser(id: string) {
@@ -51,10 +56,12 @@ export class AdminService {
   }
 
   getBoughtTickets() {
-    return this.http.get<getBoughtTicketDto[]>(`${this.apiUrl}/admin-bought-tickets`);
+    return this.http.get<getBoughtTicketDto[]>(`${this.apiUrl}/admin-bought-tickets`)
+    .pipe(resiliencePipe());
   }
 
   adminGetAllBookmarks() {
-    return this.http.get<getBookmarkDto[]>(`${this.apiUrl}/admin-all-bookmarks`);
+    return this.http.get<getBookmarkDto[]>(`${this.apiUrl}/admin-all-bookmarks`)
+    .pipe(resiliencePipe());
   }
 }
