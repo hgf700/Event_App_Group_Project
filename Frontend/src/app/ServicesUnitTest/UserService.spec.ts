@@ -1,10 +1,7 @@
 // user.service.spec.ts
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
-import {
-  HttpTestingController,
-  provideHttpClientTesting,
-} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { UserService } from '../Services/UserService';
 import { postEditUserPassword } from '../Dto/postEditUserPassword';
 import { getUserBoughtTicketDto } from '../Dto/getUserBoughtTicketDto';
@@ -18,11 +15,7 @@ describe('UserService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        UserService,
-        provideHttpClient(),
-        provideHttpClientTesting(),
-      ],
+      providers: [UserService, provideHttpClient(), provideHttpClientTesting()],
     });
 
     service = TestBed.inject(UserService);

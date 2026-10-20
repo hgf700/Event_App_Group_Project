@@ -1,4 +1,3 @@
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ErrorPage, ErrorPageConfig } from './error-page';
 
@@ -35,13 +34,12 @@ describe('ErrorPage', () => {
   it('should display the configured error information', () => {
     const element: HTMLElement = fixture.nativeElement;
 
-    expect(element.querySelector('.error-code')?.textContent?.trim())
-      .toBe('404');
+    expect(element.querySelector('.error-code')?.textContent?.trim()).toBe('404');
 
-    expect(element.querySelector('h1')?.textContent?.trim())
-      .toBe('Page not found');
+    expect(element.querySelector('h1')?.textContent?.trim()).toBe('Page not found');
 
-    expect(element.querySelector('.message')?.textContent?.trim())
-      .toBe('The page you are looking for does not exist.');
+    expect(element.querySelector('.message')?.textContent?.trim()).toBe(
+      'The page you are looking for does not exist.',
+    );
   });
 });

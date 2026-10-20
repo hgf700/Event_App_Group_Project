@@ -1,10 +1,7 @@
 // auth.service.spec.ts
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
-import {
-  HttpTestingController,
-  provideHttpClientTesting,
-} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { AuthService } from '../Services/AuthService';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { authResponseDto } from '../Dto/authResponseDto';
@@ -48,11 +45,7 @@ describe('AuthService', () => {
     });
 
     TestBed.configureTestingModule({
-      providers: [
-        AuthService,
-        provideHttpClient(),
-        provideHttpClientTesting(),
-      ],
+      providers: [AuthService, provideHttpClient(), provideHttpClientTesting()],
     });
 
     service = TestBed.inject(AuthService);
@@ -72,10 +65,10 @@ describe('AuthService', () => {
   describe('registerUserNorm', () => {
     it('should send POST request with email and password', () => {
       const mockResponse: authResponseDto = {
-          email: 'test@example.com',
-          userRole: 'user',
-          jwt: '',
-          refreshToken: ''
+        email: 'test@example.com',
+        userRole: 'user',
+        jwt: '',
+        refreshToken: '',
       };
 
       service.registerUserNorm('test@example.com', 'password123').subscribe((res) => {
@@ -98,10 +91,10 @@ describe('AuthService', () => {
   describe('loginUserNorm', () => {
     it('should send POST request with email and password', () => {
       const mockResponse: authResponseDto = {
-          email: 'test@example.com',
-          userRole: 'user',
-          jwt: '',
-          refreshToken: ''
+        email: 'test@example.com',
+        userRole: 'user',
+        jwt: '',
+        refreshToken: '',
       };
 
       service.loginUserNorm('test@example.com', 'password123').subscribe((res) => {

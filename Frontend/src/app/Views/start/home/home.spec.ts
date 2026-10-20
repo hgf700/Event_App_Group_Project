@@ -1,4 +1,3 @@
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { of } from 'rxjs';
@@ -60,24 +59,18 @@ describe('Home', () => {
   it('should navigate to register page', () => {
     component.registerUserView();
 
-    expect(routerMock.navigate).toHaveBeenCalledWith([
-      '/register-user',
-    ]);
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/register-user']);
   });
 
   it('should navigate to login page', () => {
     component.loginUserView();
 
-    expect(routerMock.navigate).toHaveBeenCalledWith([
-      '/login-user',
-    ]);
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/login-user']);
   });
 
   it('should call Google OAuth login', () => {
     component.loginWithGoogle();
 
-    expect(
-      authServiceMock.loginWithGoogleOauth,
-    ).toHaveBeenCalled();
+    expect(authServiceMock.loginWithGoogleOauth).toHaveBeenCalled();
   });
 });

@@ -107,31 +107,31 @@ After a successful payment, the application automatically performs the following
 | Liveness Probe | https://localhost:7051/health/live |
 | Readiness Probe | https://localhost:7051/health/ready |
 
-## 🐳 Docker Commands (not work yet)
-- Build the Docker image:
+## 🐳 Docker Commands
+- check if required .env are fullfilled:
 ```bash
-docker build -t event-app .
+docker compose config -q
 ```
 - Run the container:
 ```bash
-docker run -d -p 8080:8080 --name event-app event-app
+docker compose up -d --build
 ```
-- Work with monitoring: (grafana + prometheus + loki)
+- Run with monitoring: (grafana + prometheus + loki)
 ```bash
-docker compose --profile monitoring up -d
+docker compose --profile monitoring up -d --build
 ```
-- Work without monitoring: 
-```bash
-docker compose up -d 
-```
+
+## 🌐 Docker Endpoints
 
 | Service     | URL |
 |------------|-----|
 | Backend    | http://localhost:5000 |
 | Frontend    | http://localhost:8080 |
+| Grafana    | http://localhost:3000 |
+| Prometheus | http://localhost:9090 |
+| Loki       | http://localhost:3100 |
 
 ## 🚀 Future Potential Improvements
 - Strengthen application security.
-- Expand unit and integration test coverage.
 - Introduce Kubernetes for container orchestration and deployment.
 - Implement distributed tracing using OpenTelemetry.

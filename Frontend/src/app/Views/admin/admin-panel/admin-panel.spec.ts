@@ -1,4 +1,3 @@
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
@@ -35,8 +34,7 @@ describe('AdminPanel', () => {
   });
 
   it('should navigate to seed database when the button is clicked', () => {
-    const button: HTMLButtonElement =
-      fixture.nativeElement.querySelector('.seed-database');
+    const button: HTMLButtonElement = fixture.nativeElement.querySelector('.seed-database');
 
     button.click();
 
@@ -46,15 +44,14 @@ describe('AdminPanel', () => {
   it('should display the admin panel title', () => {
     const element: HTMLElement = fixture.nativeElement;
 
-    expect(element.querySelector('h2')?.textContent?.trim())
-      .toBe('Panel administracyjny');
+    expect(element.querySelector('h2')?.textContent?.trim()).toBe('Panel administracyjny');
   });
 
   it('should display all navigation links', () => {
     const element: HTMLElement = fixture.nativeElement;
-    const links = Array.from(
-      element.querySelectorAll('nav a'),
-    ).map((link) => link.textContent?.trim());
+    const links = Array.from(element.querySelectorAll('nav a')).map((link) =>
+      link.textContent?.trim(),
+    );
 
     expect(links).toContain('Dashboard');
     expect(links).toContain('Wydarzenia');
@@ -65,8 +62,7 @@ describe('AdminPanel', () => {
   });
 
   it('should display the seed database button', () => {
-    const button: HTMLButtonElement =
-      fixture.nativeElement.querySelector('.seed-database');
+    const button: HTMLButtonElement = fixture.nativeElement.querySelector('.seed-database');
 
     expect(button).toBeTruthy();
     expect(button.textContent?.trim()).toBe('Seedowanie bazy danych');

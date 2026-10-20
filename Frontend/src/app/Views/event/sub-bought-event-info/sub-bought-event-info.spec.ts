@@ -1,4 +1,3 @@
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ChangeDetectorRef } from '@angular/core';
@@ -81,16 +80,15 @@ describe('SubBoughtEventInfo', () => {
 
     const element: HTMLElement = fixture.nativeElement;
 
-    expect(element.querySelector('.dialog-title')?.textContent)
-      .toContain('Summer Festival');
+    expect(element.querySelector('.dialog-title')?.textContent).toContain('Summer Festival');
 
-    expect(element.querySelector('.dialog-badge')?.textContent)
-      .toContain('Koncert');
+    expect(element.querySelector('.dialog-badge')?.textContent).toContain('Koncert');
 
     expect(element.querySelector('.qr-code')).not.toBeNull();
 
-    expect(element.querySelector('.dialog-link')?.getAttribute('href'))
-      .toBe('https://example.com/event');
+    expect(element.querySelector('.dialog-link')?.getAttribute('href')).toBe(
+      'https://example.com/event',
+    );
 
     expect(element.textContent).toContain('Klub Muzyczny');
     expect(element.textContent).toContain('ul. Kwiatowa 10');
@@ -114,9 +112,7 @@ describe('SubBoughtEventInfo', () => {
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});
 
-    eventService.getTicketsWithQr.mockReturnValue(
-      throwError(() => error),
-    );
+    eventService.getTicketsWithQr.mockReturnValue(throwError(() => error));
 
     fixture.detectChanges();
 
@@ -137,8 +133,7 @@ describe('SubBoughtEventInfo', () => {
 
     const element: HTMLElement = fixture.nativeElement;
 
-    expect(element.querySelector('.dialog-title')?.textContent)
-      .toContain('Test Event');
+    expect(element.querySelector('.dialog-title')?.textContent).toContain('Test Event');
 
     expect(element.querySelector('.qr-box')).toBeNull();
     expect(element.querySelector('.dialog-badge')).toBeNull();

@@ -1,10 +1,7 @@
 // bookmark.service.spec.ts
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
-import {
-  HttpTestingController,
-  provideHttpClientTesting,
-} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { getBookmarkDto } from '../Dto/getBookmarkDto';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { BookMarkService } from '../Services/BookMarkService';
@@ -17,11 +14,7 @@ describe('BookMarkService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        BookMarkService,
-        provideHttpClient(),
-        provideHttpClientTesting(),
-      ],
+      providers: [BookMarkService, provideHttpClient(), provideHttpClientTesting()],
     });
 
     service = TestBed.inject(BookMarkService);
@@ -148,5 +141,5 @@ describe('BookMarkService', () => {
 });
 
 function fail(arg0: string): void {
-    throw new Error('Function not implemented.');
+  throw new Error('Function not implemented.');
 }

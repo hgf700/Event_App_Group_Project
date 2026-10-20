@@ -1,4 +1,3 @@
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -38,9 +37,7 @@ describe('GetEvents', () => {
     },
   ] as unknown as getEventDto[];
 
-  const mockBookmarks = [
-    { eventId: 1 },
-  ] as getBookmarkDto[];
+  const mockBookmarks = [{ eventId: 1 }] as getBookmarkDto[];
 
   const eventServiceMock = {
     getEvents: vi.fn(),
@@ -70,9 +67,7 @@ describe('GetEvents', () => {
       }),
     );
 
-    bookmarkServiceMock.getUserBookmarks.mockReturnValue(
-      of(mockBookmarks),
-    );
+    bookmarkServiceMock.getUserBookmarks.mockReturnValue(of(mockBookmarks));
 
     bookmarkServiceMock.bookmarkEvent.mockReturnValue(of({}));
     bookmarkServiceMock.unBookmarkEvent.mockReturnValue(of({}));

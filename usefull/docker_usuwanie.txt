@@ -1,0 +1,22 @@
+
+#usuwanie komendy jesli nie zadziala to zamknac dockera
+wsl --shutdown
+Get-ChildItem "$env:LOCALAPPDATA\Docker\wsl" -Recurse -Filter *.vhdx -ErrorAction SilentlyContinue 
+Get-Command Optimize-VHD -ErrorAction SilentlyContinue
+#jesli wyniki to moge i zwolni miejsce
+Optimize-VHD -Path "$env:LOCALAPPDATA\Docker\wsl\disk\docker_data.vhdx" -Mode Full
+
+#Usunie wszystko
+docker system prune
+
+#Usuń kontenery aplikacji
+docker compose down
+
+#Usuń zatrzymane kontenery
+docker container prune
+
+#Usuń nieużywane obrazy
+docker image prune -a
+
+#Usuń nieużywany cache budowania
+docker builder prune

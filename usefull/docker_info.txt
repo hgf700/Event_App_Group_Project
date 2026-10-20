@@ -1,6 +1,5 @@
-do dzialania db potrzebuje migrations
-
-
+do dzialania db potrzebuje migrations 
+i mimo ze daje do .dockerignore **/ musze dawac docker ignore obok dockerfile
 logika dziala
 
 services:

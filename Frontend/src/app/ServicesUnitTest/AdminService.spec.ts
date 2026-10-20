@@ -1,9 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { HttpClient, provideHttpClient } from '@angular/common/http';
-import {
-  HttpTestingController,
-  provideHttpClientTesting,
-} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { AdminService } from '../Services/AdminService';
 import { getAppUsageInfoDto } from '../Dto/getAppUsageInfoDto';
@@ -22,11 +19,7 @@ describe('AdminService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        AdminService,
-        provideHttpClient(),
-        provideHttpClientTesting(),
-      ],
+      providers: [AdminService, provideHttpClient(), provideHttpClientTesting()],
     });
 
     service = TestBed.inject(AdminService);

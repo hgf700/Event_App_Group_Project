@@ -1,10 +1,7 @@
 // event.service.spec.ts
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
-import {
-  HttpTestingController,
-  provideHttpClientTesting,
-} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { paginatedResponse } from '../model/paginatedResponse';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { EventService } from '../Services/EventService';
@@ -20,11 +17,7 @@ describe('EventService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        EventService,
-        provideHttpClient(),
-        provideHttpClientTesting(),
-      ],
+      providers: [EventService, provideHttpClient(), provideHttpClientTesting()],
     });
 
     service = TestBed.inject(EventService);
@@ -52,9 +45,7 @@ describe('EventService', () => {
         expect(res.data.length).toBe(1);
       });
 
-      const req = httpMock.expectOne(
-        `${apiUrl}/get-events?page=1&pageSize=10`,
-      );
+      const req = httpMock.expectOne(`${apiUrl}/get-events?page=1&pageSize=10`);
       expect(req.request.method).toBe('GET');
 
       req.flush(mockResponse);
@@ -95,9 +86,7 @@ describe('EventService', () => {
         expect(res).toEqual(mockTicket);
       });
 
-      const req = httpMock.expectOne(
-        `${apiUserTicketUrl}/ticket-detail-with-qr/${eventId}`,
-      );
+      const req = httpMock.expectOne(`${apiUserTicketUrl}/ticket-detail-with-qr/${eventId}`);
       expect(req.request.method).toBe('GET');
 
       req.flush(mockTicket);
@@ -116,9 +105,7 @@ describe('EventService', () => {
         expect(res).toEqual(mockResponse);
       });
 
-      const req = httpMock.expectOne(
-        `${apiUrl}/public-get-events?page=2&pageSize=20`,
-      );
+      const req = httpMock.expectOne(`${apiUrl}/public-get-events?page=2&pageSize=20`);
       expect(req.request.method).toBe('GET');
 
       req.flush(mockResponse);

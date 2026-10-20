@@ -1,10 +1,7 @@
 // payment.service.spec.ts
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
-import {
-  HttpTestingController,
-  provideHttpClientTesting,
-} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { PaymentService, PaymentStatusResponse } from '../Services/PaymentService';
 import { postBuyTicketResponseDto } from '../Dto/postBuyTicketResponseDto';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
@@ -17,11 +14,7 @@ describe('PaymentService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        PaymentService,
-        provideHttpClient(),
-        provideHttpClientTesting(),
-      ],
+      providers: [PaymentService, provideHttpClient(), provideHttpClientTesting()],
     });
 
     service = TestBed.inject(PaymentService);
@@ -41,8 +34,8 @@ describe('PaymentService', () => {
     it('should send POST request to buy-ticket endpoint', () => {
       const eventId = 42;
       const mockResponse = {
-          checkoutUrl: 'https://checkout.stripe.com/session/xxx',
-          paymentId: 123,
+        checkoutUrl: 'https://checkout.stripe.com/session/xxx',
+        paymentId: 123,
       } as unknown as postBuyTicketResponseDto;
 
       service.buyTicket(eventId).subscribe((res) => {
