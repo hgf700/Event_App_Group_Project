@@ -6,8 +6,14 @@ Get-Command Optimize-VHD -ErrorAction SilentlyContinue
 #jesli wyniki to moge i zwolni miejsce
 Optimize-VHD -Path "$env:LOCALAPPDATA\Docker\wsl\disk\docker_data.vhdx" -Mode Full
 
-#Usunie wszystko
-docker system prune
+#co jeszcze zajmuje miejsce?
+docker system df
+
+#Usunie wszystkie nieużywane obrazy,
+docker system prune -a
+
+#usuwać nieużywane wolumeny i nieużywane obrazy
+docker system prune -a --volumes
 
 #Usuń kontenery aplikacji
 docker compose down
