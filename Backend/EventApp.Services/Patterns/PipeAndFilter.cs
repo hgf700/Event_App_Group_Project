@@ -60,6 +60,20 @@ public class NormalizeWhitespaceFilter : IFilter
     }
 }
 
+# to prevent insert of <> "' for xss and sql injection
+public class HtmlEncodeFilter : IFilter
+{
+    public StringContext Execute(StringContext input)
+    {
+        return new StringContext
+        {
+            Value = input.Value == null
+                ? string.Empty
+                : HtmlEncoder.Default.Encode(input.Value)
+        };
+    }
+}
+
 public class Pipe
 {
     private readonly List<IFilter> _filters = new();
