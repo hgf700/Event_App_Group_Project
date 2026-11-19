@@ -28,3 +28,5 @@ Obsługa błędów	W subscribe lub przez operatory	Najczęściej przez operatory
 
 event$ = this.eventService.getEventDetails(15);
 @if (event$ | async; as event) 
+
+uzywanie HtmlEncodeFilter ktory koduje znaki <> "' na tekst by utrudnic xss
